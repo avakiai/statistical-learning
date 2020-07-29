@@ -1,0 +1,1644 @@
+Scenario - DJ_test
+Logfile written - 03/04/2020 18:25:44
+
+Subject	Trial	Event Type	Code	Time	TTime	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur	Stim Type	Pair Index
+
+s1504	1	Picture	instruct	166	0	1	106646	2	0	next	other	0
+s1504	1	Response	1	106360	106194	1
+s1504	2	Picture	Block #1 | Trial #1 | task_struct_seq_A_1.txt | Init. Dial Pos 1: 936 | Init. ISI 1: 312 | Init. Dial Pos 2: 462 | Init. ISI 2: 154 | Init. Dial Pos 3: 1089 | Init. ISI 3: 363	106812	0	1	17497	2	0	next	other	0
+s1504	2	Response	1	124200	17388	1
+s1504	4	Picture	fixation	124309	0	1	315243	197	0	next	other	0
+s1504	4	Sound	Syll: ga	124309	0	2			0		other	0
+s1504	5	Nothing	Dial No.: 2 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	126770	0	1			0		other	0
+s1504	6	Sound	Syll: di | Duration: 240	128310	0	1			0		other	0
+s1504	7	Nothing	Dial No.: 1 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	130762	0	1			0		other	0
+s1504	8	Sound	Syll: mi | Duration: 240	133882	0	1			0		other	0
+s1504	9	Nothing	Dial No.: 3 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	136254	0	1			0		other	0
+s1504	10	Sound	Syll: po | Duration: 240	139884	0	2			0		other	0
+s1504	11	Nothing	Dial No.: 2 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	142273	0	1			0		other	0
+s1504	12	Sound	Syll: la | Duration: 240	143813	0	1			0		other	0
+s1504	13	Nothing	Dial No.: 1 | Current ISI: 355 ms. | Current Pos: 1066 | Previous ISI: 335 ms. | Previous Pos: 1006 | ISI Diff: 20 ms. | Pos Diff: 60	146270	0	1			0		other	0
+s1504	14	Sound	Syll: nu | Duration: 240	149820	0	2			0		other	0
+s1504	15	Nothing	Dial No.: 3 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	152210	0	1			0		other	0
+s1504	16	Sound	Syll: ga | Duration: 240	155840	0	2			0		other	0
+s1504	17	Nothing	Dial No.: 2 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	158210	0	1			0		other	0
+s1504	18	Sound	Syll: di | Duration: 240	159750	0	1			0		other	0
+s1504	19	Nothing	Dial No.: 1 | Current ISI: 422 ms. | Current Pos: 1266 | Previous ISI: 422 ms. | Previous Pos: 1266 | ISI Diff: 0 ms. | Pos Diff: 0	162171	0	1			0		other	0
+s1504	20	Sound	Syll: ro | Duration: 240	166391	0	2			0		other	0
+s1504	21	Nothing	Dial No.: 3 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	168766	0	1			0		other	0
+s1504	22	Sound	Syll: ki | Duration: 240	172396	0	1			0		other	0
+s1504	23	Nothing	Dial No.: 2 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	174756	0	1			0		other	0
+s1504	24	Sound	Syll: se | Duration: 240	176296	0	2			0		other	0
+s1504	25	Nothing	Dial No.: 1 | Current ISI: 492 ms. | Current Pos: 1476 | Previous ISI: 458 ms. | Previous Pos: 1376 | ISI Diff: 34 ms. | Pos Diff: 100	178655	0	1			0		other	0
+s1504	26	Sound	Syll: za | Duration: 240	183575	0	1			0		other	0
+s1504	27	Nothing	Dial No.: 3 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	185967	0	1			0		other	0
+s1504	28	Sound	Syll: be | Duration: 245	189597	0	2			0		other	0
+s1504	29	Nothing	Dial No.: 2 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	192064	0	1			0		other	0
+s1504	30	Sound	Syll: tu | Duration: 240	193604	0	1			0		other	0
+s1504	31	Nothing	Dial No.: 1 | Current ISI: 525 ms. | Current Pos: 1576 | Previous ISI: 525 ms. | Previous Pos: 1576 | ISI Diff: 0 ms. | Pos Diff: 0	195911	0	1			0		other	0
+s1504	32	Sound	Syll: nu | Duration: 240	201161	0	1			0		other	0
+s1504	33	Nothing	Dial No.: 3 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	203512	0	1			0		other	0
+s1504	34	Sound	Syll: ga | Duration: 240	207142	0	1			0		other	0
+s1504	35	Nothing	Dial No.: 2 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	209512	0	1			0		other	0
+s1504	36	Sound	Syll: di | Duration: 240	211052	0	1			0		other	0
+s1504	37	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 525 ms. | Previous Pos: 1576 | ISI Diff: 40 ms. | Pos Diff: 120	213412	0	1			0		other	0
+s1504	38	Sound	Syll: mi | Duration: 240	219062	0	1			0		other	0
+s1504	39	Nothing	Dial No.: 3 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	221412	0	1			0		other	0
+s1504	40	Sound	Syll: po | Duration: 240	225042	0	2			0		other	0
+s1504	41	Nothing	Dial No.: 2 | Current ISI: 80 ms. | Current Pos: 242 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: -74 ms. | Pos Diff: -220	227412	0	1			0		other	0
+s1504	42	Sound	Syll: la | Duration: 240	228212	0	1			0		other	0
+s1504	43	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 565 ms. | Previous Pos: 1696 | ISI Diff: 0 ms. | Pos Diff: 0	230612	0	1			0		other	0
+s1504	44	Sound	Syll: ro | Duration: 240	236262	0	2			0		other	0
+s1504	45	Nothing	Dial No.: 3 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	238613	0	1			0		other	0
+s1504	46	Sound	Syll: ki | Duration: 240	242243	0	1			0		other	0
+s1504	47	Nothing	Dial No.: 2 | Current ISI: 4 ms. | Current Pos: 12 | Previous ISI: 14 ms. | Previous Pos: 42 | ISI Diff: -10 ms. | Pos Diff: -30	244613	0	1			0		other	0
+s1504	48	Sound	Syll: se | Duration: 240	244653	0	1			0		other	0
+s1504	49	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 565 ms. | Previous Pos: 1696 | ISI Diff: 0 ms. | Pos Diff: 0	247013	0	1			0		other	0
+s1504	50	Sound	Syll: za | Duration: 240	252663	0	1			0		other	0
+s1504	51	Nothing	Dial No.: 3 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	255013	0	1			0		other	0
+s1504	52	Sound	Syll: be | Duration: 245	258643	0	2			0		other	0
+s1504	53	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	261114	0	1			0		other	0
+s1504	54	Sound	Syll: tu | Duration: 240	261124	0	1			0		other	0
+s1504	55	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 565 ms. | Previous Pos: 1696 | ISI Diff: 0 ms. | Pos Diff: 0	263520	0	1			0		other	0
+s1504	56	Sound	Syll: nu | Duration: 240	269170	0	1			0		other	0
+s1504	57	Nothing	Dial No.: 3 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	271522	0	1			0		other	0
+s1504	58	Sound	Syll: ga | Duration: 240	275152	0	2			0		other	0
+s1504	59	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	277525	0	1			0		other	0
+s1504	60	Sound	Syll: di | Duration: 240	277535	0	1			0		other	0
+s1504	61	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 565 ms. | Previous Pos: 1696 | ISI Diff: 0 ms. | Pos Diff: 0	279926	0	1			0		other	0
+s1504	62	Sound	Syll: mi | Duration: 240	285576	0	2			0		other	0
+s1504	63	Nothing	Dial No.: 3 | Current ISI: 479 ms. | Current Pos: 1439 | Previous ISI: 409 ms. | Previous Pos: 1229 | ISI Diff: 70 ms. | Pos Diff: 210	287921	0	1			0		other	0
+s1504	64	Sound	Syll: po | Duration: 240	292711	0	1			0		other	0
+s1504	65	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	295120	0	1			0		other	0
+s1504	66	Sound	Syll: la | Duration: 240	295130	0	1			0		other	0
+s1504	67	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 565 ms. | Previous Pos: 1696 | ISI Diff: 0 ms. | Pos Diff: 0	297525	0	1			0		other	0
+s1504	68	Sound	Syll: za | Duration: 240	303175	0	1			0		other	0
+s1504	69	Nothing	Dial No.: 3 | Current ISI: 479 ms. | Current Pos: 1439 | Previous ISI: 479 ms. | Previous Pos: 1439 | ISI Diff: 0 ms. | Pos Diff: 0	305522	0	1			0		other	0
+s1504	70	Sound	Syll: be | Duration: 245	310312	0	2			0		other	0
+s1504	71	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	312820	0	1			0		other	0
+s1504	72	Sound	Syll: tu | Duration: 240	312830	0	1			0		other	0
+s1504	73	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 565 ms. | Previous Pos: 1696 | ISI Diff: 0 ms. | Pos Diff: 0	315216	0	1			0		other	0
+s1504	74	Sound	Syll: nu | Duration: 240	320866	0	2			0		other	0
+s1504	75	Nothing	Dial No.: 3 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 359 ms. | Previous Pos: 1079 | ISI Diff: -66 ms. | Pos Diff: -200	323216	0	1			0		other	0
+s1504	76	Sound	Syll: ga | Duration: 240	326146	0	1			0		other	0
+s1504	77	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	328515	0	1			0		other	0
+s1504	78	Sound	Syll: di | Duration: 240	328525	0	1			0		other	0
+s1504	79	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 565 ms. | Previous Pos: 1696 | ISI Diff: 0 ms. | Pos Diff: 0	330929	0	1			0		other	0
+s1504	80	Sound	Syll: ro | Duration: 240	336579	0	2			0		other	0
+s1504	81	Nothing	Dial No.: 3 | Current ISI: 243 ms. | Current Pos: 729 | Previous ISI: 279 ms. | Previous Pos: 839 | ISI Diff: -36 ms. | Pos Diff: -110	338923	0	1			0		other	0
+s1504	82	Sound	Syll: ki | Duration: 240	341353	0	1			0		other	0
+s1504	83	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	343728	0	1			0		other	0
+s1504	84	Sound	Syll: se | Duration: 240	343738	0	1			0		other	0
+s1504	85	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 565 ms. | Previous Pos: 1696 | ISI Diff: 0 ms. | Pos Diff: 0	346117	0	1			0		other	0
+s1504	86	Sound	Syll: za | Duration: 240	351767	0	1			0		other	0
+s1504	87	Nothing	Dial No.: 3 | Current ISI: 196 ms. | Current Pos: 589 | Previous ISI: 196 ms. | Previous Pos: 589 | ISI Diff: 0 ms. | Pos Diff: 0	354116	0	1			0		other	0
+s1504	88	Sound	Syll: be | Duration: 245	356076	0	1			0		other	0
+s1504	89	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	358516	0	1			0		other	0
+s1504	90	Sound	Syll: tu | Duration: 240	358526	0	1			0		other	0
+s1504	91	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 565 ms. | Previous Pos: 1696 | ISI Diff: 0 ms. | Pos Diff: 0	360917	0	1			0		other	0
+s1504	92	Sound	Syll: nu | Duration: 240	366567	0	2			0		other	0
+s1504	93	Nothing	Dial No.: 3 | Current ISI: 163 ms. | Current Pos: 489 | Previous ISI: 196 ms. | Previous Pos: 589 | ISI Diff: -33 ms. | Pos Diff: -100	368917	0	1			0		other	0
+s1504	94	Sound	Syll: ga | Duration: 240	370547	0	1			0		other	0
+s1504	95	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	372917	0	1			0		other	0
+s1504	96	Sound	Syll: di | Duration: 240	372927	0	1			0		other	0
+s1504	97	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 565 ms. | Previous Pos: 1696 | ISI Diff: 0 ms. | Pos Diff: 0	375317	0	1			0		other	0
+s1504	98	Sound	Syll: ro | Duration: 240	380967	0	1			0		other	0
+s1504	99	Nothing	Dial No.: 3 | Current ISI: 163 ms. | Current Pos: 489 | Previous ISI: 163 ms. | Previous Pos: 489 | ISI Diff: 0 ms. | Pos Diff: 0	383317	0	1			0		other	0
+s1504	100	Sound	Syll: ki | Duration: 240	384947	0	1			0		other	0
+s1504	101	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	387317	0	1			0		other	0
+s1504	102	Sound	Syll: se | Duration: 240	387327	0	1			0		other	0
+s1504	103	Nothing	Dial No.: 1 | Current ISI: 565 ms. | Current Pos: 1696 | Previous ISI: 565 ms. | Previous Pos: 1696 | ISI Diff: 0 ms. | Pos Diff: 0	389717	0	1			0		other	0
+s1504	104	Sound	Syll: za | Duration: 240	395367	0	2			0		other	0
+s1504	105	Nothing	Dial No.: 3 | Current ISI: 163 ms. | Current Pos: 489 | Previous ISI: 163 ms. | Previous Pos: 489 | ISI Diff: 0 ms. | Pos Diff: 0	397718	0	1			0		other	0
+s1504	106	Sound	Syll: be | Duration: 245	399348	0	1			0		other	0
+s1504	107	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	401817	0	1			0		other	0
+s1504	108	Sound	Syll: tu | Duration: 240	401827	0	1			0		other	0
+s1504	109	Nothing	Dial No.: 1 | Current ISI: 532 ms. | Current Pos: 1596 | Previous ISI: 532 ms. | Previous Pos: 1596 | ISI Diff: 0 ms. | Pos Diff: 0	404269	0	1			0		other	0
+s1504	110	Sound	Syll: mi | Duration: 240	409589	0	2			0		other	0
+s1504	111	Nothing	Dial No.: 3 | Current ISI: 163 ms. | Current Pos: 489 | Previous ISI: 163 ms. | Previous Pos: 489 | ISI Diff: 0 ms. | Pos Diff: 0	411973	0	1			0		other	0
+s1504	112	Sound	Syll: po | Duration: 240	413603	0	1			0		other	0
+s1504	113	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	415965	0	1			0		other	0
+s1504	114	Sound	Syll: la | Duration: 240	415975	0	1			0		other	0
+s1504	115	Nothing	Dial No.: 1 | Current ISI: 482 ms. | Current Pos: 1446 | Previous ISI: 482 ms. | Previous Pos: 1446 | ISI Diff: 0 ms. | Pos Diff: 0	418328	0	1			0		other	0
+s1504	116	Sound	Syll: za | Duration: 240	423148	0	1			0		other	0
+s1504	117	Nothing	Dial No.: 3 | Current ISI: 163 ms. | Current Pos: 489 | Previous ISI: 163 ms. | Previous Pos: 489 | ISI Diff: 0 ms. | Pos Diff: 0	425528	0	1			0		other	0
+s1504	118	Sound	Syll: be | Duration: 245	427158	0	1			0		other	0
+s1504	119	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	429625	0	1			0		other	0
+s1504	120	Sound	Syll: tu | Duration: 240	429635	0	1			0		other	0
+s1504	121	Nothing	Dial No.: 1 | Current ISI: 482 ms. | Current Pos: 1446 | Previous ISI: 482 ms. | Previous Pos: 1446 | ISI Diff: 0 ms. | Pos Diff: 0	432029	0	1			0		other	0
+s1504	121	Response	1	436512	4483	1
+s1504	122	Sound	Syll: ro | Duration: 240	436849	0	1			0		other	0
+s1504	123	Picture	Block #1 | Trial #2 | task_struct_seq_A_2.txt | Init. Dial Pos 1: 462 | Init. ISI 1: 154 | Init. Dial Pos 2: 1488 | Init. ISI 2: 496 | Init. Dial Pos 3: 879 | Init. ISI 3: 293	439552	0	196	17692	197	0	next	other	0
+s1504	123	Response	1	457071	17519	1
+s1504	124	Picture	fixation	457244	0	1	341600	2	0	next	other	0
+s1504	125	Sound	Syll: ga	457245	0	1			0		other	0
+s1504	126	Nothing	Dial No.: 1 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	459627	0	1			0		other	0
+s1504	127	Sound	Syll: di | Duration: 240	461167	0	1			0		other	0
+s1504	128	Nothing	Dial No.: 3 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	463519	0	1			0		other	0
+s1504	129	Sound	Syll: mi | Duration: 240	466449	0	1			0		other	0
+s1504	130	Nothing	Dial No.: 2 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	468820	0	1			0		other	0
+s1504	131	Sound	Syll: po | Duration: 240	473780	0	1			0		other	0
+s1504	132	Nothing	Dial No.: 1 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	476120	0	1			0		other	0
+s1504	133	Sound	Syll: la | Duration: 240	477660	0	1			0		other	0
+s1504	134	Nothing	Dial No.: 3 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	480020	0	1			0		other	0
+s1504	135	Sound	Syll: ro | Duration: 240	482950	0	1			0		other	0
+s1504	136	Nothing	Dial No.: 2 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	485330	0	1			0		other	0
+s1504	137	Sound	Syll: ki | Duration: 240	490290	0	2			0		other	0
+s1504	138	Nothing	Dial No.: 1 | Current ISI: 104 ms. | Current Pos: 312 | Previous ISI: 134 ms. | Previous Pos: 402 | ISI Diff: -30 ms. | Pos Diff: -90	492629	0	1			0		other	0
+s1504	139	Sound	Syll: se | Duration: 240	493669	0	1			0		other	0
+s1504	140	Nothing	Dial No.: 3 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	496021	0	1			0		other	0
+s1504	141	Sound	Syll: mi | Duration: 240	498951	0	1			0		other	0
+s1504	142	Nothing	Dial No.: 2 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	501321	0	1			0		other	0
+s1504	143	Sound	Syll: po | Duration: 240	506281	0	1			0		other	0
+s1504	144	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	508621	0	1			0		other	0
+s1504	145	Sound	Syll: la | Duration: 240	509621	0	1			0		other	0
+s1504	146	Nothing	Dial No.: 3 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	512029	0	1			0		other	0
+s1504	147	Sound	Syll: nu | Duration: 240	514959	0	1			0		other	0
+s1504	148	Nothing	Dial No.: 2 | Current ISI: 456 ms. | Current Pos: 1368 | Previous ISI: 456 ms. | Previous Pos: 1368 | ISI Diff: 0 ms. | Pos Diff: 0	517321	0	1			0		other	0
+s1504	149	Sound	Syll: ga | Duration: 240	521881	0	1			0		other	0
+s1504	150	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	524222	0	1			0		other	0
+s1504	151	Sound	Syll: di | Duration: 240	525222	0	1			0		other	0
+s1504	152	Nothing	Dial No.: 3 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	527699	0	1			0		other	0
+s1504	153	Sound	Syll: za | Duration: 240	530629	0	1			0		other	0
+s1504	154	Nothing	Dial No.: 2 | Current ISI: 416 ms. | Current Pos: 1248 | Previous ISI: 416 ms. | Previous Pos: 1248 | ISI Diff: 0 ms. | Pos Diff: 0	533030	0	1			0		other	0
+s1504	155	Sound	Syll: be | Duration: 245	537190	0	1			0		other	0
+s1504	156	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	539629	0	1			0		other	0
+s1504	157	Sound	Syll: tu | Duration: 240	540629	0	1			0		other	0
+s1504	158	Nothing	Dial No.: 3 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	543022	0	1			0		other	0
+s1504	159	Sound	Syll: nu | Duration: 240	545952	0	1			0		other	0
+s1504	160	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	548329	0	1			0		other	0
+s1504	161	Sound	Syll: ga | Duration: 240	552289	0	2			0		other	0
+s1504	162	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	554623	0	1			0		other	0
+s1504	163	Sound	Syll: di | Duration: 240	555623	0	1			0		other	0
+s1504	164	Nothing	Dial No.: 3 | Current ISI: 333 ms. | Current Pos: 999 | Previous ISI: 326 ms. | Previous Pos: 979 | ISI Diff: 7 ms. | Pos Diff: 20	558022	0	1			0		other	0
+s1504	165	Sound	Syll: za | Duration: 240	561352	0	1			0		other	0
+s1504	166	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	563722	0	1			0		other	0
+s1504	167	Sound	Syll: be | Duration: 245	567682	0	1			0		other	0
+s1504	168	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	570123	0	1			0		other	0
+s1504	169	Sound	Syll: tu | Duration: 240	571123	0	1			0		other	0
+s1504	170	Nothing	Dial No.: 3 | Current ISI: 366 ms. | Current Pos: 1099 | Previous ISI: 366 ms. | Previous Pos: 1099 | ISI Diff: 0 ms. | Pos Diff: 0	573523	0	1			0		other	0
+s1504	171	Sound	Syll: nu | Duration: 240	577183	0	1			0		other	0
+s1504	172	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	579523	0	1			0		other	0
+s1504	173	Sound	Syll: ga | Duration: 240	583483	0	1			0		other	0
+s1504	174	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	585834	0	1			0		other	0
+s1504	175	Sound	Syll: di | Duration: 240	586834	0	2			0		other	0
+s1504	176	Nothing	Dial No.: 3 | Current ISI: 399 ms. | Current Pos: 1199 | Previous ISI: 386 ms. | Previous Pos: 1159 | ISI Diff: 13 ms. | Pos Diff: 40	589223	0	1			0		other	0
+s1504	177	Sound	Syll: za | Duration: 240	593213	0	1			0		other	0
+s1504	178	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	595524	0	1			0		other	0
+s1504	179	Sound	Syll: be | Duration: 245	599484	0	1			0		other	0
+s1504	180	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	601924	0	1			0		other	0
+s1504	181	Sound	Syll: tu | Duration: 240	602924	0	1			0		other	0
+s1504	182	Nothing	Dial No.: 3 | Current ISI: 399 ms. | Current Pos: 1199 | Previous ISI: 399 ms. | Previous Pos: 1199 | ISI Diff: 0 ms. | Pos Diff: 0	605335	0	1			0		other	0
+s1504	183	Sound	Syll: mi | Duration: 240	609325	0	1			0		other	0
+s1504	184	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	611734	0	1			0		other	0
+s1504	185	Sound	Syll: po | Duration: 240	615694	0	2			0		other	0
+s1504	186	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	618034	0	1			0		other	0
+s1504	187	Sound	Syll: la | Duration: 240	619034	0	1			0		other	0
+s1504	188	Nothing	Dial No.: 3 | Current ISI: 329 ms. | Current Pos: 989 | Previous ISI: 339 ms. | Previous Pos: 1019 | ISI Diff: -10 ms. | Pos Diff: -30	621431	0	1			0		other	0
+s1504	189	Sound	Syll: ro | Duration: 240	624721	0	2			0		other	0
+s1504	190	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	627132	0	1			0		other	0
+s1504	191	Sound	Syll: ki | Duration: 240	631092	0	1			0		other	0
+s1504	192	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	633433	0	1			0		other	0
+s1504	193	Sound	Syll: se | Duration: 240	634433	0	2			0		other	0
+s1504	194	Nothing	Dial No.: 3 | Current ISI: 229 ms. | Current Pos: 689 | Previous ISI: 249 ms. | Previous Pos: 749 | ISI Diff: -20 ms. | Pos Diff: -60	636834	0	1			0		other	0
+s1504	195	Sound	Syll: nu | Duration: 240	639124	0	1			0		other	0
+s1504	196	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	641525	0	1			0		other	0
+s1504	197	Sound	Syll: ga | Duration: 240	645485	0	1			0		other	0
+s1504	198	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	647825	0	1			0		other	0
+s1504	199	Sound	Syll: di | Duration: 240	648825	0	1			0		other	0
+s1504	200	Nothing	Dial No.: 3 | Current ISI: 179 ms. | Current Pos: 539 | Previous ISI: 183 ms. | Previous Pos: 549 | ISI Diff: -4 ms. | Pos Diff: -10	651237	0	1			0		other	0
+s1504	201	Sound	Syll: za | Duration: 240	653027	0	1			0		other	0
+s1504	202	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	655431	0	1			0		other	0
+s1504	203	Sound	Syll: be | Duration: 245	659391	0	1			0		other	0
+s1504	204	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	661834	0	1			0		other	0
+s1504	205	Sound	Syll: tu | Duration: 240	662834	0	1			0		other	0
+s1504	206	Nothing	Dial No.: 3 | Current ISI: 146 ms. | Current Pos: 439 | Previous ISI: 146 ms. | Previous Pos: 439 | ISI Diff: 0 ms. | Pos Diff: 0	665225	0	1			0		other	0
+s1504	207	Sound	Syll: mi | Duration: 240	666685	0	1			0		other	0
+s1504	208	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	669025	0	1			0		other	0
+s1504	209	Sound	Syll: po | Duration: 240	672985	0	1			0		other	0
+s1504	210	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	675326	0	1			0		other	0
+s1504	211	Sound	Syll: la | Duration: 240	676326	0	1			0		other	0
+s1504	212	Nothing	Dial No.: 3 | Current ISI: 113 ms. | Current Pos: 339 | Previous ISI: 116 ms. | Previous Pos: 349 | ISI Diff: -3 ms. | Pos Diff: -10	678726	0	1			0		other	0
+s1504	213	Sound	Syll: ro | Duration: 240	679856	0	1			0		other	0
+s1504	214	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	682226	0	1			0		other	0
+s1504	215	Sound	Syll: ki | Duration: 240	686186	0	1			0		other	0
+s1504	216	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	688526	0	1			0		other	0
+s1504	217	Sound	Syll: se | Duration: 240	689526	0	1			0		other	0
+s1504	218	Nothing	Dial No.: 3 | Current ISI: 113 ms. | Current Pos: 339 | Previous ISI: 113 ms. | Previous Pos: 339 | ISI Diff: 0 ms. | Pos Diff: 0	691926	0	1			0		other	0
+s1504	219	Sound	Syll: za | Duration: 240	693056	0	1			0		other	0
+s1504	220	Nothing	Dial No.: 2 | Current ISI: 369 ms. | Current Pos: 1108 | Previous ISI: 369 ms. | Previous Pos: 1108 | ISI Diff: 0 ms. | Pos Diff: 0	695426	0	1			0		other	0
+s1504	221	Sound	Syll: be | Duration: 245	699116	0	1			0		other	0
+s1504	222	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	701527	0	1			0		other	0
+s1504	223	Sound	Syll: tu | Duration: 240	702527	0	1			0		other	0
+s1504	224	Nothing	Dial No.: 3 | Current ISI: 113 ms. | Current Pos: 339 | Previous ISI: 113 ms. | Previous Pos: 339 | ISI Diff: 0 ms. | Pos Diff: 0	704927	0	1			0		other	0
+s1504	225	Sound	Syll: mi | Duration: 240	706057	0	1			0		other	0
+s1504	226	Nothing	Dial No.: 2 | Current ISI: 339 ms. | Current Pos: 1018 | Previous ISI: 339 ms. | Previous Pos: 1018 | ISI Diff: 0 ms. | Pos Diff: 0	708427	0	1			0		other	0
+s1504	227	Sound	Syll: po | Duration: 240	711817	0	1			0		other	0
+s1504	228	Nothing	Dial No.: 1 | Current ISI: 100 ms. | Current Pos: 302 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 0 ms. | Pos Diff: 0	714127	0	1			0		other	0
+s1504	229	Sound	Syll: la | Duration: 240	715127	0	1			0		other	0
+s1504	230	Nothing	Dial No.: 3 | Current ISI: 113 ms. | Current Pos: 339 | Previous ISI: 113 ms. | Previous Pos: 339 | ISI Diff: 0 ms. | Pos Diff: 0	717527	0	1			0		other	0
+s1504	231	Sound	Syll: nu | Duration: 240	718657	0	1			0		other	0
+s1504	232	Nothing	Dial No.: 2 | Current ISI: 316 ms. | Current Pos: 948 | Previous ISI: 316 ms. | Previous Pos: 948 | ISI Diff: 0 ms. | Pos Diff: 0	721038	0	1			0		other	0
+s1504	233	Sound	Syll: ga | Duration: 240	724198	0	1			0		other	0
+s1504	234	Nothing	Dial No.: 1 | Current ISI: 117 ms. | Current Pos: 352 | Previous ISI: 100 ms. | Previous Pos: 302 | ISI Diff: 17 ms. | Pos Diff: 50	726539	0	1			0		other	0
+s1504	235	Sound	Syll: di | Duration: 240	727709	0	1			0		other	0
+s1504	236	Nothing	Dial No.: 3 | Current ISI: 113 ms. | Current Pos: 339 | Previous ISI: 113 ms. | Previous Pos: 339 | ISI Diff: 0 ms. | Pos Diff: 0	730038	0	1			0		other	0
+s1504	237	Sound	Syll: ro | Duration: 240	731168	0	1			0		other	0
+s1504	238	Nothing	Dial No.: 2 | Current ISI: 316 ms. | Current Pos: 948 | Previous ISI: 316 ms. | Previous Pos: 948 | ISI Diff: 0 ms. | Pos Diff: 0	733537	0	1			0		other	0
+s1504	239	Sound	Syll: ki | Duration: 240	736697	0	1			0		other	0
+s1504	240	Nothing	Dial No.: 1 | Current ISI: 124 ms. | Current Pos: 372 | Previous ISI: 120 ms. | Previous Pos: 362 | ISI Diff: 4 ms. | Pos Diff: 10	739038	0	1			0		other	0
+s1504	241	Sound	Syll: se | Duration: 240	740278	0	2			0		other	0
+s1504	242	Nothing	Dial No.: 3 | Current ISI: 113 ms. | Current Pos: 339 | Previous ISI: 113 ms. | Previous Pos: 339 | ISI Diff: 0 ms. | Pos Diff: 0	742635	0	1			0		other	0
+s1504	243	Sound	Syll: nu | Duration: 240	743765	0	1			0		other	0
+s1504	244	Nothing	Dial No.: 2 | Current ISI: 316 ms. | Current Pos: 948 | Previous ISI: 316 ms. | Previous Pos: 948 | ISI Diff: 0 ms. | Pos Diff: 0	746128	0	1			0		other	0
+s1504	245	Sound	Syll: ga | Duration: 240	749288	0	1			0		other	0
+s1504	246	Nothing	Dial No.: 1 | Current ISI: 144 ms. | Current Pos: 432 | Previous ISI: 144 ms. | Previous Pos: 432 | ISI Diff: 0 ms. | Pos Diff: 0	751628	0	1			0		other	0
+s1504	247	Sound	Syll: di | Duration: 240	753068	0	2			0		other	0
+s1504	248	Nothing	Dial No.: 3 | Current ISI: 113 ms. | Current Pos: 339 | Previous ISI: 113 ms. | Previous Pos: 339 | ISI Diff: 0 ms. | Pos Diff: 0	755437	0	1			0		other	0
+s1504	249	Sound	Syll: za | Duration: 240	756567	0	1			0		other	0
+s1504	250	Nothing	Dial No.: 2 | Current ISI: 316 ms. | Current Pos: 948 | Previous ISI: 316 ms. | Previous Pos: 948 | ISI Diff: 0 ms. | Pos Diff: 0	758937	0	1			0		other	0
+s1504	251	Sound	Syll: be | Duration: 245	762097	0	1			0		other	0
+s1504	252	Nothing	Dial No.: 1 | Current ISI: 160 ms. | Current Pos: 482 | Previous ISI: 160 ms. | Previous Pos: 482 | ISI Diff: 0 ms. | Pos Diff: 0	764539	0	1			0		other	0
+s1504	253	Sound	Syll: tu | Duration: 240	766139	0	1			0		other	0
+s1504	254	Nothing	Dial No.: 3 | Current ISI: 113 ms. | Current Pos: 339 | Previous ISI: 113 ms. | Previous Pos: 339 | ISI Diff: 0 ms. | Pos Diff: 0	768528	0	1			0		other	0
+s1504	255	Sound	Syll: ro | Duration: 240	769658	0	1			0		other	0
+s1504	256	Nothing	Dial No.: 2 | Current ISI: 316 ms. | Current Pos: 948 | Previous ISI: 316 ms. | Previous Pos: 948 | ISI Diff: 0 ms. | Pos Diff: 0	772029	0	1			0		other	0
+s1504	257	Sound	Syll: ki | Duration: 240	775189	0	1			0		other	0
+s1504	258	Nothing	Dial No.: 1 | Current ISI: 160 ms. | Current Pos: 482 | Previous ISI: 160 ms. | Previous Pos: 482 | ISI Diff: 0 ms. | Pos Diff: 0	777529	0	1			0		other	0
+s1504	259	Sound	Syll: se | Duration: 240	779129	0	1			0		other	0
+s1504	260	Nothing	Dial No.: 3 | Current ISI: 113 ms. | Current Pos: 339 | Previous ISI: 113 ms. | Previous Pos: 339 | ISI Diff: 0 ms. | Pos Diff: 0	781529	0	1			0		other	0
+s1504	261	Sound	Syll: za | Duration: 240	782659	0	1			0		other	0
+s1504	262	Nothing	Dial No.: 2 | Current ISI: 316 ms. | Current Pos: 948 | Previous ISI: 316 ms. | Previous Pos: 948 | ISI Diff: 0 ms. | Pos Diff: 0	785029	0	1			0		other	0
+s1504	263	Sound	Syll: be | Duration: 245	788189	0	1			0		other	0
+s1504	264	Nothing	Dial No.: 1 | Current ISI: 160 ms. | Current Pos: 482 | Previous ISI: 160 ms. | Previous Pos: 482 | ISI Diff: 0 ms. | Pos Diff: 0	790629	0	1			0		other	0
+s1504	265	Sound	Syll: tu | Duration: 240	792229	0	1			0		other	0
+s1504	266	Nothing	Dial No.: 3 | Current ISI: 113 ms. | Current Pos: 339 | Previous ISI: 113 ms. | Previous Pos: 339 | ISI Diff: 0 ms. | Pos Diff: 0	794630	0	1			0		other	0
+s1504	266	Response	1	794742	112	1
+s1504	267	Sound	Syll: ro | Duration: 240	795760	0	1			0		other	0
+s1504	268	Picture	Block #1 | Trial #3 | task_struct_seq_A_3.txt | Init. Dial Pos 1: 1089 | Init. ISI 1: 363 | Init. Dial Pos 2: 879 | Init. ISI 2: 293 | Init. Dial Pos 3: 462 | Init. ISI 3: 154	798844	0	1	6166	2	0	next	other	0
+s1504	268	Response	1	804902	6058	1
+s1504	270	Picture	fixation	805010	0	1	367762	2	0	next	other	0
+s1504	270	Sound	Syll: ro	805010	0	2			0		other	0
+s1504	271	Nothing	Dial No.: 1 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	807330	0	1			0		other	0
+s1504	272	Sound	Syll: ki | Duration: 240	810960	0	1			0		other	0
+s1504	273	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	813330	0	1			0		other	0
+s1504	274	Sound	Syll: se | Duration: 240	816260	0	1			0		other	0
+s1504	275	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	818630	0	1			0		other	0
+s1504	276	Sound	Syll: za | Duration: 240	820170	0	1			0		other	0
+s1504	277	Nothing	Dial No.: 1 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	822530	0	1			0		other	0
+s1504	278	Sound	Syll: be | Duration: 245	826160	0	1			0		other	0
+s1504	279	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	828630	0	1			0		other	0
+s1504	280	Sound	Syll: tu | Duration: 240	831560	0	1			0		other	0
+s1504	281	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	833979	0	1			0		other	0
+s1504	282	Sound	Syll: mi | Duration: 240	835519	0	1			0		other	0
+s1504	283	Nothing	Dial No.: 1 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	837886	0	1			0		other	0
+s1504	284	Sound	Syll: po | Duration: 240	841516	0	1			0		other	0
+s1504	285	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	843887	0	1			0		other	0
+s1504	286	Sound	Syll: la | Duration: 240	846817	0	2			0		other	0
+s1504	287	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	849141	0	1			0		other	0
+s1504	288	Sound	Syll: nu | Duration: 240	850681	0	1			0		other	0
+s1504	289	Nothing	Dial No.: 1 | Current ISI: 319 ms. | Current Pos: 959 | Previous ISI: 319 ms. | Previous Pos: 959 | ISI Diff: 0 ms. | Pos Diff: 0	853039	0	1			0		other	0
+s1504	290	Sound	Syll: ga | Duration: 240	856229	0	1			0		other	0
+s1504	291	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	858638	0	1			0		other	0
+s1504	292	Sound	Syll: di | Duration: 240	861568	0	2			0		other	0
+s1504	293	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	863940	0	1			0		other	0
+s1504	294	Sound	Syll: ro | Duration: 240	865480	0	1			0		other	0
+s1504	295	Nothing	Dial No.: 1 | Current ISI: 273 ms. | Current Pos: 819 | Previous ISI: 273 ms. | Previous Pos: 819 | ISI Diff: 0 ms. | Pos Diff: 0	867839	0	1			0		other	0
+s1504	296	Sound	Syll: ki | Duration: 240	870569	0	1			0		other	0
+s1504	297	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	872938	0	1			0		other	0
+s1504	298	Sound	Syll: se | Duration: 240	875868	0	1			0		other	0
+s1504	299	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	878234	0	1			0		other	0
+s1504	300	Sound	Syll: nu | Duration: 240	879774	0	2			0		other	0
+s1504	301	Nothing	Dial No.: 1 | Current ISI: 273 ms. | Current Pos: 819 | Previous ISI: 273 ms. | Previous Pos: 819 | ISI Diff: 0 ms. | Pos Diff: 0	882132	0	1			0		other	0
+s1504	302	Sound	Syll: ga | Duration: 240	884862	0	2			0		other	0
+s1504	303	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	887232	0	1			0		other	0
+s1504	304	Sound	Syll: di | Duration: 240	890162	0	1			0		other	0
+s1504	305	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	892542	0	1			0		other	0
+s1504	306	Sound	Syll: za | Duration: 240	894082	0	1			0		other	0
+s1504	307	Nothing	Dial No.: 1 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	896453	0	1			0		other	0
+s1504	308	Sound	Syll: be | Duration: 245	898783	0	2			0		other	0
+s1504	309	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	901240	0	1			0		other	0
+s1504	310	Sound	Syll: tu | Duration: 240	904170	0	1			0		other	0
+s1504	311	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	906532	0	1			0		other	0
+s1504	312	Sound	Syll: ro | Duration: 240	908072	0	1			0		other	0
+s1504	313	Nothing	Dial No.: 1 | Current ISI: 203 ms. | Current Pos: 609 | Previous ISI: 203 ms. | Previous Pos: 609 | ISI Diff: 0 ms. | Pos Diff: 0	910432	0	1			0		other	0
+s1504	314	Sound	Syll: ki | Duration: 240	912462	0	1			0		other	0
+s1504	315	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	914833	0	1			0		other	0
+s1504	316	Sound	Syll: se | Duration: 240	917763	0	1			0		other	0
+s1504	317	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	920133	0	1			0		other	0
+s1504	318	Sound	Syll: za | Duration: 240	921673	0	1			0		other	0
+s1504	319	Nothing	Dial No.: 1 | Current ISI: 203 ms. | Current Pos: 609 | Previous ISI: 203 ms. | Previous Pos: 609 | ISI Diff: 0 ms. | Pos Diff: 0	924033	0	1			0		other	0
+s1504	320	Sound	Syll: be | Duration: 245	926063	0	1			0		other	0
+s1504	321	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	928534	0	1			0		other	0
+s1504	322	Sound	Syll: tu | Duration: 240	931464	0	1			0		other	0
+s1504	323	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	933833	0	1			0		other	0
+s1504	324	Sound	Syll: ro | Duration: 240	935373	0	1			0		other	0
+s1504	325	Nothing	Dial No.: 1 | Current ISI: 176 ms. | Current Pos: 529 | Previous ISI: 203 ms. | Previous Pos: 609 | ISI Diff: -27 ms. | Pos Diff: -80	937734	0	1			0		other	0
+s1504	326	Sound	Syll: ki | Duration: 240	939494	0	1			0		other	0
+s1504	327	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	941834	0	1			0		other	0
+s1504	328	Sound	Syll: se | Duration: 240	944764	0	1			0		other	0
+s1504	329	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	947134	0	1			0		other	0
+s1504	330	Sound	Syll: nu | Duration: 240	948674	0	1			0		other	0
+s1504	331	Nothing	Dial No.: 1 | Current ISI: 176 ms. | Current Pos: 529 | Previous ISI: 176 ms. | Previous Pos: 529 | ISI Diff: 0 ms. | Pos Diff: 0	951033	0	1			0		other	0
+s1504	332	Sound	Syll: ga | Duration: 240	952793	0	1			0		other	0
+s1504	333	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	955135	0	1			0		other	0
+s1504	334	Sound	Syll: di | Duration: 240	958065	0	1			0		other	0
+s1504	335	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	960483	0	1			0		other	0
+s1504	336	Sound	Syll: mi | Duration: 240	962023	0	2			0		other	0
+s1504	337	Nothing	Dial No.: 1 | Current ISI: 226 ms. | Current Pos: 679 | Previous ISI: 176 ms. | Previous Pos: 529 | ISI Diff: 50 ms. | Pos Diff: 150	964386	0	1			0		other	0
+s1504	338	Sound	Syll: po | Duration: 240	966646	0	1			0		other	0
+s1504	339	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	969043	0	1			0		other	0
+s1504	340	Sound	Syll: la | Duration: 240	971973	0	1			0		other	0
+s1504	341	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	974344	0	1			0		other	0
+s1504	342	Sound	Syll: nu | Duration: 240	975884	0	1			0		other	0
+s1504	343	Nothing	Dial No.: 1 | Current ISI: 269 ms. | Current Pos: 809 | Previous ISI: 269 ms. | Previous Pos: 809 | ISI Diff: 0 ms. | Pos Diff: 0	978243	0	1			0		other	0
+s1504	344	Sound	Syll: ga | Duration: 240	980933	0	1			0		other	0
+s1504	345	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	983343	0	1			0		other	0
+s1504	346	Sound	Syll: di | Duration: 240	986273	0	1			0		other	0
+s1504	347	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	988646	0	1			0		other	0
+s1504	348	Sound	Syll: ro | Duration: 240	990186	0	1			0		other	0
+s1504	349	Nothing	Dial No.: 1 | Current ISI: 269 ms. | Current Pos: 809 | Previous ISI: 269 ms. | Previous Pos: 809 | ISI Diff: 0 ms. | Pos Diff: 0	992545	0	1			0		other	0
+s1504	350	Sound	Syll: ki | Duration: 240	995235	0	1			0		other	0
+s1504	351	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	997643	0	1			0		other	0
+s1504	352	Sound	Syll: se | Duration: 240	1000573	0	1			0		other	0
+s1504	353	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	1002943	0	1			0		other	0
+s1504	354	Sound	Syll: za | Duration: 240	1004483	0	1			0		other	0
+s1504	355	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1006842	0	1			0		other	0
+s1504	356	Sound	Syll: be | Duration: 245	1009672	0	1			0		other	0
+s1504	357	Nothing	Dial No.: 2 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	1012148	0	1			0		other	0
+s1504	358	Sound	Syll: tu | Duration: 240	1015078	0	1			0		other	0
+s1504	359	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	1017436	0	1			0		other	0
+s1504	360	Sound	Syll: mi | Duration: 240	1018976	0	2			0		other	0
+s1504	361	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1021336	0	1			0		other	0
+s1504	362	Sound	Syll: po | Duration: 240	1024166	0	1			0		other	0
+s1504	363	Nothing	Dial No.: 2 | Current ISI: 316 ms. | Current Pos: 949 | Previous ISI: 316 ms. | Previous Pos: 949 | ISI Diff: 0 ms. | Pos Diff: 0	1026536	0	1			0		other	0
+s1504	364	Sound	Syll: la | Duration: 240	1029696	0	1			0		other	0
+s1504	365	Nothing	Dial No.: 3 | Current ISI: 154 ms. | Current Pos: 462 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 0 ms. | Pos Diff: 0	1032037	0	1			0		other	0
+s1504	366	Sound	Syll: ro | Duration: 240	1033577	0	1			0		other	0
+s1504	367	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1035936	0	1			0		other	0
+s1504	368	Sound	Syll: ki | Duration: 240	1038766	0	1			0		other	0
+s1504	369	Nothing	Dial No.: 2 | Current ISI: 336 ms. | Current Pos: 1009 | Previous ISI: 336 ms. | Previous Pos: 1009 | ISI Diff: 0 ms. | Pos Diff: 0	1041137	0	1			0		other	0
+s1504	370	Sound	Syll: se | Duration: 240	1044497	0	2			0		other	0
+s1504	371	Nothing	Dial No.: 3 | Current ISI: 187 ms. | Current Pos: 562 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: 33 ms. | Pos Diff: 100	1046837	0	1			0		other	0
+s1504	372	Sound	Syll: mi | Duration: 240	1048707	0	1			0		other	0
+s1504	373	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1051037	0	1			0		other	0
+s1504	374	Sound	Syll: po | Duration: 240	1053867	0	1			0		other	0
+s1504	375	Nothing	Dial No.: 2 | Current ISI: 336 ms. | Current Pos: 1009 | Previous ISI: 336 ms. | Previous Pos: 1009 | ISI Diff: 0 ms. | Pos Diff: 0	1056237	0	1			0		other	0
+s1504	376	Sound	Syll: la | Duration: 240	1059597	0	1			0		other	0
+s1504	377	Nothing	Dial No.: 3 | Current ISI: 187 ms. | Current Pos: 562 | Previous ISI: 187 ms. | Previous Pos: 562 | ISI Diff: 0 ms. | Pos Diff: 0	1061937	0	1			0		other	0
+s1504	378	Sound	Syll: nu | Duration: 240	1063807	0	1			0		other	0
+s1504	379	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1066138	0	1			0		other	0
+s1504	380	Sound	Syll: ga | Duration: 240	1068968	0	2			0		other	0
+s1504	381	Nothing	Dial No.: 2 | Current ISI: 336 ms. | Current Pos: 1009 | Previous ISI: 336 ms. | Previous Pos: 1009 | ISI Diff: 0 ms. | Pos Diff: 0	1071338	0	1			0		other	0
+s1504	382	Sound	Syll: di | Duration: 240	1074698	0	1			0		other	0
+s1504	383	Nothing	Dial No.: 3 | Current ISI: 204 ms. | Current Pos: 612 | Previous ISI: 204 ms. | Previous Pos: 612 | ISI Diff: 0 ms. | Pos Diff: 0	1077045	0	1			0		other	0
+s1504	384	Sound	Syll: mi | Duration: 240	1079085	0	1			0		other	0
+s1504	385	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1081444	0	1			0		other	0
+s1504	386	Sound	Syll: po | Duration: 240	1084274	0	1			0		other	0
+s1504	387	Nothing	Dial No.: 2 | Current ISI: 336 ms. | Current Pos: 1009 | Previous ISI: 336 ms. | Previous Pos: 1009 | ISI Diff: 0 ms. | Pos Diff: 0	1086647	0	1			0		other	0
+s1504	388	Sound	Syll: la | Duration: 240	1090007	0	1			0		other	0
+s1504	389	Nothing	Dial No.: 3 | Current ISI: 204 ms. | Current Pos: 612 | Previous ISI: 204 ms. | Previous Pos: 612 | ISI Diff: 0 ms. | Pos Diff: 0	1092338	0	1			0		other	0
+s1504	390	Sound	Syll: za | Duration: 240	1094378	0	1			0		other	0
+s1504	391	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1096739	0	1			0		other	0
+s1504	392	Sound	Syll: be | Duration: 245	1099569	0	1			0		other	0
+s1504	393	Nothing	Dial No.: 2 | Current ISI: 336 ms. | Current Pos: 1009 | Previous ISI: 336 ms. | Previous Pos: 1009 | ISI Diff: 0 ms. | Pos Diff: 0	1102039	0	1			0		other	0
+s1504	394	Sound	Syll: tu | Duration: 240	1105399	0	2			0		other	0
+s1504	395	Nothing	Dial No.: 3 | Current ISI: 110 ms. | Current Pos: 332 | Previous ISI: 154 ms. | Previous Pos: 462 | ISI Diff: -44 ms. | Pos Diff: -130	1107751	0	1			0		other	0
+s1504	396	Sound	Syll: ro | Duration: 240	1108851	0	1			0		other	0
+s1504	397	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1111245	0	1			0		other	0
+s1504	398	Sound	Syll: ki | Duration: 240	1114075	0	1			0		other	0
+s1504	399	Nothing	Dial No.: 2 | Current ISI: 336 ms. | Current Pos: 1009 | Previous ISI: 336 ms. | Previous Pos: 1009 | ISI Diff: 0 ms. | Pos Diff: 0	1116448	0	1			0		other	0
+s1504	400	Sound	Syll: se | Duration: 240	1119808	0	2			0		other	0
+s1504	401	Nothing	Dial No.: 3 | Current ISI: 74 ms. | Current Pos: 222 | Previous ISI: 74 ms. | Previous Pos: 222 | ISI Diff: 0 ms. | Pos Diff: 0	1122147	0	1			0		other	0
+s1504	402	Sound	Syll: nu | Duration: 240	1122887	0	1			0		other	0
+s1504	403	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1125247	0	1			0		other	0
+s1504	404	Sound	Syll: ga | Duration: 240	1128077	0	1			0		other	0
+s1504	405	Nothing	Dial No.: 2 | Current ISI: 336 ms. | Current Pos: 1009 | Previous ISI: 336 ms. | Previous Pos: 1009 | ISI Diff: 0 ms. | Pos Diff: 0	1130451	0	1			0		other	0
+s1504	406	Sound	Syll: di | Duration: 240	1133811	0	1			0		other	0
+s1504	407	Nothing	Dial No.: 3 | Current ISI: 74 ms. | Current Pos: 222 | Previous ISI: 74 ms. | Previous Pos: 222 | ISI Diff: 0 ms. | Pos Diff: 0	1136140	0	1			0		other	0
+s1504	408	Sound	Syll: ro | Duration: 240	1136880	0	1			0		other	0
+s1504	409	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1139239	0	1			0		other	0
+s1504	410	Sound	Syll: ki | Duration: 240	1142069	0	1			0		other	0
+s1504	411	Nothing	Dial No.: 2 | Current ISI: 336 ms. | Current Pos: 1009 | Previous ISI: 336 ms. | Previous Pos: 1009 | ISI Diff: 0 ms. | Pos Diff: 0	1144440	0	1			0		other	0
+s1504	412	Sound	Syll: se | Duration: 240	1147800	0	1			0		other	0
+s1504	413	Nothing	Dial No.: 3 | Current ISI: 54 ms. | Current Pos: 162 | Previous ISI: 67 ms. | Previous Pos: 202 | ISI Diff: -13 ms. | Pos Diff: -40	1150140	0	1			0		other	0
+s1504	414	Sound	Syll: nu | Duration: 240	1150680	0	1			0		other	0
+s1504	415	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1153040	0	1			0		other	0
+s1504	416	Sound	Syll: ga | Duration: 240	1155870	0	1			0		other	0
+s1504	417	Nothing	Dial No.: 2 | Current ISI: 336 ms. | Current Pos: 1009 | Previous ISI: 336 ms. | Previous Pos: 1009 | ISI Diff: 0 ms. | Pos Diff: 0	1158240	0	1			0		other	0
+s1504	418	Sound	Syll: di | Duration: 240	1161600	0	1			0		other	0
+s1504	419	Nothing	Dial No.: 3 | Current ISI: 54 ms. | Current Pos: 162 | Previous ISI: 54 ms. | Previous Pos: 162 | ISI Diff: 0 ms. | Pos Diff: 0	1163951	0	1			0		other	0
+s1504	420	Sound	Syll: za | Duration: 240	1164491	0	1			0		other	0
+s1504	421	Nothing	Dial No.: 1 | Current ISI: 283 ms. | Current Pos: 849 | Previous ISI: 283 ms. | Previous Pos: 849 | ISI Diff: 0 ms. | Pos Diff: 0	1166847	0	1			0		other	0
+s1504	421	Response	1	1168732	1885	1
+s1504	422	Sound	Syll: be | Duration: 245	1169677	0	1			0		other	0
+s1504	423	Picture	Block #1 | Trial #4 | task_struct_seq_A_4.txt | Init. Dial Pos 1: 879 | Init. ISI 1: 293 | Init. Dial Pos 2: 1491 | Init. ISI 2: 497 | Init. Dial Pos 3: 627 | Init. ISI 3: 209	1172772	0	1	9831	2	0	next	other	0
+s1504	423	Response	1	1182572	9800	1
+s1504	424	Picture	fixation	1182603	0	1	585886	3	0	next	other	0
+s1504	425	Sound	Syll: be	1182604	0	1			0		other	0
+s1504	426	Nothing	Dial No.: 3 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	1185050	0	1			0		other	0
+s1504	427	Sound	Syll: tu | Duration: 240	1187140	0	1			0		other	0
+s1504	428	Nothing	Dial No.: 2 | Current ISI: 497 ms. | Current Pos: 1491 | Previous ISI: 497 ms. | Previous Pos: 1491 | ISI Diff: 0 ms. | Pos Diff: 0	1189603	0	1			0		other	0
+s1504	429	Sound	Syll: mi | Duration: 240	1194573	0	2			0		other	0
+s1504	430	Nothing	Dial No.: 1 | Current ISI: 293 ms. | Current Pos: 879 | Previous ISI: 293 ms. | Previous Pos: 879 | ISI Diff: 0 ms. | Pos Diff: 0	1196950	0	1			0		other	0
+s1504	431	Sound	Syll: po | Duration: 240	1199880	0	2			0		other	0
+s1504	432	Nothing	Dial No.: 3 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1202251	0	1			0		other	0
+s1504	433	Sound	Syll: la | Duration: 240	1204341	0	1			0		other	0
+s1504	434	Nothing	Dial No.: 2 | Current ISI: 497 ms. | Current Pos: 1491 | Previous ISI: 497 ms. | Previous Pos: 1491 | ISI Diff: 0 ms. | Pos Diff: 0	1206742	0	1			0		other	0
+s1504	435	Sound	Syll: za | Duration: 240	1211712	0	1			0		other	0
+s1504	436	Nothing	Dial No.: 1 | Current ISI: 379 ms. | Current Pos: 1139 | Previous ISI: 379 ms. | Previous Pos: 1139 | ISI Diff: 0 ms. | Pos Diff: 0	1214042	0	1			0		other	0
+s1504	437	Sound	Syll: be | Duration: 245	1217832	0	1			0		other	0
+s1504	438	Nothing	Dial No.: 3 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1220242	0	1			0		other	0
+s1504	439	Sound	Syll: tu | Duration: 240	1222332	0	1			0		other	0
+s1504	440	Nothing	Dial No.: 2 | Current ISI: 497 ms. | Current Pos: 1491 | Previous ISI: 497 ms. | Previous Pos: 1491 | ISI Diff: 0 ms. | Pos Diff: 0	1224651	0	1			0		other	0
+s1504	441	Sound	Syll: nu | Duration: 240	1229621	0	1			0		other	0
+s1504	442	Nothing	Dial No.: 1 | Current ISI: 423 ms. | Current Pos: 1269 | Previous ISI: 406 ms. | Previous Pos: 1219 | ISI Diff: 17 ms. | Pos Diff: 50	1231952	0	1			0		other	0
+s1504	443	Sound	Syll: ga | Duration: 240	1236182	0	1			0		other	0
+s1504	444	Nothing	Dial No.: 3 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1238552	0	1			0		other	0
+s1504	445	Sound	Syll: di | Duration: 240	1240642	0	1			0		other	0
+s1504	446	Nothing	Dial No.: 2 | Current ISI: 497 ms. | Current Pos: 1491 | Previous ISI: 497 ms. | Previous Pos: 1491 | ISI Diff: 0 ms. | Pos Diff: 0	1243092	0	1			0		other	0
+s1504	447	Sound	Syll: ro | Duration: 240	1248062	0	2			0		other	0
+s1504	448	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 426 ms. | Previous Pos: 1279 | ISI Diff: 20 ms. | Pos Diff: 60	1250498	0	1			0		other	0
+s1504	449	Sound	Syll: ki | Duration: 240	1254958	0	1			0		other	0
+s1504	450	Nothing	Dial No.: 3 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1257354	0	1			0		other	0
+s1504	451	Sound	Syll: se | Duration: 240	1259444	0	1			0		other	0
+s1504	452	Nothing	Dial No.: 2 | Current ISI: 497 ms. | Current Pos: 1491 | Previous ISI: 497 ms. | Previous Pos: 1491 | ISI Diff: 0 ms. | Pos Diff: 0	1261843	0	1			0		other	0
+s1504	453	Sound	Syll: mi | Duration: 240	1266813	0	2			0		other	0
+s1504	454	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1269144	0	1			0		other	0
+s1504	455	Sound	Syll: po | Duration: 240	1273604	0	1			0		other	0
+s1504	456	Nothing	Dial No.: 3 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1275944	0	1			0		other	0
+s1504	457	Sound	Syll: la | Duration: 240	1278034	0	1			0		other	0
+s1504	458	Nothing	Dial No.: 2 | Current ISI: 437 ms. | Current Pos: 1311 | Previous ISI: 437 ms. | Previous Pos: 1311 | ISI Diff: 0 ms. | Pos Diff: 0	1280344	0	1			0		other	0
+s1504	459	Sound	Syll: nu | Duration: 240	1284714	0	2			0		other	0
+s1504	460	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1287099	0	1			0		other	0
+s1504	461	Sound	Syll: ga | Duration: 240	1291559	0	1			0		other	0
+s1504	462	Nothing	Dial No.: 3 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1293991	0	1			0		other	0
+s1504	463	Sound	Syll: di | Duration: 240	1296081	0	1			0		other	0
+s1504	464	Nothing	Dial No.: 2 | Current ISI: 407 ms. | Current Pos: 1221 | Previous ISI: 407 ms. | Previous Pos: 1221 | ISI Diff: 0 ms. | Pos Diff: 0	1298494	0	1			0		other	0
+s1504	465	Sound	Syll: mi | Duration: 240	1302564	0	1			0		other	0
+s1504	466	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1305000	0	1			0		other	0
+s1504	467	Sound	Syll: po | Duration: 240	1309460	0	2			0		other	0
+s1504	468	Nothing	Dial No.: 3 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1311889	0	1			0		other	0
+s1504	469	Sound	Syll: la | Duration: 240	1313979	0	1			0		other	0
+s1504	470	Nothing	Dial No.: 2 | Current ISI: 373 ms. | Current Pos: 1121 | Previous ISI: 373 ms. | Previous Pos: 1121 | ISI Diff: 0 ms. | Pos Diff: 0	1316389	0	1			0		other	0
+s1504	471	Sound	Syll: ro | Duration: 240	1320119	0	1			0		other	0
+s1504	472	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1322493	0	1			0		other	0
+s1504	473	Sound	Syll: ki | Duration: 240	1326953	0	2			0		other	0
+s1504	474	Nothing	Dial No.: 3 | Current ISI: 249 ms. | Current Pos: 747 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 40 ms. | Pos Diff: 120	1329396	0	1			0		other	0
+s1504	475	Sound	Syll: se | Duration: 240	1331886	0	1			0		other	0
+s1504	476	Nothing	Dial No.: 2 | Current ISI: 373 ms. | Current Pos: 1121 | Previous ISI: 373 ms. | Previous Pos: 1121 | ISI Diff: 0 ms. | Pos Diff: 0	1334298	0	1			0		other	0
+s1504	477	Sound	Syll: za | Duration: 240	1338028	0	2			0		other	0
+s1504	478	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1340406	0	1			0		other	0
+s1504	479	Sound	Syll: be | Duration: 245	1344866	0	2			0		other	0
+s1504	480	Nothing	Dial No.: 3 | Current ISI: 285 ms. | Current Pos: 857 | Previous ISI: 265 ms. | Previous Pos: 797 | ISI Diff: 20 ms. | Pos Diff: 60	1347399	0	1			0		other	0
+s1504	481	Sound	Syll: tu | Duration: 240	1350249	0	2			0		other	0
+s1504	482	Nothing	Dial No.: 2 | Current ISI: 373 ms. | Current Pos: 1121 | Previous ISI: 373 ms. | Previous Pos: 1121 | ISI Diff: 0 ms. | Pos Diff: 0	1352699	0	1			0		other	0
+s1504	483	Sound	Syll: ro | Duration: 240	1356429	0	2			0		other	0
+s1504	484	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1358794	0	1			0		other	0
+s1504	485	Sound	Syll: ki | Duration: 240	1363254	0	2			0		other	0
+s1504	486	Nothing	Dial No.: 3 | Current ISI: 212 ms. | Current Pos: 637 | Previous ISI: 249 ms. | Previous Pos: 747 | ISI Diff: -37 ms. | Pos Diff: -110	1365691	0	1			0		other	0
+s1504	487	Sound	Syll: se | Duration: 240	1367811	0	1			0		other	0
+s1504	488	Nothing	Dial No.: 2 | Current ISI: 373 ms. | Current Pos: 1121 | Previous ISI: 373 ms. | Previous Pos: 1121 | ISI Diff: 0 ms. | Pos Diff: 0	1370192	0	1			0		other	0
+s1504	489	Sound	Syll: za | Duration: 240	1373922	0	1			0		other	0
+s1504	490	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1376293	0	1			0		other	0
+s1504	491	Sound	Syll: be | Duration: 245	1380753	0	1			0		other	0
+s1504	492	Nothing	Dial No.: 3 | Current ISI: 212 ms. | Current Pos: 637 | Previous ISI: 212 ms. | Previous Pos: 637 | ISI Diff: 0 ms. | Pos Diff: 0	1383299	0	1			0		other	0
+s1504	493	Sound	Syll: tu | Duration: 240	1385419	0	1			0		other	0
+s1504	494	Nothing	Dial No.: 2 | Current ISI: 373 ms. | Current Pos: 1121 | Previous ISI: 373 ms. | Previous Pos: 1121 | ISI Diff: 0 ms. | Pos Diff: 0	1387747	0	1			0		other	0
+s1504	495	Sound	Syll: ro | Duration: 240	1391477	0	1			0		other	0
+s1504	496	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1393848	0	1			0		other	0
+s1504	497	Sound	Syll: ki | Duration: 240	1398308	0	2			0		other	0
+s1504	498	Nothing	Dial No.: 3 | Current ISI: 159 ms. | Current Pos: 477 | Previous ISI: 192 ms. | Previous Pos: 577 | ISI Diff: -33 ms. | Pos Diff: -100	1400648	0	1			0		other	0
+s1504	499	Sound	Syll: se | Duration: 240	1402238	0	1			0		other	0
+s1504	500	Nothing	Dial No.: 2 | Current ISI: 373 ms. | Current Pos: 1121 | Previous ISI: 373 ms. | Previous Pos: 1121 | ISI Diff: 0 ms. | Pos Diff: 0	1404598	0	1			0		other	0
+s1504	501	Sound	Syll: mi | Duration: 240	1408328	0	1			0		other	0
+s1504	502	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1410694	0	1			0		other	0
+s1504	503	Sound	Syll: po | Duration: 240	1415154	0	1			0		other	0
+s1504	504	Nothing	Dial No.: 3 | Current ISI: 135 ms. | Current Pos: 407 | Previous ISI: 139 ms. | Previous Pos: 417 | ISI Diff: -4 ms. | Pos Diff: -10	1417596	0	1			0		other	0
+s1504	505	Sound	Syll: la | Duration: 240	1418946	0	1			0		other	0
+s1504	506	Nothing	Dial No.: 2 | Current ISI: 373 ms. | Current Pos: 1121 | Previous ISI: 373 ms. | Previous Pos: 1121 | ISI Diff: 0 ms. | Pos Diff: 0	1421348	0	1			0		other	0
+s1504	507	Sound	Syll: ro | Duration: 240	1425078	0	2			0		other	0
+s1504	508	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1427448	0	1			0		other	0
+s1504	509	Sound	Syll: ki | Duration: 240	1431908	0	1			0		other	0
+s1504	510	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1434248	0	1			0		other	0
+s1504	511	Sound	Syll: se | Duration: 240	1435398	0	1			0		other	0
+s1504	512	Nothing	Dial No.: 2 | Current ISI: 373 ms. | Current Pos: 1121 | Previous ISI: 373 ms. | Previous Pos: 1121 | ISI Diff: 0 ms. | Pos Diff: 0	1437748	0	1			0		other	0
+s1504	513	Sound	Syll: mi | Duration: 240	1441478	0	1			0		other	0
+s1504	514	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1443848	0	1			0		other	0
+s1504	515	Sound	Syll: po | Duration: 240	1448308	0	1			0		other	0
+s1504	516	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1450649	0	1			0		other	0
+s1504	517	Sound	Syll: la | Duration: 240	1451799	0	1			0		other	0
+s1504	518	Nothing	Dial No.: 2 | Current ISI: 413 ms. | Current Pos: 1241 | Previous ISI: 390 ms. | Previous Pos: 1171 | ISI Diff: 23 ms. | Pos Diff: 70	1454196	0	1			0		other	0
+s1504	519	Sound	Syll: nu | Duration: 240	1458326	0	1			0		other	0
+s1504	520	Nothing	Dial No.: 1 | Current ISI: 446 ms. | Current Pos: 1339 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 0 ms. | Pos Diff: 0	1460701	0	1			0		other	0
+s1504	521	Sound	Syll: ga | Duration: 240	1465161	0	2			0		other	0
+s1504	522	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1467602	0	1			0		other	0
+s1504	523	Sound	Syll: di | Duration: 240	1468752	0	1			0		other	0
+s1504	524	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1471158	0	1			0		other	0
+s1504	525	Sound	Syll: za | Duration: 240	1475328	0	1			0		other	0
+s1504	526	Nothing	Dial No.: 1 | Current ISI: 469 ms. | Current Pos: 1409 | Previous ISI: 469 ms. | Previous Pos: 1409 | ISI Diff: 0 ms. | Pos Diff: 0	1477657	0	1			0		other	0
+s1504	527	Sound	Syll: be | Duration: 245	1482347	0	2			0		other	0
+s1504	528	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1484856	0	1			0		other	0
+s1504	529	Sound	Syll: tu | Duration: 240	1486006	0	1			0		other	0
+s1504	530	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1488350	0	1			0		other	0
+s1504	531	Sound	Syll: mi | Duration: 240	1492520	0	1			0		other	0
+s1504	532	Nothing	Dial No.: 1 | Current ISI: 486 ms. | Current Pos: 1459 | Previous ISI: 486 ms. | Previous Pos: 1459 | ISI Diff: 0 ms. | Pos Diff: 0	1494850	0	1			0		other	0
+s1504	533	Sound	Syll: po | Duration: 240	1499710	0	2			0		other	0
+s1504	534	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1502051	0	1			0		other	0
+s1504	535	Sound	Syll: la | Duration: 240	1503201	0	1			0		other	0
+s1504	536	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1505550	0	1			0		other	0
+s1504	537	Sound	Syll: za | Duration: 240	1509720	0	1			0		other	0
+s1504	538	Nothing	Dial No.: 1 | Current ISI: 503 ms. | Current Pos: 1509 | Previous ISI: 503 ms. | Previous Pos: 1509 | ISI Diff: 0 ms. | Pos Diff: 0	1512051	0	1			0		other	0
+s1504	539	Sound	Syll: be | Duration: 245	1517081	0	1			0		other	0
+s1504	540	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1519551	0	1			0		other	0
+s1504	541	Sound	Syll: tu | Duration: 240	1520701	0	1			0		other	0
+s1504	542	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1523060	0	1			0		other	0
+s1504	543	Sound	Syll: ro | Duration: 240	1527230	0	1			0		other	0
+s1504	544	Nothing	Dial No.: 1 | Current ISI: 503 ms. | Current Pos: 1509 | Previous ISI: 503 ms. | Previous Pos: 1509 | ISI Diff: 0 ms. | Pos Diff: 0	1529558	0	1			0		other	0
+s1504	545	Sound	Syll: ki | Duration: 240	1534588	0	2			0		other	0
+s1504	546	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1536960	0	1			0		other	0
+s1504	547	Sound	Syll: se | Duration: 240	1538110	0	1			0		other	0
+s1504	548	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1540452	0	1			0		other	0
+s1504	549	Sound	Syll: nu | Duration: 240	1544622	0	1			0		other	0
+s1504	550	Nothing	Dial No.: 1 | Current ISI: 556 ms. | Current Pos: 1669 | Previous ISI: 526 ms. | Previous Pos: 1579 | ISI Diff: 30 ms. | Pos Diff: 90	1546953	0	1			0		other	0
+s1504	551	Sound	Syll: ga | Duration: 240	1552513	0	1			0		other	0
+s1504	552	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1554852	0	1			0		other	0
+s1504	553	Sound	Syll: di | Duration: 240	1556002	0	1			0		other	0
+s1504	554	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1558353	0	1			0		other	0
+s1504	555	Sound	Syll: za | Duration: 240	1562523	0	1			0		other	0
+s1504	556	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	1564852	0	1			0		other	0
+s1504	557	Sound	Syll: be | Duration: 245	1570852	0	1			0		other	0
+s1504	558	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1573353	0	1			0		other	0
+s1504	559	Sound	Syll: tu | Duration: 240	1574503	0	1			0		other	0
+s1504	560	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1576860	0	1			0		other	0
+s1504	561	Sound	Syll: nu | Duration: 240	1581030	0	2			0		other	0
+s1504	562	Nothing	Dial No.: 1 | Current ISI: 423 ms. | Current Pos: 1270 | Previous ISI: 500 ms. | Previous Pos: 1500 | ISI Diff: -77 ms. | Pos Diff: -230	1583364	0	1			0		other	0
+s1504	563	Sound	Syll: ga | Duration: 240	1587594	0	2			0		other	0
+s1504	564	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1589964	0	1			0		other	0
+s1504	565	Sound	Syll: di | Duration: 240	1591114	0	2			0		other	0
+s1504	566	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1593453	0	1			0		other	0
+s1504	567	Sound	Syll: ro | Duration: 240	1597623	0	2			0		other	0
+s1504	568	Nothing	Dial No.: 1 | Current ISI: 286 ms. | Current Pos: 860 | Previous ISI: 360 ms. | Previous Pos: 1080 | ISI Diff: -74 ms. | Pos Diff: -220	1599954	0	1			0		other	0
+s1504	569	Sound	Syll: ki | Duration: 240	1602814	0	1			0		other	0
+s1504	570	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1605154	0	1			0		other	0
+s1504	571	Sound	Syll: se | Duration: 240	1606304	0	2			0		other	0
+s1504	572	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1608662	0	1			0		other	0
+s1504	573	Sound	Syll: za | Duration: 240	1612832	0	2			0		other	0
+s1504	574	Nothing	Dial No.: 1 | Current ISI: 170 ms. | Current Pos: 510 | Previous ISI: 223 ms. | Previous Pos: 670 | ISI Diff: -53 ms. | Pos Diff: -160	1615165	0	1			0		other	0
+s1504	575	Sound	Syll: be | Duration: 245	1616865	0	2			0		other	0
+s1504	576	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1619361	0	1			0		other	0
+s1504	577	Sound	Syll: tu | Duration: 240	1620511	0	1			0		other	0
+s1504	578	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1622855	0	1			0		other	0
+s1504	579	Sound	Syll: nu | Duration: 240	1627025	0	1			0		other	0
+s1504	580	Nothing	Dial No.: 1 | Current ISI: 80 ms. | Current Pos: 240 | Previous ISI: 80 ms. | Previous Pos: 240 | ISI Diff: 0 ms. | Pos Diff: 0	1629354	0	1			0		other	0
+s1504	581	Sound	Syll: ga | Duration: 240	1630154	0	1			0		other	0
+s1504	582	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1632555	0	1			0		other	0
+s1504	583	Sound	Syll: di | Duration: 240	1633705	0	1			0		other	0
+s1504	584	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1636098	0	1			0		other	0
+s1504	585	Sound	Syll: mi | Duration: 240	1640268	0	2			0		other	0
+s1504	586	Nothing	Dial No.: 1 | Current ISI: 56 ms. | Current Pos: 170 | Previous ISI: 56 ms. | Previous Pos: 170 | ISI Diff: 0 ms. | Pos Diff: 0	1642711	0	1			0		other	0
+s1504	587	Sound	Syll: po | Duration: 240	1643271	0	1			0		other	0
+s1504	588	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1645662	0	1			0		other	0
+s1504	589	Sound	Syll: la | Duration: 240	1646812	0	1			0		other	0
+s1504	590	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1649161	0	1			0		other	0
+s1504	591	Sound	Syll: ro | Duration: 240	1653331	0	1			0		other	0
+s1504	592	Nothing	Dial No.: 1 | Current ISI: 33 ms. | Current Pos: 100 | Previous ISI: 36 ms. | Previous Pos: 110 | ISI Diff: -3 ms. | Pos Diff: -10	1655665	0	1			0		other	0
+s1504	593	Sound	Syll: ki | Duration: 240	1655995	0	1			0		other	0
+s1504	594	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1658367	0	1			0		other	0
+s1504	595	Sound	Syll: se | Duration: 240	1659517	0	1			0		other	0
+s1504	596	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1661856	0	1			0		other	0
+s1504	597	Sound	Syll: za | Duration: 240	1666026	0	1			0		other	0
+s1504	598	Nothing	Dial No.: 1 | Current ISI: 13 ms. | Current Pos: 40 | Previous ISI: 13 ms. | Previous Pos: 40 | ISI Diff: 0 ms. | Pos Diff: 0	1668356	0	1			0		other	0
+s1504	599	Sound	Syll: be | Duration: 245	1668486	0	1			0		other	0
+s1504	600	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1670955	0	1			0		other	0
+s1504	601	Sound	Syll: tu | Duration: 240	1672105	0	1			0		other	0
+s1504	602	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1674456	0	1			0		other	0
+s1504	603	Sound	Syll: nu | Duration: 240	1678626	0	2			0		other	0
+s1504	604	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 13 ms. | Previous Pos: 40 | ISI Diff: -13 ms. | Pos Diff: -40	1680956	0	1			0		other	0
+s1504	605	Sound	Syll: ga | Duration: 240	1680966	0	1			0		other	0
+s1504	606	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1683356	0	1			0		other	0
+s1504	607	Sound	Syll: di | Duration: 240	1684506	0	1			0		other	0
+s1504	608	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1686856	0	1			0		other	0
+s1504	609	Sound	Syll: ro | Duration: 240	1691026	0	1			0		other	0
+s1504	610	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	1693373	0	1			0		other	0
+s1504	611	Sound	Syll: ki | Duration: 240	1693383	0	1			0		other	0
+s1504	612	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1695756	0	1			0		other	0
+s1504	613	Sound	Syll: se | Duration: 240	1696906	0	1			0		other	0
+s1504	614	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1699257	0	1			0		other	0
+s1504	615	Sound	Syll: mi | Duration: 240	1703427	0	2			0		other	0
+s1504	616	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	1705758	0	1			0		other	0
+s1504	617	Sound	Syll: po | Duration: 240	1705768	0	1			0		other	0
+s1504	618	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1708157	0	1			0		other	0
+s1504	619	Sound	Syll: la | Duration: 240	1709307	0	1			0		other	0
+s1504	620	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1711673	0	1			0		other	0
+s1504	621	Sound	Syll: za | Duration: 240	1715843	0	1			0		other	0
+s1504	622	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	1718167	0	1			0		other	0
+s1504	623	Sound	Syll: be | Duration: 245	1718177	0	1			0		other	0
+s1504	624	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1720665	0	1			0		other	0
+s1504	625	Sound	Syll: tu | Duration: 240	1721815	0	1			0		other	0
+s1504	626	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1724164	0	1			0		other	0
+s1504	627	Sound	Syll: nu | Duration: 240	1728334	0	1			0		other	0
+s1504	628	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	1730665	0	1			0		other	0
+s1504	629	Sound	Syll: ga | Duration: 240	1730675	0	1			0		other	0
+s1504	630	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1733064	0	1			0		other	0
+s1504	631	Sound	Syll: di | Duration: 240	1734214	0	1			0		other	0
+s1504	632	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1736564	0	1			0		other	0
+s1504	633	Sound	Syll: mi | Duration: 240	1740734	0	1			0		other	0
+s1504	634	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	1743064	0	1			0		other	0
+s1504	635	Sound	Syll: po | Duration: 240	1743074	0	1			0		other	0
+s1504	636	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1745457	0	1			0		other	0
+s1504	637	Sound	Syll: la | Duration: 240	1746607	0	1			0		other	0
+s1504	638	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1748958	0	1			0		other	0
+s1504	639	Sound	Syll: nu | Duration: 240	1753128	0	1			0		other	0
+s1504	640	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	1755458	0	1			0		other	0
+s1504	641	Sound	Syll: ga | Duration: 240	1755468	0	1			0		other	0
+s1504	642	Nothing	Dial No.: 3 | Current ISI: 115 ms. | Current Pos: 347 | Previous ISI: 115 ms. | Previous Pos: 347 | ISI Diff: 0 ms. | Pos Diff: 0	1757858	0	1			0		other	0
+s1504	643	Sound	Syll: di | Duration: 240	1759008	0	1			0		other	0
+s1504	644	Nothing	Dial No.: 2 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1761358	0	1			0		other	0
+s1504	644	Response	1	1763036	1678	1
+s1504	645	Sound	Syll: mi | Duration: 240	1765528	0	1			0		other	0
+s1504	646	Picture	Block #1 | Trial #5 | task_struct_seq_A_5.txt | Init. Dial Pos 1: 627 | Init. ISI 1: 209 | Init. Dial Pos 2: 627 | Init. ISI 2: 209 | Init. Dial Pos 3: 1491 | Init. ISI 3: 497	1768489	0	2	6166	3	0	next	other	0
+s1504	646	Response	1	1774476	5987	1
+s1504	647	Picture	fixation	1774655	0	1	285278	2	0	next	other	0
+s1504	648	Sound	Syll: po	1774656	0	1			0		other	0
+s1504	649	Nothing	Dial No.: 1 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	1777071	0	1			0		other	0
+s1504	650	Sound	Syll: la | Duration: 240	1779161	0	1			0		other	0
+s1504	651	Nothing	Dial No.: 2 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1781559	0	1			0		other	0
+s1504	652	Sound	Syll: nu | Duration: 240	1783649	0	1			0		other	0
+s1504	653	Nothing	Dial No.: 3 | Current ISI: 497 ms. | Current Pos: 1491 | Previous ISI: 497 ms. | Previous Pos: 1491 | ISI Diff: 0 ms. | Pos Diff: 0	1785959	0	1			0		other	0
+s1504	654	Sound	Syll: ga | Duration: 240	1790929	0	1			0		other	0
+s1504	655	Nothing	Dial No.: 1 | Current ISI: 199 ms. | Current Pos: 597 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: -10 ms. | Pos Diff: -30	1793260	0	1			0		other	0
+s1504	656	Sound	Syll: di | Duration: 240	1795250	0	2			0		other	0
+s1504	657	Nothing	Dial No.: 2 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1797560	0	1			0		other	0
+s1504	658	Sound	Syll: za | Duration: 240	1799650	0	1			0		other	0
+s1504	659	Nothing	Dial No.: 3 | Current ISI: 497 ms. | Current Pos: 1491 | Previous ISI: 497 ms. | Previous Pos: 1491 | ISI Diff: 0 ms. | Pos Diff: 0	1801959	0	1			0		other	0
+s1504	660	Sound	Syll: be | Duration: 245	1806929	0	2			0		other	0
+s1504	661	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 142 ms. | Previous Pos: 427 | ISI Diff: -67 ms. | Pos Diff: -200	1809360	0	1			0		other	0
+s1504	662	Sound	Syll: tu | Duration: 240	1810110	0	1			0		other	0
+s1504	663	Nothing	Dial No.: 2 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1812460	0	1			0		other	0
+s1504	664	Sound	Syll: mi | Duration: 240	1814550	0	1			0		other	0
+s1504	665	Nothing	Dial No.: 3 | Current ISI: 467 ms. | Current Pos: 1401 | Previous ISI: 497 ms. | Previous Pos: 1491 | ISI Diff: -30 ms. | Pos Diff: -90	1816860	0	1			0		other	0
+s1504	666	Sound	Syll: po | Duration: 240	1821530	0	1			0		other	0
+s1504	667	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1823861	0	1			0		other	0
+s1504	668	Sound	Syll: la | Duration: 240	1824611	0	2			0		other	0
+s1504	669	Nothing	Dial No.: 2 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1826971	0	1			0		other	0
+s1504	670	Sound	Syll: ro | Duration: 240	1829061	0	1			0		other	0
+s1504	671	Nothing	Dial No.: 3 | Current ISI: 417 ms. | Current Pos: 1251 | Previous ISI: 417 ms. | Previous Pos: 1251 | ISI Diff: 0 ms. | Pos Diff: 0	1831468	0	1			0		other	0
+s1504	672	Sound	Syll: ki | Duration: 240	1835638	0	1			0		other	0
+s1504	673	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1837971	0	1			0		other	0
+s1504	674	Sound	Syll: se | Duration: 240	1838721	0	1			0		other	0
+s1504	675	Nothing	Dial No.: 2 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1841070	0	1			0		other	0
+s1504	676	Sound	Syll: mi | Duration: 240	1843160	0	1			0		other	0
+s1504	677	Nothing	Dial No.: 3 | Current ISI: 343 ms. | Current Pos: 1031 | Previous ISI: 367 ms. | Previous Pos: 1101 | ISI Diff: -24 ms. | Pos Diff: -70	1845571	0	2			0		other	0
+s1504	678	Sound	Syll: po | Duration: 240	1849001	0	2			0		other	0
+s1504	679	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1851361	0	1			0		other	0
+s1504	680	Sound	Syll: la | Duration: 240	1852111	0	1			0		other	0
+s1504	681	Nothing	Dial No.: 2 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1854468	0	1			0		other	0
+s1504	682	Sound	Syll: za | Duration: 240	1856558	0	1			0		other	0
+s1504	683	Nothing	Dial No.: 3 | Current ISI: 297 ms. | Current Pos: 891 | Previous ISI: 297 ms. | Previous Pos: 891 | ISI Diff: 0 ms. | Pos Diff: 0	1858971	0	1			0		other	0
+s1504	684	Sound	Syll: be | Duration: 245	1861941	0	1			0		other	0
+s1504	685	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1864371	0	1			0		other	0
+s1504	686	Sound	Syll: tu | Duration: 240	1865121	0	1			0		other	0
+s1504	687	Nothing	Dial No.: 2 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1867471	0	1			0		other	0
+s1504	688	Sound	Syll: nu | Duration: 240	1869561	0	1			0		other	0
+s1504	689	Nothing	Dial No.: 3 | Current ISI: 260 ms. | Current Pos: 781 | Previous ISI: 273 ms. | Previous Pos: 821 | ISI Diff: -13 ms. | Pos Diff: -40	1871974	0	1			0		other	0
+s1504	690	Sound	Syll: ga | Duration: 240	1874574	0	2			0		other	0
+s1504	691	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1876972	0	1			0		other	0
+s1504	692	Sound	Syll: di | Duration: 240	1877722	0	1			0		other	0
+s1504	693	Nothing	Dial No.: 2 | Current ISI: 209 ms. | Current Pos: 627 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: 0 ms. | Pos Diff: 0	1880062	0	1			0		other	0
+s1504	694	Sound	Syll: mi | Duration: 240	1882152	0	2			0		other	0
+s1504	695	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 223 ms. | Previous Pos: 671 | ISI Diff: -20 ms. | Pos Diff: -60	1884462	0	1			0		other	0
+s1504	696	Sound	Syll: po | Duration: 240	1886492	0	1			0		other	0
+s1504	697	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1888873	0	1			0		other	0
+s1504	698	Sound	Syll: la | Duration: 240	1889623	0	1			0		other	0
+s1504	699	Nothing	Dial No.: 2 | Current ISI: 182 ms. | Current Pos: 547 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: -27 ms. | Pos Diff: -80	1891962	0	1			0		other	0
+s1504	700	Sound	Syll: nu | Duration: 240	1893782	0	1			0		other	0
+s1504	701	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	1896165	0	1			0		other	0
+s1504	702	Sound	Syll: ga | Duration: 240	1898195	0	2			0		other	0
+s1504	703	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1900563	0	1			0		other	0
+s1504	704	Sound	Syll: di | Duration: 240	1901313	0	1			0		other	0
+s1504	705	Nothing	Dial No.: 2 | Current ISI: 185 ms. | Current Pos: 557 | Previous ISI: 155 ms. | Previous Pos: 467 | ISI Diff: 30 ms. | Pos Diff: 90	1903663	0	1			0		other	0
+s1504	706	Sound	Syll: za | Duration: 240	1905513	0	2			0		other	0
+s1504	707	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	1907863	0	1			0		other	0
+s1504	708	Sound	Syll: be | Duration: 245	1909893	0	2			0		other	0
+s1504	709	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1912363	0	1			0		other	0
+s1504	710	Sound	Syll: tu | Duration: 240	1913113	0	1			0		other	0
+s1504	711	Nothing	Dial No.: 2 | Current ISI: 269 ms. | Current Pos: 807 | Previous ISI: 242 ms. | Previous Pos: 727 | ISI Diff: 27 ms. | Pos Diff: 80	1915463	0	1			0		other	0
+s1504	712	Sound	Syll: nu | Duration: 240	1918153	0	1			0		other	0
+s1504	713	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	1920463	0	1			0		other	0
+s1504	714	Sound	Syll: ga | Duration: 240	1922493	0	1			0		other	0
+s1504	715	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1924863	0	1			0		other	0
+s1504	716	Sound	Syll: di | Duration: 240	1925613	0	1			0		other	0
+s1504	717	Nothing	Dial No.: 2 | Current ISI: 269 ms. | Current Pos: 807 | Previous ISI: 269 ms. | Previous Pos: 807 | ISI Diff: 0 ms. | Pos Diff: 0	1927963	0	1			0		other	0
+s1504	718	Sound	Syll: za | Duration: 240	1930653	0	1			0		other	0
+s1504	719	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	1932963	0	1			0		other	0
+s1504	720	Sound	Syll: be | Duration: 245	1934993	0	1			0		other	0
+s1504	721	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1937463	0	1			0		other	0
+s1504	722	Sound	Syll: tu | Duration: 240	1938213	0	1			0		other	0
+s1504	723	Nothing	Dial No.: 2 | Current ISI: 269 ms. | Current Pos: 807 | Previous ISI: 269 ms. | Previous Pos: 807 | ISI Diff: 0 ms. | Pos Diff: 0	1940563	0	1			0		other	0
+s1504	724	Sound	Syll: nu | Duration: 240	1943253	0	2			0		other	0
+s1504	725	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	1945564	0	1			0		other	0
+s1504	726	Sound	Syll: ga | Duration: 240	1947594	0	1			0		other	0
+s1504	727	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1949964	0	1			0		other	0
+s1504	728	Sound	Syll: di | Duration: 240	1950714	0	2			0		other	0
+s1504	729	Nothing	Dial No.: 2 | Current ISI: 175 ms. | Current Pos: 527 | Previous ISI: 209 ms. | Previous Pos: 627 | ISI Diff: -34 ms. | Pos Diff: -100	1953073	0	1			0		other	0
+s1504	730	Sound	Syll: ro | Duration: 240	1954823	0	1			0		other	0
+s1504	731	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	1957170	0	1			0		other	0
+s1504	732	Sound	Syll: ki | Duration: 240	1959200	0	1			0		other	0
+s1504	733	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1961626	0	1			0		other	0
+s1504	734	Sound	Syll: se | Duration: 240	1962376	0	1			0		other	0
+s1504	735	Nothing	Dial No.: 2 | Current ISI: 135 ms. | Current Pos: 407 | Previous ISI: 175 ms. | Previous Pos: 527 | ISI Diff: -40 ms. | Pos Diff: -120	1964772	0	1			0		other	0
+s1504	736	Sound	Syll: mi | Duration: 240	1966122	0	1			0		other	0
+s1504	737	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	1968474	0	1			0		other	0
+s1504	738	Sound	Syll: po | Duration: 240	1970504	0	1			0		other	0
+s1504	739	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1972865	0	1			0		other	0
+s1504	740	Sound	Syll: la | Duration: 240	1973615	0	2			0		other	0
+s1504	741	Nothing	Dial No.: 2 | Current ISI: 79 ms. | Current Pos: 237 | Previous ISI: 122 ms. | Previous Pos: 367 | ISI Diff: -43 ms. | Pos Diff: -130	1975965	0	1			0		other	0
+s1504	742	Sound	Syll: ro | Duration: 240	1976755	0	1			0		other	0
+s1504	743	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	1979065	0	1			0		other	0
+s1504	744	Sound	Syll: ki | Duration: 240	1981095	0	1			0		other	0
+s1504	745	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1983466	0	1			0		other	0
+s1504	746	Sound	Syll: se | Duration: 240	1984216	0	2			0		other	0
+s1504	747	Nothing	Dial No.: 2 | Current ISI: 22 ms. | Current Pos: 67 | Previous ISI: 59 ms. | Previous Pos: 177 | ISI Diff: -37 ms. | Pos Diff: -110	1986577	0	1			0		other	0
+s1504	748	Sound	Syll: nu | Duration: 240	1986797	0	1			0		other	0
+s1504	749	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	1989171	0	1			0		other	0
+s1504	750	Sound	Syll: ga | Duration: 240	1991201	0	1			0		other	0
+s1504	751	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	1993571	0	1			0		other	0
+s1504	752	Sound	Syll: di | Duration: 240	1994321	0	1			0		other	0
+s1504	753	Nothing	Dial No.: 2 | Current ISI: 22 ms. | Current Pos: 67 | Previous ISI: 22 ms. | Previous Pos: 67 | ISI Diff: 0 ms. | Pos Diff: 0	1996665	0	1			0		other	0
+s1504	754	Sound	Syll: ro | Duration: 240	1996885	0	1			0		other	0
+s1504	755	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	1999265	0	1			0		other	0
+s1504	756	Sound	Syll: ki | Duration: 240	2001295	0	1			0		other	0
+s1504	757	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	2003666	0	1			0		other	0
+s1504	758	Sound	Syll: se | Duration: 240	2004416	0	1			0		other	0
+s1504	759	Nothing	Dial No.: 2 | Current ISI: 22 ms. | Current Pos: 67 | Previous ISI: 22 ms. | Previous Pos: 67 | ISI Diff: 0 ms. | Pos Diff: 0	2006765	0	1			0		other	0
+s1504	760	Sound	Syll: mi | Duration: 240	2006985	0	1			0		other	0
+s1504	761	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	2009366	0	1			0		other	0
+s1504	762	Sound	Syll: po | Duration: 240	2011396	0	1			0		other	0
+s1504	763	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	2013774	0	1			0		other	0
+s1504	764	Sound	Syll: la | Duration: 240	2014524	0	1			0		other	0
+s1504	765	Nothing	Dial No.: 2 | Current ISI: 5 ms. | Current Pos: 17 | Previous ISI: 22 ms. | Previous Pos: 67 | ISI Diff: -17 ms. | Pos Diff: -50	2016867	0	1			0		other	0
+s1504	766	Sound	Syll: ro | Duration: 240	2016917	0	1			0		other	0
+s1504	767	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	2019282	0	1			0		other	0
+s1504	768	Sound	Syll: ki | Duration: 240	2021312	0	1			0		other	0
+s1504	769	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	2023666	0	1			0		other	0
+s1504	770	Sound	Syll: se | Duration: 240	2024416	0	1			0		other	0
+s1504	771	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	2026766	0	1			0		other	0
+s1504	772	Sound	Syll: nu | Duration: 240	2026776	0	1			0		other	0
+s1504	773	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	2029166	0	1			0		other	0
+s1504	774	Sound	Syll: ga | Duration: 240	2031196	0	1			0		other	0
+s1504	775	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	2033567	0	1			0		other	0
+s1504	776	Sound	Syll: di | Duration: 240	2034317	0	1			0		other	0
+s1504	777	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	2036677	0	1			0		other	0
+s1504	778	Sound	Syll: za | Duration: 240	2036687	0	1			0		other	0
+s1504	779	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	2039075	0	1			0		other	0
+s1504	780	Sound	Syll: be | Duration: 245	2041105	0	1			0		other	0
+s1504	781	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	2043575	0	1			0		other	0
+s1504	782	Sound	Syll: tu | Duration: 240	2044325	0	1			0		other	0
+s1504	783	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	2046667	0	1			0		other	0
+s1504	784	Sound	Syll: nu | Duration: 240	2046677	0	1			0		other	0
+s1504	785	Nothing	Dial No.: 3 | Current ISI: 203 ms. | Current Pos: 611 | Previous ISI: 203 ms. | Previous Pos: 611 | ISI Diff: 0 ms. | Pos Diff: 0	2049067	0	1			0		other	0
+s1504	786	Sound	Syll: ga | Duration: 240	2051097	0	1			0		other	0
+s1504	787	Nothing	Dial No.: 1 | Current ISI: 75 ms. | Current Pos: 227 | Previous ISI: 75 ms. | Previous Pos: 227 | ISI Diff: 0 ms. | Pos Diff: 0	2053467	0	1			0		other	0
+s1504	788	Sound	Syll: di | Duration: 240	2054217	0	1			0		other	0
+s1504	789	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	2056567	0	1			0		other	0
+s1504	790	Sound	Syll: za | Duration: 240	2056577	0	1			0		other	0
+s1504	790	Response	1	2058388	1811	1
+s1504	791	Picture	Block #1 | Trial #6 | task_struct_seq_A_6.txt | Init. Dial Pos 1: 918 | Init. ISI 1: 306 | Init. Dial Pos 2: 918 | Init. ISI 2: 306 | Init. Dial Pos 3: 918 | Init. ISI 3: 306	2059933	0	1	5999	2	0	next	other	0
+s1504	791	Response	1	2065908	5975	1
+s1504	793	Picture	fixation	2065932	0	1	639876	2	0	next	other	0
+s1504	793	Sound	Syll: za	2065932	0	2			0		other	0
+s1504	794	Nothing	Dial No.: 2 | Current ISI: 306 ms. | Current Pos: 918 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	2068267	0	1			0		other	0
+s1504	795	Sound	Syll: be | Duration: 245	2071327	0	2			0		other	0
+s1504	796	Nothing	Dial No.: 3 | Current ISI: 306 ms. | Current Pos: 918 | Previous ISI: 306 ms. | Previous Pos: 918 | ISI Diff: 0 ms. | Pos Diff: 0	2073769	0	1			0		other	0
+s1504	797	Sound	Syll: tu | Duration: 240	2076829	0	2			0		other	0
+s1504	798	Nothing	Dial No.: 1 | Current ISI: 306 ms. | Current Pos: 918 | Previous ISI: 306 ms. | Previous Pos: 918 | ISI Diff: 0 ms. | Pos Diff: 0	2079175	0	1			0		other	0
+s1504	799	Sound	Syll: mi | Duration: 240	2082235	0	1			0		other	0
+s1504	800	Nothing	Dial No.: 2 | Current ISI: 306 ms. | Current Pos: 918 | Previous ISI: 306 ms. | Previous Pos: 918 | ISI Diff: 0 ms. | Pos Diff: 0	2084574	0	1			0		other	0
+s1504	801	Sound	Syll: po | Duration: 240	2087634	0	2			0		other	0
+s1504	802	Nothing	Dial No.: 3 | Current ISI: 306 ms. | Current Pos: 918 | Previous ISI: 306 ms. | Previous Pos: 918 | ISI Diff: 0 ms. | Pos Diff: 0	2089969	0	1			0		other	0
+s1504	803	Sound	Syll: la | Duration: 240	2093029	0	2			0		other	0
+s1504	804	Nothing	Dial No.: 1 | Current ISI: 246 ms. | Current Pos: 738 | Previous ISI: 246 ms. | Previous Pos: 738 | ISI Diff: 0 ms. | Pos Diff: 0	2095382	0	1			0		other	0
+s1504	805	Sound	Syll: ro | Duration: 240	2097842	0	2			0		other	0
+s1504	806	Nothing	Dial No.: 2 | Current ISI: 306 ms. | Current Pos: 918 | Previous ISI: 306 ms. | Previous Pos: 918 | ISI Diff: 0 ms. | Pos Diff: 0	2100179	0	1			0		other	0
+s1504	807	Sound	Syll: ki | Duration: 240	2103239	0	2			0		other	0
+s1504	808	Nothing	Dial No.: 3 | Current ISI: 306 ms. | Current Pos: 918 | Previous ISI: 306 ms. | Previous Pos: 918 | ISI Diff: 0 ms. | Pos Diff: 0	2105579	0	1			0		other	0
+s1504	809	Sound	Syll: se | Duration: 240	2108639	0	2			0		other	0
+s1504	810	Nothing	Dial No.: 1 | Current ISI: 226 ms. | Current Pos: 678 | Previous ISI: 246 ms. | Previous Pos: 738 | ISI Diff: -20 ms. | Pos Diff: -60	2110979	0	1			0		other	0
+s1504	811	Sound	Syll: nu | Duration: 240	2113239	0	2			0		other	0
+s1504	812	Nothing	Dial No.: 2 | Current ISI: 306 ms. | Current Pos: 918 | Previous ISI: 306 ms. | Previous Pos: 918 | ISI Diff: 0 ms. | Pos Diff: 0	2115577	0	1			0		other	0
+s1504	813	Sound	Syll: ga | Duration: 240	2118637	0	2			0		other	0
+s1504	814	Nothing	Dial No.: 3 | Current ISI: 342 ms. | Current Pos: 1028 | Previous ISI: 306 ms. | Previous Pos: 918 | ISI Diff: 36 ms. | Pos Diff: 110	2120981	0	1			0		other	0
+s1504	815	Sound	Syll: di | Duration: 240	2124401	0	2			0		other	0
+s1504	816	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2126769	0	1			0		other	0
+s1504	817	Sound	Syll: mi | Duration: 240	2128989	0	2			0		other	0
+s1504	818	Nothing	Dial No.: 2 | Current ISI: 306 ms. | Current Pos: 918 | Previous ISI: 306 ms. | Previous Pos: 918 | ISI Diff: 0 ms. | Pos Diff: 0	2131369	0	1			0		other	0
+s1504	819	Sound	Syll: po | Duration: 240	2134429	0	2			0		other	0
+s1504	820	Nothing	Dial No.: 3 | Current ISI: 422 ms. | Current Pos: 1268 | Previous ISI: 379 ms. | Previous Pos: 1138 | ISI Diff: 43 ms. | Pos Diff: 130	2136781	0	1			0		other	0
+s1504	821	Sound	Syll: la | Duration: 240	2141001	0	2			0		other	0
+s1504	822	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2143377	0	1			0		other	0
+s1504	823	Sound	Syll: za | Duration: 240	2145597	0	2			0		other	0
+s1504	824	Nothing	Dial No.: 2 | Current ISI: 249 ms. | Current Pos: 748 | Previous ISI: 306 ms. | Previous Pos: 918 | ISI Diff: -57 ms. | Pos Diff: -170	2147977	0	1			0		other	0
+s1504	825	Sound	Syll: be | Duration: 245	2150467	0	2			0		other	0
+s1504	826	Nothing	Dial No.: 3 | Current ISI: 422 ms. | Current Pos: 1268 | Previous ISI: 422 ms. | Previous Pos: 1268 | ISI Diff: 0 ms. | Pos Diff: 0	2152977	0	1			0		other	0
+s1504	827	Sound	Syll: tu | Duration: 240	2157197	0	2			0		other	0
+s1504	828	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2159570	0	1			0		other	0
+s1504	829	Sound	Syll: mi | Duration: 240	2161790	0	2			0		other	0
+s1504	830	Nothing	Dial No.: 2 | Current ISI: 189 ms. | Current Pos: 568 | Previous ISI: 242 ms. | Previous Pos: 728 | ISI Diff: -53 ms. | Pos Diff: -160	2164171	0	1			0		other	0
+s1504	831	Sound	Syll: po | Duration: 240	2166061	0	2			0		other	0
+s1504	832	Nothing	Dial No.: 3 | Current ISI: 422 ms. | Current Pos: 1268 | Previous ISI: 422 ms. | Previous Pos: 1268 | ISI Diff: 0 ms. | Pos Diff: 0	2168370	0	1			0		other	0
+s1504	833	Sound	Syll: la | Duration: 240	2172590	0	2			0		other	0
+s1504	834	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2174971	0	1			0		other	0
+s1504	835	Sound	Syll: nu | Duration: 240	2177191	0	2			0		other	0
+s1504	836	Nothing	Dial No.: 2 | Current ISI: 189 ms. | Current Pos: 568 | Previous ISI: 189 ms. | Previous Pos: 568 | ISI Diff: 0 ms. | Pos Diff: 0	2179571	0	1			0		other	0
+s1504	837	Sound	Syll: ga | Duration: 240	2181461	0	2			0		other	0
+s1504	838	Nothing	Dial No.: 3 | Current ISI: 336 ms. | Current Pos: 1008 | Previous ISI: 382 ms. | Previous Pos: 1148 | ISI Diff: -46 ms. | Pos Diff: -140	2183771	0	1			0		other	0
+s1504	839	Sound	Syll: di | Duration: 240	2187131	0	2			0		other	0
+s1504	840	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2189471	0	1			0		other	0
+s1504	841	Sound	Syll: ro | Duration: 240	2191691	0	2			0		other	0
+s1504	842	Nothing	Dial No.: 2 | Current ISI: 149 ms. | Current Pos: 448 | Previous ISI: 189 ms. | Previous Pos: 568 | ISI Diff: -40 ms. | Pos Diff: -120	2194071	0	1			0		other	0
+s1504	843	Sound	Syll: ki | Duration: 240	2195561	0	2			0		other	0
+s1504	844	Nothing	Dial No.: 3 | Current ISI: 336 ms. | Current Pos: 1008 | Previous ISI: 336 ms. | Previous Pos: 1008 | ISI Diff: 0 ms. | Pos Diff: 0	2197872	0	1			0		other	0
+s1504	845	Sound	Syll: se | Duration: 240	2201232	0	2			0		other	0
+s1504	846	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2203571	0	1			0		other	0
+s1504	847	Sound	Syll: za | Duration: 240	2205791	0	2			0		other	0
+s1504	848	Nothing	Dial No.: 2 | Current ISI: 96 ms. | Current Pos: 288 | Previous ISI: 96 ms. | Previous Pos: 288 | ISI Diff: 0 ms. | Pos Diff: 0	2208172	0	1			0		other	0
+s1504	849	Sound	Syll: be | Duration: 245	2209132	0	2			0		other	0
+s1504	850	Nothing	Dial No.: 3 | Current ISI: 336 ms. | Current Pos: 1008 | Previous ISI: 336 ms. | Previous Pos: 1008 | ISI Diff: 0 ms. | Pos Diff: 0	2211572	0	1			0		other	0
+s1504	851	Sound	Syll: tu | Duration: 240	2214932	0	2			0		other	0
+s1504	852	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2217286	0	1			0		other	0
+s1504	853	Sound	Syll: ro | Duration: 240	2219506	0	2			0		other	0
+s1504	854	Nothing	Dial No.: 2 | Current ISI: 96 ms. | Current Pos: 288 | Previous ISI: 96 ms. | Previous Pos: 288 | ISI Diff: 0 ms. | Pos Diff: 0	2221880	0	1			0		other	0
+s1504	855	Sound	Syll: ki | Duration: 240	2222840	0	2			0		other	0
+s1504	856	Nothing	Dial No.: 3 | Current ISI: 336 ms. | Current Pos: 1008 | Previous ISI: 336 ms. | Previous Pos: 1008 | ISI Diff: 0 ms. | Pos Diff: 0	2225182	0	1			0		other	0
+s1504	857	Sound	Syll: se | Duration: 240	2228542	0	2			0		other	0
+s1504	858	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2230883	0	1			0		other	0
+s1504	859	Sound	Syll: nu | Duration: 240	2233103	0	1			0		other	0
+s1504	860	Nothing	Dial No.: 2 | Current ISI: 96 ms. | Current Pos: 288 | Previous ISI: 96 ms. | Previous Pos: 288 | ISI Diff: 0 ms. | Pos Diff: 0	2235479	0	1			0		other	0
+s1504	861	Sound	Syll: ga | Duration: 240	2236439	0	2			0		other	0
+s1504	862	Nothing	Dial No.: 3 | Current ISI: 269 ms. | Current Pos: 808 | Previous ISI: 306 ms. | Previous Pos: 918 | ISI Diff: -37 ms. | Pos Diff: -110	2238784	0	1			0		other	0
+s1504	863	Sound	Syll: di | Duration: 240	2241474	0	2			0		other	0
+s1504	864	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2243885	0	1			0		other	0
+s1504	865	Sound	Syll: mi | Duration: 240	2246105	0	2			0		other	0
+s1504	866	Nothing	Dial No.: 2 | Current ISI: 96 ms. | Current Pos: 288 | Previous ISI: 96 ms. | Previous Pos: 288 | ISI Diff: 0 ms. | Pos Diff: 0	2248482	0	1			0		other	0
+s1504	867	Sound	Syll: po | Duration: 240	2249442	0	2			0		other	0
+s1504	868	Nothing	Dial No.: 3 | Current ISI: 269 ms. | Current Pos: 808 | Previous ISI: 269 ms. | Previous Pos: 808 | ISI Diff: 0 ms. | Pos Diff: 0	2251779	0	1			0		other	0
+s1504	869	Sound	Syll: la | Duration: 240	2254469	0	2			0		other	0
+s1504	870	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2256873	0	1			0		other	0
+s1504	871	Sound	Syll: nu | Duration: 240	2259093	0	2			0		other	0
+s1504	872	Nothing	Dial No.: 2 | Current ISI: 96 ms. | Current Pos: 288 | Previous ISI: 96 ms. | Previous Pos: 288 | ISI Diff: 0 ms. | Pos Diff: 0	2261473	0	1			0		other	0
+s1504	873	Sound	Syll: ga | Duration: 240	2262433	0	2			0		other	0
+s1504	874	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 236 ms. | Previous Pos: 708 | ISI Diff: -17 ms. | Pos Diff: -50	2264774	0	1			0		other	0
+s1504	875	Sound	Syll: di | Duration: 240	2266964	0	2			0		other	0
+s1504	876	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2269274	0	1			0		other	0
+s1504	877	Sound	Syll: mi | Duration: 240	2271494	0	2			0		other	0
+s1504	878	Nothing	Dial No.: 2 | Current ISI: 59 ms. | Current Pos: 178 | Previous ISI: 96 ms. | Previous Pos: 288 | ISI Diff: -37 ms. | Pos Diff: -110	2273874	0	1			0		other	0
+s1504	879	Sound	Syll: po | Duration: 240	2274464	0	2			0		other	0
+s1504	880	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2276774	0	1			0		other	0
+s1504	881	Sound	Syll: la | Duration: 240	2278964	0	2			0		other	0
+s1504	882	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2281274	0	1			0		other	0
+s1504	883	Sound	Syll: ro | Duration: 240	2283494	0	2			0		other	0
+s1504	884	Nothing	Dial No.: 2 | Current ISI: 62 ms. | Current Pos: 188 | Previous ISI: 39 ms. | Previous Pos: 118 | ISI Diff: 23 ms. | Pos Diff: 70	2285874	0	1			0		other	0
+s1504	885	Sound	Syll: ki | Duration: 240	2286494	0	2			0		other	0
+s1504	886	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2288874	0	1			0		other	0
+s1504	887	Sound	Syll: se | Duration: 240	2291064	0	2			0		other	0
+s1504	888	Nothing	Dial No.: 1 | Current ISI: 222 ms. | Current Pos: 668 | Previous ISI: 222 ms. | Previous Pos: 668 | ISI Diff: 0 ms. | Pos Diff: 0	2293375	0	1			0		other	0
+s1504	889	Sound	Syll: nu | Duration: 240	2295595	0	2			0		other	0
+s1504	890	Nothing	Dial No.: 2 | Current ISI: 116 ms. | Current Pos: 348 | Previous ISI: 116 ms. | Previous Pos: 348 | ISI Diff: 0 ms. | Pos Diff: 0	2297974	0	1			0		other	0
+s1504	891	Sound	Syll: ga | Duration: 240	2299134	0	2			0		other	0
+s1504	892	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2301474	0	1			0		other	0
+s1504	893	Sound	Syll: di | Duration: 240	2303664	0	2			0		other	0
+s1504	894	Nothing	Dial No.: 1 | Current ISI: 269 ms. | Current Pos: 808 | Previous ISI: 269 ms. | Previous Pos: 808 | ISI Diff: 0 ms. | Pos Diff: 0	2305981	0	1			0		other	0
+s1504	895	Sound	Syll: za | Duration: 240	2308671	0	2			0		other	0
+s1504	896	Nothing	Dial No.: 2 | Current ISI: 116 ms. | Current Pos: 348 | Previous ISI: 116 ms. | Previous Pos: 348 | ISI Diff: 0 ms. | Pos Diff: 0	2311082	0	1			0		other	0
+s1504	897	Sound	Syll: be | Duration: 245	2312242	0	2			0		other	0
+s1504	898	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2314686	0	1			0		other	0
+s1504	899	Sound	Syll: tu | Duration: 240	2316876	0	2			0		other	0
+s1504	900	Nothing	Dial No.: 1 | Current ISI: 289 ms. | Current Pos: 868 | Previous ISI: 289 ms. | Previous Pos: 868 | ISI Diff: 0 ms. | Pos Diff: 0	2319276	0	1			0		other	0
+s1504	901	Sound	Syll: mi | Duration: 240	2322166	0	2			0		other	0
+s1504	902	Nothing	Dial No.: 2 | Current ISI: 116 ms. | Current Pos: 348 | Previous ISI: 116 ms. | Previous Pos: 348 | ISI Diff: 0 ms. | Pos Diff: 0	2324476	0	1			0		other	0
+s1504	903	Sound	Syll: po | Duration: 240	2325636	0	2			0		other	0
+s1504	904	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2327975	0	1			0		other	0
+s1504	905	Sound	Syll: la | Duration: 240	2330165	0	2			0		other	0
+s1504	906	Nothing	Dial No.: 1 | Current ISI: 322 ms. | Current Pos: 968 | Previous ISI: 289 ms. | Previous Pos: 868 | ISI Diff: 33 ms. | Pos Diff: 100	2332475	0	1			0		other	0
+s1504	907	Sound	Syll: za | Duration: 240	2335695	0	2			0		other	0
+s1504	908	Nothing	Dial No.: 2 | Current ISI: 116 ms. | Current Pos: 348 | Previous ISI: 116 ms. | Previous Pos: 348 | ISI Diff: 0 ms. | Pos Diff: 0	2338076	0	1			0		other	0
+s1504	909	Sound	Syll: be | Duration: 245	2339236	0	2			0		other	0
+s1504	910	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2341676	0	1			0		other	0
+s1504	911	Sound	Syll: tu | Duration: 240	2343866	0	2			0		other	0
+s1504	912	Nothing	Dial No.: 1 | Current ISI: 346 ms. | Current Pos: 1038 | Previous ISI: 346 ms. | Previous Pos: 1038 | ISI Diff: 0 ms. | Pos Diff: 0	2346186	0	1			0		other	0
+s1504	913	Sound	Syll: nu | Duration: 240	2349646	0	2			0		other	0
+s1504	914	Nothing	Dial No.: 2 | Current ISI: 116 ms. | Current Pos: 348 | Previous ISI: 116 ms. | Previous Pos: 348 | ISI Diff: 0 ms. | Pos Diff: 0	2351987	0	1			0		other	0
+s1504	915	Sound	Syll: ga | Duration: 240	2353147	0	2			0		other	0
+s1504	916	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2355485	0	1			0		other	0
+s1504	917	Sound	Syll: di | Duration: 240	2357675	0	2			0		other	0
+s1504	918	Nothing	Dial No.: 1 | Current ISI: 346 ms. | Current Pos: 1038 | Previous ISI: 346 ms. | Previous Pos: 1038 | ISI Diff: 0 ms. | Pos Diff: 0	2360086	0	1			0		other	0
+s1504	919	Sound	Syll: ro | Duration: 240	2363546	0	2			0		other	0
+s1504	920	Nothing	Dial No.: 2 | Current ISI: 116 ms. | Current Pos: 348 | Previous ISI: 116 ms. | Previous Pos: 348 | ISI Diff: 0 ms. | Pos Diff: 0	2365888	0	1			0		other	0
+s1504	921	Sound	Syll: ki | Duration: 240	2367048	0	2			0		other	0
+s1504	922	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2369402	0	1			0		other	0
+s1504	923	Sound	Syll: se | Duration: 240	2371592	0	2			0		other	0
+s1504	924	Nothing	Dial No.: 1 | Current ISI: 372 ms. | Current Pos: 1118 | Previous ISI: 369 ms. | Previous Pos: 1108 | ISI Diff: 3 ms. | Pos Diff: 10	2373983	0	1			0		other	0
+s1504	925	Sound	Syll: mi | Duration: 240	2377703	0	2			0		other	0
+s1504	926	Nothing	Dial No.: 2 | Current ISI: 116 ms. | Current Pos: 348 | Previous ISI: 116 ms. | Previous Pos: 348 | ISI Diff: 0 ms. | Pos Diff: 0	2380086	0	1			0		other	0
+s1504	927	Sound	Syll: po | Duration: 240	2381246	0	2			0		other	0
+s1504	928	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2383585	0	1			0		other	0
+s1504	929	Sound	Syll: la | Duration: 240	2385775	0	2			0		other	0
+s1504	930	Nothing	Dial No.: 1 | Current ISI: 372 ms. | Current Pos: 1118 | Previous ISI: 372 ms. | Previous Pos: 1118 | ISI Diff: 0 ms. | Pos Diff: 0	2388177	0	1			0		other	0
+s1504	931	Sound	Syll: ro | Duration: 240	2391897	0	2			0		other	0
+s1504	932	Nothing	Dial No.: 2 | Current ISI: 116 ms. | Current Pos: 348 | Previous ISI: 116 ms. | Previous Pos: 348 | ISI Diff: 0 ms. | Pos Diff: 0	2394277	0	1			0		other	0
+s1504	933	Sound	Syll: ki | Duration: 240	2395437	0	2			0		other	0
+s1504	934	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2397777	0	1			0		other	0
+s1504	935	Sound	Syll: se | Duration: 240	2399967	0	2			0		other	0
+s1504	936	Nothing	Dial No.: 1 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	2402277	0	1			0		other	0
+s1504	937	Sound	Syll: za | Duration: 240	2406237	0	2			0		other	0
+s1504	938	Nothing	Dial No.: 2 | Current ISI: 116 ms. | Current Pos: 348 | Previous ISI: 116 ms. | Previous Pos: 348 | ISI Diff: 0 ms. | Pos Diff: 0	2408578	0	1			0		other	0
+s1504	939	Sound	Syll: be | Duration: 245	2409738	0	2			0		other	0
+s1504	940	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2412181	0	1			0		other	0
+s1504	941	Sound	Syll: tu | Duration: 240	2414371	0	2			0		other	0
+s1504	942	Nothing	Dial No.: 1 | Current ISI: 396 ms. | Current Pos: 1188 | Previous ISI: 396 ms. | Previous Pos: 1188 | ISI Diff: 0 ms. | Pos Diff: 0	2416679	0	1			0		other	0
+s1504	943	Sound	Syll: ro | Duration: 240	2420639	0	2			0		other	0
+s1504	944	Nothing	Dial No.: 2 | Current ISI: 116 ms. | Current Pos: 348 | Previous ISI: 116 ms. | Previous Pos: 348 | ISI Diff: 0 ms. | Pos Diff: 0	2422978	0	1			0		other	0
+s1504	945	Sound	Syll: ki | Duration: 240	2424138	0	2			0		other	0
+s1504	946	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2426478	0	1			0		other	0
+s1504	947	Sound	Syll: se | Duration: 240	2428668	0	2			0		other	0
+s1504	948	Nothing	Dial No.: 1 | Current ISI: 412 ms. | Current Pos: 1238 | Previous ISI: 412 ms. | Previous Pos: 1238 | ISI Diff: 0 ms. | Pos Diff: 0	2430985	0	1			0		other	0
+s1504	949	Sound	Syll: za | Duration: 240	2435105	0	2			0		other	0
+s1504	950	Nothing	Dial No.: 2 | Current ISI: 189 ms. | Current Pos: 568 | Previous ISI: 116 ms. | Previous Pos: 348 | ISI Diff: 73 ms. | Pos Diff: 220	2437485	0	1			0		other	0
+s1504	951	Sound	Syll: be | Duration: 245	2439375	0	2			0		other	0
+s1504	952	Nothing	Dial No.: 3 | Current ISI: 219 ms. | Current Pos: 658 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 0 ms. | Pos Diff: 0	2441890	0	1			0		other	0
+s1504	953	Sound	Syll: tu | Duration: 240	2444080	0	2			0		other	0
+s1504	954	Nothing	Dial No.: 1 | Current ISI: 412 ms. | Current Pos: 1238 | Previous ISI: 412 ms. | Previous Pos: 1238 | ISI Diff: 0 ms. | Pos Diff: 0	2446479	0	1			0		other	0
+s1504	955	Sound	Syll: ro | Duration: 240	2450599	0	2			0		other	0
+s1504	956	Nothing	Dial No.: 2 | Current ISI: 279 ms. | Current Pos: 838 | Previous ISI: 239 ms. | Previous Pos: 718 | ISI Diff: 40 ms. | Pos Diff: 120	2452980	0	1			0		other	0
+s1504	957	Sound	Syll: ki | Duration: 240	2455770	0	2			0		other	0
+s1504	958	Nothing	Dial No.: 3 | Current ISI: 249 ms. | Current Pos: 748 | Previous ISI: 219 ms. | Previous Pos: 658 | ISI Diff: 30 ms. | Pos Diff: 90	2458079	0	1			0		other	0
+s1504	959	Sound	Syll: se | Duration: 240	2460569	0	2			0		other	0
+s1504	960	Nothing	Dial No.: 1 | Current ISI: 412 ms. | Current Pos: 1238 | Previous ISI: 412 ms. | Previous Pos: 1238 | ISI Diff: 0 ms. | Pos Diff: 0	2462882	0	1			0		other	0
+s1504	961	Sound	Syll: mi | Duration: 240	2467002	0	2			0		other	0
+s1504	962	Nothing	Dial No.: 2 | Current ISI: 279 ms. | Current Pos: 838 | Previous ISI: 279 ms. | Previous Pos: 838 | ISI Diff: 0 ms. | Pos Diff: 0	2469380	0	1			0		other	0
+s1504	963	Sound	Syll: po | Duration: 240	2472170	0	1			0		other	0
+s1504	964	Nothing	Dial No.: 3 | Current ISI: 356 ms. | Current Pos: 1068 | Previous ISI: 319 ms. | Previous Pos: 958 | ISI Diff: 37 ms. | Pos Diff: 110	2474480	0	1			0		other	0
+s1504	965	Sound	Syll: la | Duration: 240	2478040	0	2			0		other	0
+s1504	966	Nothing	Dial No.: 1 | Current ISI: 412 ms. | Current Pos: 1238 | Previous ISI: 412 ms. | Previous Pos: 1238 | ISI Diff: 0 ms. | Pos Diff: 0	2480381	0	1			0		other	0
+s1504	967	Sound	Syll: za | Duration: 240	2484501	0	1			0		other	0
+s1504	968	Nothing	Dial No.: 2 | Current ISI: 279 ms. | Current Pos: 838 | Previous ISI: 279 ms. | Previous Pos: 838 | ISI Diff: 0 ms. | Pos Diff: 0	2486881	0	1			0		other	0
+s1504	969	Sound	Syll: be | Duration: 245	2489671	0	265			0		other	0
+s1504	970	Nothing	Dial No.: 3 | Current ISI: 419 ms. | Current Pos: 1258 | Previous ISI: 419 ms. | Previous Pos: 1258 | ISI Diff: 0 ms. | Pos Diff: 0	2492382	0	1			0		other	0
+s1504	971	Sound	Syll: tu | Duration: 240	2496572	0	267			0		other	0
+s1504	972	Nothing	Dial No.: 1 | Current ISI: 412 ms. | Current Pos: 1238 | Previous ISI: 412 ms. | Previous Pos: 1238 | ISI Diff: 0 ms. | Pos Diff: 0	2499192	0	1			0		other	0
+s1504	973	Sound	Syll: nu | Duration: 240	2503312	0	2			0		other	0
+s1504	974	Nothing	Dial No.: 2 | Current ISI: 279 ms. | Current Pos: 838 | Previous ISI: 279 ms. | Previous Pos: 838 | ISI Diff: 0 ms. | Pos Diff: 0	2505744	0	1			0		other	0
+s1504	975	Sound	Syll: ga | Duration: 240	2508534	0	2			0		other	0
+s1504	976	Nothing	Dial No.: 3 | Current ISI: 512 ms. | Current Pos: 1538 | Previous ISI: 512 ms. | Previous Pos: 1538 | ISI Diff: 0 ms. | Pos Diff: 0	2510935	0	1			0		other	0
+s1504	977	Sound	Syll: di | Duration: 240	2516055	0	488			0		other	0
+s1504	978	Nothing	Dial No.: 1 | Current ISI: 412 ms. | Current Pos: 1238 | Previous ISI: 412 ms. | Previous Pos: 1238 | ISI Diff: 0 ms. | Pos Diff: 0	2518889	0	1			0		other	0
+s1504	979	Sound	Syll: ro | Duration: 240	2523009	0	2			0		other	0
+s1504	980	Nothing	Dial No.: 2 | Current ISI: 279 ms. | Current Pos: 838 | Previous ISI: 279 ms. | Previous Pos: 838 | ISI Diff: 0 ms. | Pos Diff: 0	2525391	0	1			0		other	0
+s1504	981	Sound	Syll: ki | Duration: 240	2528181	0	84			0		other	0
+s1504	982	Nothing	Dial No.: 3 | Current ISI: 312 ms. | Current Pos: 938 | Previous ISI: 356 ms. | Previous Pos: 1068 | ISI Diff: -44 ms. | Pos Diff: -130	2530595	0	1			0		other	0
+s1504	983	Sound	Syll: se | Duration: 240	2533715	0	2			0		other	0
+s1504	984	Nothing	Dial No.: 1 | Current ISI: 412 ms. | Current Pos: 1238 | Previous ISI: 412 ms. | Previous Pos: 1238 | ISI Diff: 0 ms. | Pos Diff: 0	2536082	0	1			0		other	0
+s1504	985	Sound	Syll: nu | Duration: 240	2540202	0	81			0		other	0
+s1504	986	Nothing	Dial No.: 2 | Current ISI: 279 ms. | Current Pos: 838 | Previous ISI: 279 ms. | Previous Pos: 838 | ISI Diff: 0 ms. | Pos Diff: 0	2542682	0	1			0		other	0
+s1504	987	Sound	Syll: ga | Duration: 240	2545472	0	56			0		other	0
+s1504	988	Nothing	Dial No.: 3 | Current ISI: 132 ms. | Current Pos: 398 | Previous ISI: 172 ms. | Previous Pos: 518 | ISI Diff: -40 ms. | Pos Diff: -120	2547883	0	1			0		other	0
+s1504	989	Sound	Syll: di | Duration: 240	2549203	0	211			0		other	0
+s1504	990	Nothing	Dial No.: 1 | Current ISI: 412 ms. | Current Pos: 1238 | Previous ISI: 412 ms. | Previous Pos: 1238 | ISI Diff: 0 ms. | Pos Diff: 0	2551794	0	1			0		other	0
+s1504	991	Sound	Syll: za | Duration: 240	2555914	0	145			0		other	0
+s1504	992	Nothing	Dial No.: 2 | Current ISI: 279 ms. | Current Pos: 838 | Previous ISI: 279 ms. | Previous Pos: 838 | ISI Diff: 0 ms. | Pos Diff: 0	2558390	0	1			0		other	0
+s1504	993	Sound	Syll: be | Duration: 245	2561180	0	370			0		other	0
+s1504	994	Nothing	Dial No.: 3 | Current ISI: 132 ms. | Current Pos: 398 | Previous ISI: 132 ms. | Previous Pos: 398 | ISI Diff: 0 ms. | Pos Diff: 0	2563993	0	1			0		other	0
+s1504	995	Sound	Syll: tu | Duration: 240	2565313	0	2			0		other	0
+s1504	996	Nothing	Dial No.: 1 | Current ISI: 546 ms. | Current Pos: 1638 | Previous ISI: 516 ms. | Previous Pos: 1548 | ISI Diff: 30 ms. | Pos Diff: 90	2567683	0	1			0		other	0
+s1504	997	Sound	Syll: ro | Duration: 240	2573143	0	2			0		other	0
+s1504	998	Nothing	Dial No.: 2 | Current ISI: 279 ms. | Current Pos: 838 | Previous ISI: 279 ms. | Previous Pos: 838 | ISI Diff: 0 ms. | Pos Diff: 0	2575483	0	1			0		other	0
+s1504	999	Sound	Syll: ki | Duration: 240	2578273	0	2			0		other	0
+s1504	1000	Nothing	Dial No.: 3 | Current ISI: 132 ms. | Current Pos: 398 | Previous ISI: 132 ms. | Previous Pos: 398 | ISI Diff: 0 ms. | Pos Diff: 0	2580583	0	1			0		other	0
+s1504	1001	Sound	Syll: se | Duration: 240	2581903	0	2			0		other	0
+s1504	1002	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	2584283	0	1			0		other	0
+s1504	1003	Sound	Syll: nu | Duration: 240	2590283	0	2			0		other	0
+s1504	1004	Nothing	Dial No.: 2 | Current ISI: 279 ms. | Current Pos: 838 | Previous ISI: 279 ms. | Previous Pos: 838 | ISI Diff: 0 ms. | Pos Diff: 0	2592684	0	1			0		other	0
+s1504	1005	Sound	Syll: ga | Duration: 240	2595474	0	2			0		other	0
+s1504	1006	Nothing	Dial No.: 3 | Current ISI: 132 ms. | Current Pos: 398 | Previous ISI: 132 ms. | Previous Pos: 398 | ISI Diff: 0 ms. | Pos Diff: 0	2597784	0	1			0		other	0
+s1504	1007	Sound	Syll: di | Duration: 240	2599104	0	2			0		other	0
+s1504	1008	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	2601485	0	1			0		other	0
+s1504	1009	Sound	Syll: za | Duration: 240	2607485	0	2			0		other	0
+s1504	1010	Nothing	Dial No.: 2 | Current ISI: 152 ms. | Current Pos: 458 | Previous ISI: 229 ms. | Previous Pos: 688 | ISI Diff: -77 ms. | Pos Diff: -230	2609885	0	1			0		other	0
+s1504	1011	Sound	Syll: be | Duration: 245	2611405	0	2			0		other	0
+s1504	1012	Nothing	Dial No.: 3 | Current ISI: 132 ms. | Current Pos: 398 | Previous ISI: 132 ms. | Previous Pos: 398 | ISI Diff: 0 ms. | Pos Diff: 0	2613884	0	1			0		other	0
+s1504	1013	Sound	Syll: tu | Duration: 240	2615204	0	2			0		other	0
+s1504	1014	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	2617597	0	1			0		other	0
+s1504	1015	Sound	Syll: mi | Duration: 240	2623597	0	2			0		other	0
+s1504	1016	Nothing	Dial No.: 2 | Current ISI: 22 ms. | Current Pos: 68 | Previous ISI: 72 ms. | Previous Pos: 218 | ISI Diff: -50 ms. | Pos Diff: -150	2626041	0	1			0		other	0
+s1504	1017	Sound	Syll: po | Duration: 240	2626261	0	2			0		other	0
+s1504	1018	Nothing	Dial No.: 3 | Current ISI: 132 ms. | Current Pos: 398 | Previous ISI: 132 ms. | Previous Pos: 398 | ISI Diff: 0 ms. | Pos Diff: 0	2628630	0	1			0		other	0
+s1504	1019	Sound	Syll: la | Duration: 240	2629950	0	2			0		other	0
+s1504	1020	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	2632292	0	1			0		other	0
+s1504	1021	Sound	Syll: nu | Duration: 240	2638292	0	2			0		other	0
+s1504	1022	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 22 ms. | Previous Pos: 68 | ISI Diff: -22 ms. | Pos Diff: -68	2640690	0	1			0		other	0
+s1504	1023	Sound	Syll: ga | Duration: 240	2640700	0	1			0		other	0
+s1504	1024	Nothing	Dial No.: 3 | Current ISI: 132 ms. | Current Pos: 398 | Previous ISI: 132 ms. | Previous Pos: 398 | ISI Diff: 0 ms. | Pos Diff: 0	2643090	0	1			0		other	0
+s1504	1025	Sound	Syll: di | Duration: 240	2644410	0	2			0		other	0
+s1504	1026	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	2646785	0	1			0		other	0
+s1504	1027	Sound	Syll: mi | Duration: 240	2652785	0	2			0		other	0
+s1504	1028	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	2655186	0	1			0		other	0
+s1504	1029	Sound	Syll: po | Duration: 240	2655196	0	1			0		other	0
+s1504	1030	Nothing	Dial No.: 3 | Current ISI: 132 ms. | Current Pos: 398 | Previous ISI: 132 ms. | Previous Pos: 398 | ISI Diff: 0 ms. | Pos Diff: 0	2657586	0	1			0		other	0
+s1504	1031	Sound	Syll: la | Duration: 240	2658906	0	2			0		other	0
+s1504	1032	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	2661285	0	1			0		other	0
+s1504	1033	Sound	Syll: nu | Duration: 240	2667285	0	2			0		other	0
+s1504	1034	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	2669702	0	1			0		other	0
+s1504	1035	Sound	Syll: ga | Duration: 240	2669712	0	1			0		other	0
+s1504	1036	Nothing	Dial No.: 3 | Current ISI: 132 ms. | Current Pos: 398 | Previous ISI: 132 ms. | Previous Pos: 398 | ISI Diff: 0 ms. | Pos Diff: 0	2672086	0	1			0		other	0
+s1504	1037	Sound	Syll: di | Duration: 240	2673406	0	2			0		other	0
+s1504	1038	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	2675795	0	1			0		other	0
+s1504	1039	Sound	Syll: za | Duration: 240	2681795	0	2			0		other	0
+s1504	1040	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	2684193	0	1			0		other	0
+s1504	1041	Sound	Syll: be | Duration: 245	2684203	0	1			0		other	0
+s1504	1042	Nothing	Dial No.: 3 | Current ISI: 132 ms. | Current Pos: 398 | Previous ISI: 132 ms. | Previous Pos: 398 | ISI Diff: 0 ms. | Pos Diff: 0	2686697	0	1			0		other	0
+s1504	1043	Sound	Syll: tu | Duration: 240	2688017	0	2			0		other	0
+s1504	1044	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	2690430	0	1			0		other	0
+s1504	1045	Sound	Syll: ro | Duration: 240	2696430	0	2			0		other	0
+s1504	1046	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	2698841	0	1			0		other	0
+s1504	1047	Sound	Syll: ki | Duration: 240	2698851	0	1			0		other	0
+s1504	1048	Nothing	Dial No.: 3 | Current ISI: 132 ms. | Current Pos: 398 | Previous ISI: 132 ms. | Previous Pos: 398 | ISI Diff: 0 ms. | Pos Diff: 0	2701197	0	1			0		other	0
+s1504	1049	Sound	Syll: se | Duration: 240	2702517	0	2			0		other	0
+s1504	1049	Response	1	2704211	1694	1
+s1504	1050	Picture	Block #1 | Trial #7 | task_struct_seq_A_7.txt | Init. Dial Pos 1: 1488 | Init. ISI 1: 496 | Init. Dial Pos 2: 1173 | Init. ISI 2: 391 | Init. Dial Pos 3: 699 | Init. ISI 3: 233	2705808	0	1	7331	3	0	next	other	0
+s1504	1050	Response	1	2713091	7283	1
+s1504	1051	Picture	fixation	2713139	0	2	354765	3	0	next	other	0
+s1504	1052	Sound	Syll: tu	2713140	0	2			0		other	0
+s1504	1053	Nothing	Dial No.: 1 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	2715488	0	1			0		other	0
+s1504	1054	Sound	Syll: mi | Duration: 240	2720448	0	2			0		other	0
+s1504	1055	Nothing	Dial No.: 2 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	2722788	0	1			0		other	0
+s1504	1056	Sound	Syll: po | Duration: 240	2726698	0	2			0		other	0
+s1504	1057	Nothing	Dial No.: 3 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	2729098	0	1			0		other	0
+s1504	1058	Sound	Syll: la | Duration: 240	2731428	0	2			0		other	0
+s1504	1059	Nothing	Dial No.: 1 | Current ISI: 456 ms. | Current Pos: 1368 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: -40 ms. | Pos Diff: -120	2733789	0	1			0		other	0
+s1504	1060	Sound	Syll: ro | Duration: 240	2738349	0	2			0		other	0
+s1504	1061	Nothing	Dial No.: 2 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	2740689	0	1			0		other	0
+s1504	1062	Sound	Syll: ki | Duration: 240	2744599	0	2			0		other	0
+s1504	1063	Nothing	Dial No.: 3 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	2746989	0	1			0		other	0
+s1504	1064	Sound	Syll: se | Duration: 240	2749319	0	2			0		other	0
+s1504	1065	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 422 ms. | Previous Pos: 1268 | ISI Diff: -46 ms. | Pos Diff: -140	2751689	0	1			0		other	0
+s1504	1066	Sound	Syll: za | Duration: 240	2755449	0	2			0		other	0
+s1504	1067	Nothing	Dial No.: 2 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	2757790	0	1			0		other	0
+s1504	1068	Sound	Syll: be | Duration: 245	2761700	0	2			0		other	0
+s1504	1069	Nothing	Dial No.: 3 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	2764191	0	1			0		other	0
+s1504	1070	Sound	Syll: tu | Duration: 240	2766521	0	2			0		other	0
+s1504	1071	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2768899	0	1			0		other	0
+s1504	1072	Sound	Syll: mi | Duration: 240	2772659	0	2			0		other	0
+s1504	1073	Nothing	Dial No.: 2 | Current ISI: 344 ms. | Current Pos: 1033 | Previous ISI: 347 ms. | Previous Pos: 1043 | ISI Diff: -3 ms. | Pos Diff: -10	2775001	0	1			0		other	0
+s1504	1074	Sound	Syll: po | Duration: 240	2778441	0	2			0		other	0
+s1504	1075	Nothing	Dial No.: 3 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	2780809	0	1			0		other	0
+s1504	1076	Sound	Syll: la | Duration: 240	2783139	0	2			0		other	0
+s1504	1077	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2785500	0	1			0		other	0
+s1504	1078	Sound	Syll: za | Duration: 240	2789260	0	2			0		other	0
+s1504	1079	Nothing	Dial No.: 2 | Current ISI: 281 ms. | Current Pos: 843 | Previous ISI: 317 ms. | Previous Pos: 953 | ISI Diff: -36 ms. | Pos Diff: -110	2791601	0	1			0		other	0
+s1504	1080	Sound	Syll: be | Duration: 245	2794411	0	2			0		other	0
+s1504	1081	Nothing	Dial No.: 3 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	2796898	0	1			0		other	0
+s1504	1082	Sound	Syll: tu | Duration: 240	2799228	0	2			0		other	0
+s1504	1083	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2801658	0	1			0		other	0
+s1504	1084	Sound	Syll: nu | Duration: 240	2805418	0	2			0		other	0
+s1504	1085	Nothing	Dial No.: 2 | Current ISI: 234 ms. | Current Pos: 703 | Previous ISI: 234 ms. | Previous Pos: 703 | ISI Diff: 0 ms. | Pos Diff: 0	2807842	0	1			0		other	0
+s1504	1086	Sound	Syll: ga | Duration: 240	2810182	0	2			0		other	0
+s1504	1087	Nothing	Dial No.: 3 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	2812542	0	1			0		other	0
+s1504	1088	Sound	Syll: di | Duration: 240	2814872	0	2			0		other	0
+s1504	1089	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2817192	0	1			0		other	0
+s1504	1090	Sound	Syll: mi | Duration: 240	2820952	0	2			0		other	0
+s1504	1091	Nothing	Dial No.: 2 | Current ISI: 117 ms. | Current Pos: 353 | Previous ISI: 174 ms. | Previous Pos: 523 | ISI Diff: -57 ms. | Pos Diff: -170	2823292	0	1			0		other	0
+s1504	1092	Sound	Syll: po | Duration: 240	2824462	0	2			0		other	0
+s1504	1093	Nothing	Dial No.: 3 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	2826791	0	1			0		other	0
+s1504	1094	Sound	Syll: la | Duration: 240	2829121	0	2			0		other	0
+s1504	1095	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2831492	0	1			0		other	0
+s1504	1096	Sound	Syll: nu | Duration: 240	2835252	0	2			0		other	0
+s1504	1097	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 117 ms. | Previous Pos: 353 | ISI Diff: -33 ms. | Pos Diff: -100	2837592	0	1			0		other	0
+s1504	1098	Sound	Syll: ga | Duration: 240	2838432	0	2			0		other	0
+s1504	1099	Nothing	Dial No.: 3 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	2840792	0	1			0		other	0
+s1504	1100	Sound	Syll: di | Duration: 240	2843122	0	2			0		other	0
+s1504	1101	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2845492	0	1			0		other	0
+s1504	1102	Sound	Syll: za | Duration: 240	2849252	0	2			0		other	0
+s1504	1103	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	2851882	0	1			0		other	0
+s1504	1104	Sound	Syll: be | Duration: 245	2852722	0	2			0		other	0
+s1504	1105	Nothing	Dial No.: 3 | Current ISI: 279 ms. | Current Pos: 839 | Previous ISI: 279 ms. | Previous Pos: 839 | ISI Diff: 0 ms. | Pos Diff: 0	2855235	0	1			0		other	0
+s1504	1106	Sound	Syll: tu | Duration: 240	2858025	0	2			0		other	0
+s1504	1107	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2860433	0	1			0		other	0
+s1504	1108	Sound	Syll: mi | Duration: 240	2864193	0	2			0		other	0
+s1504	1109	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	2866638	0	1			0		other	0
+s1504	1110	Sound	Syll: po | Duration: 240	2867478	0	2			0		other	0
+s1504	1111	Nothing	Dial No.: 3 | Current ISI: 309 ms. | Current Pos: 929 | Previous ISI: 309 ms. | Previous Pos: 929 | ISI Diff: 0 ms. | Pos Diff: 0	2869837	0	1			0		other	0
+s1504	1112	Sound	Syll: la | Duration: 240	2872927	0	2			0		other	0
+s1504	1113	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2875350	0	1			0		other	0
+s1504	1114	Sound	Syll: ro | Duration: 240	2879110	0	2			0		other	0
+s1504	1115	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	2881549	0	1			0		other	0
+s1504	1116	Sound	Syll: ki | Duration: 240	2882389	0	1			0		other	0
+s1504	1117	Nothing	Dial No.: 3 | Current ISI: 239 ms. | Current Pos: 719 | Previous ISI: 263 ms. | Previous Pos: 789 | ISI Diff: -24 ms. | Pos Diff: -70	2884839	0	1			0		other	0
+s1504	1118	Sound	Syll: se | Duration: 240	2887229	0	2			0		other	0
+s1504	1119	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2889636	0	1			0		other	0
+s1504	1120	Sound	Syll: za | Duration: 240	2893396	0	1			0		other	0
+s1504	1121	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	2895792	0	1			0		other	0
+s1504	1122	Sound	Syll: be | Duration: 245	2896632	0	1			0		other	0
+s1504	1123	Nothing	Dial No.: 3 | Current ISI: 179 ms. | Current Pos: 539 | Previous ISI: 179 ms. | Previous Pos: 539 | ISI Diff: 0 ms. | Pos Diff: 0	2899093	0	1			0		other	0
+s1504	1124	Sound	Syll: tu | Duration: 240	2900883	0	1			0		other	0
+s1504	1125	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2903193	0	1			0		other	0
+s1504	1126	Sound	Syll: ro | Duration: 240	2906953	0	499			0		other	0
+s1504	1127	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	2909793	0	1			0		other	0
+s1504	1128	Sound	Syll: ki | Duration: 240	2910633	0	184			0		other	0
+s1504	1129	Nothing	Dial No.: 3 | Current ISI: 133 ms. | Current Pos: 399 | Previous ISI: 133 ms. | Previous Pos: 399 | ISI Diff: 0 ms. | Pos Diff: 0	2913193	0	1			0		other	0
+s1504	1130	Sound	Syll: se | Duration: 240	2914523	0	28			0		other	0
+s1504	1131	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2916941	0	1			0		other	0
+s1504	1132	Sound	Syll: nu | Duration: 240	2920701	0	90			0		other	0
+s1504	1133	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	2923249	0	1			0		other	0
+s1504	1134	Sound	Syll: ga | Duration: 240	2924089	0	1			0		other	0
+s1504	1135	Nothing	Dial No.: 3 | Current ISI: 169 ms. | Current Pos: 509 | Previous ISI: 133 ms. | Previous Pos: 399 | ISI Diff: 36 ms. | Pos Diff: 110	2926543	0	1			0		other	0
+s1504	1136	Sound	Syll: di | Duration: 240	2928233	0	25			0		other	0
+s1504	1137	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2930594	0	1			0		other	0
+s1504	1138	Sound	Syll: mi | Duration: 240	2934354	0	403			0		other	0
+s1504	1139	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	2937094	0	1			0		other	0
+s1504	1140	Sound	Syll: po | Duration: 240	2937934	0	1			0		other	0
+s1504	1141	Nothing	Dial No.: 3 | Current ISI: 206 ms. | Current Pos: 619 | Previous ISI: 206 ms. | Previous Pos: 619 | ISI Diff: 0 ms. | Pos Diff: 0	2940294	0	1			0		other	0
+s1504	1142	Sound	Syll: la | Duration: 240	2942354	0	354			0		other	0
+s1504	1143	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2945094	0	1			0		other	0
+s1504	1144	Sound	Syll: za | Duration: 240	2948854	0	2			0		other	0
+s1504	1145	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	2951194	0	1			0		other	0
+s1504	1146	Sound	Syll: be | Duration: 245	2952034	0	363			0		other	0
+s1504	1147	Nothing	Dial No.: 3 | Current ISI: 286 ms. | Current Pos: 859 | Previous ISI: 253 ms. | Previous Pos: 759 | ISI Diff: 33 ms. | Pos Diff: 100	2954895	0	1			0		other	0
+s1504	1148	Sound	Syll: tu | Duration: 240	2957755	0	450			0		other	0
+s1504	1149	Nothing	Dial No.: 1 | Current ISI: 376 ms. | Current Pos: 1128 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 0 ms. | Pos Diff: 0	2960606	0	1			0		other	0
+s1504	1150	Sound	Syll: mi | Duration: 240	2964366	0	95			0		other	0
+s1504	1151	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	2966806	0	1			0		other	0
+s1504	1152	Sound	Syll: po | Duration: 240	2967646	0	350			0		other	0
+s1504	1153	Nothing	Dial No.: 3 | Current ISI: 286 ms. | Current Pos: 859 | Previous ISI: 286 ms. | Previous Pos: 859 | ISI Diff: 0 ms. | Pos Diff: 0	2970404	0	1			0		other	0
+s1504	1154	Sound	Syll: la | Duration: 240	2973264	0	2			0		other	0
+s1504	1155	Nothing	Dial No.: 1 | Current ISI: 406 ms. | Current Pos: 1218 | Previous ISI: 376 ms. | Previous Pos: 1128 | ISI Diff: 30 ms. | Pos Diff: 90	2975597	0	1			0		other	0
+s1504	1156	Sound	Syll: nu | Duration: 240	2979657	0	2			0		other	0
+s1504	1157	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	2981997	0	1			0		other	0
+s1504	1158	Sound	Syll: ga | Duration: 240	2982837	0	2			0		other	0
+s1504	1159	Nothing	Dial No.: 3 | Current ISI: 286 ms. | Current Pos: 859 | Previous ISI: 286 ms. | Previous Pos: 859 | ISI Diff: 0 ms. | Pos Diff: 0	2985196	0	1			0		other	0
+s1504	1160	Sound	Syll: di | Duration: 240	2988056	0	2			0		other	0
+s1504	1161	Nothing	Dial No.: 1 | Current ISI: 406 ms. | Current Pos: 1218 | Previous ISI: 406 ms. | Previous Pos: 1218 | ISI Diff: 0 ms. | Pos Diff: 0	2990406	0	1			0		other	0
+s1504	1162	Sound	Syll: za | Duration: 240	2994466	0	2			0		other	0
+s1504	1163	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	2996809	0	1			0		other	0
+s1504	1164	Sound	Syll: be | Duration: 245	2997649	0	2			0		other	0
+s1504	1165	Nothing	Dial No.: 3 | Current ISI: 286 ms. | Current Pos: 859 | Previous ISI: 286 ms. | Previous Pos: 859 | ISI Diff: 0 ms. | Pos Diff: 0	3000105	0	1			0		other	0
+s1504	1166	Sound	Syll: tu | Duration: 240	3002965	0	2			0		other	0
+s1504	1167	Nothing	Dial No.: 1 | Current ISI: 452 ms. | Current Pos: 1358 | Previous ISI: 452 ms. | Previous Pos: 1358 | ISI Diff: 0 ms. | Pos Diff: 0	3005309	0	1			0		other	0
+s1504	1168	Sound	Syll: ro | Duration: 240	3009829	0	2			0		other	0
+s1504	1169	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	3012206	0	1			0		other	0
+s1504	1170	Sound	Syll: ki | Duration: 240	3013046	0	1			0		other	0
+s1504	1171	Nothing	Dial No.: 3 | Current ISI: 286 ms. | Current Pos: 859 | Previous ISI: 286 ms. | Previous Pos: 859 | ISI Diff: 0 ms. | Pos Diff: 0	3015403	0	1			0		other	0
+s1504	1172	Sound	Syll: se | Duration: 240	3018263	0	2			0		other	0
+s1504	1173	Nothing	Dial No.: 1 | Current ISI: 452 ms. | Current Pos: 1358 | Previous ISI: 452 ms. | Previous Pos: 1358 | ISI Diff: 0 ms. | Pos Diff: 0	3020608	0	1			0		other	0
+s1504	1174	Sound	Syll: nu | Duration: 240	3025128	0	2			0		other	0
+s1504	1175	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	3027505	0	1			0		other	0
+s1504	1176	Sound	Syll: ga | Duration: 240	3028345	0	1			0		other	0
+s1504	1177	Nothing	Dial No.: 3 | Current ISI: 286 ms. | Current Pos: 859 | Previous ISI: 286 ms. | Previous Pos: 859 | ISI Diff: 0 ms. | Pos Diff: 0	3030711	0	1			0		other	0
+s1504	1178	Sound	Syll: di | Duration: 240	3033571	0	2			0		other	0
+s1504	1179	Nothing	Dial No.: 1 | Current ISI: 492 ms. | Current Pos: 1478 | Previous ISI: 489 ms. | Previous Pos: 1468 | ISI Diff: 3 ms. | Pos Diff: 10	3035898	0	1			0		other	0
+s1504	1180	Sound	Syll: ro | Duration: 240	3040818	0	2			0		other	0
+s1504	1181	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	3043197	0	1			0		other	0
+s1504	1182	Sound	Syll: ki | Duration: 240	3044037	0	2			0		other	0
+s1504	1183	Nothing	Dial No.: 3 | Current ISI: 286 ms. | Current Pos: 859 | Previous ISI: 286 ms. | Previous Pos: 859 | ISI Diff: 0 ms. | Pos Diff: 0	3046397	0	1			0		other	0
+s1504	1184	Sound	Syll: se | Duration: 240	3049257	0	1			0		other	0
+s1504	1185	Nothing	Dial No.: 1 | Current ISI: 492 ms. | Current Pos: 1478 | Previous ISI: 492 ms. | Previous Pos: 1478 | ISI Diff: 0 ms. | Pos Diff: 0	3051597	0	1			0		other	0
+s1504	1186	Sound	Syll: mi | Duration: 240	3056517	0	1			0		other	0
+s1504	1187	Nothing	Dial No.: 2 | Current ISI: 84 ms. | Current Pos: 253 | Previous ISI: 84 ms. | Previous Pos: 253 | ISI Diff: 0 ms. | Pos Diff: 0	3058898	0	1			0		other	0
+s1504	1188	Sound	Syll: po | Duration: 240	3059738	0	1			0		other	0
+s1504	1189	Nothing	Dial No.: 3 | Current ISI: 286 ms. | Current Pos: 859 | Previous ISI: 286 ms. | Previous Pos: 859 | ISI Diff: 0 ms. | Pos Diff: 0	3062098	0	1			0		other	0
+s1504	1189	Response	1	3063962	1864	1
+s1504	1190	Sound	Syll: la | Duration: 240	3064958	0	304			0		other	0
+s1504	1191	Picture	Block #1 | Trial #8 | task_struct_seq_A_8.txt | Init. Dial Pos 1: 1491 | Init. ISI 1: 497 | Init. Dial Pos 2: 699 | Init. ISI 2: 233 | Init. Dial Pos 3: 936 | Init. ISI 3: 312	3067904	0	1	7332	2	0	next	other	0
+s1504	1191	Response	1	3075161	7257	1
+s1504	1192	Picture	fixation	3075236	0	1	309440	2	0	next	other	0
+s1504	1193	Sound	Syll: po	3075237	0	1			0		other	0
+s1504	1194	Nothing	Dial No.: 2 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3077607	0	1			0		other	0
+s1504	1195	Sound	Syll: la | Duration: 240	3079937	0	2			0		other	0
+s1504	1196	Nothing	Dial No.: 1 | Current ISI: 497 ms. | Current Pos: 1491 | Previous ISI: 497 ms. | Previous Pos: 1491 | ISI Diff: 0 ms. | Pos Diff: 0	3082299	0	1			0		other	0
+s1504	1197	Sound	Syll: za | Duration: 240	3087269	0	2			0		other	0
+s1504	1198	Nothing	Dial No.: 3 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3089598	0	1			0		other	0
+s1504	1199	Sound	Syll: be | Duration: 245	3092718	0	449			0		other	0
+s1504	1200	Nothing	Dial No.: 2 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	3095599	0	1			0		other	0
+s1504	1201	Sound	Syll: tu | Duration: 240	3097929	0	315			0		other	0
+s1504	1202	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 587 ms. | Previous Pos: 1761 | ISI Diff: 13 ms. | Pos Diff: 39	3100599	0	1			0		other	0
+s1504	1203	Sound	Syll: nu | Duration: 240	3106599	0	797			0		other	0
+s1504	1204	Nothing	Dial No.: 3 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3109699	0	1			0		other	0
+s1504	1205	Sound	Syll: ga | Duration: 240	3112819	0	561			0		other	0
+s1504	1206	Nothing	Dial No.: 2 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	3115699	0	1			0		other	0
+s1504	1207	Sound	Syll: di | Duration: 240	3118029	0	935			0		other	0
+s1504	1208	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3121306	0	1			0		other	0
+s1504	1209	Sound	Syll: mi | Duration: 240	3127306	0	2			0		other	0
+s1504	1210	Nothing	Dial No.: 3 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3129700	0	1			0		other	0
+s1504	1211	Sound	Syll: po | Duration: 240	3132820	0	2			0		other	0
+s1504	1212	Nothing	Dial No.: 2 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	3135201	0	1			0		other	0
+s1504	1213	Sound	Syll: la | Duration: 240	3137531	0	2			0		other	0
+s1504	1214	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3139910	0	1			0		other	0
+s1504	1215	Sound	Syll: za | Duration: 240	3145910	0	2			0		other	0
+s1504	1216	Nothing	Dial No.: 3 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3148307	0	1			0		other	0
+s1504	1217	Sound	Syll: be | Duration: 245	3151427	0	2			0		other	0
+s1504	1218	Nothing	Dial No.: 2 | Current ISI: 103 ms. | Current Pos: 309 | Previous ISI: 166 ms. | Previous Pos: 499 | ISI Diff: -63 ms. | Pos Diff: -190	3153914	0	1			0		other	0
+s1504	1219	Sound	Syll: tu | Duration: 240	3154944	0	2			0		other	0
+s1504	1220	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3157308	0	1			0		other	0
+s1504	1221	Sound	Syll: ro | Duration: 240	3163308	0	1			0		other	0
+s1504	1222	Nothing	Dial No.: 3 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3165753	0	1			0		other	0
+s1504	1223	Sound	Syll: ki | Duration: 240	3168873	0	2			0		other	0
+s1504	1224	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 43 ms. | Previous Pos: 129 | ISI Diff: -43 ms. | Pos Diff: -129	3171252	0	1			0		other	0
+s1504	1225	Sound	Syll: se | Duration: 240	3171262	0	2			0		other	0
+s1504	1226	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3173602	0	1			0		other	0
+s1504	1227	Sound	Syll: ro | Duration: 240	3179602	0	2			0		other	0
+s1504	1228	Nothing	Dial No.: 3 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3182018	0	1			0		other	0
+s1504	1229	Sound	Syll: ki | Duration: 240	3185138	0	1			0		other	0
+s1504	1230	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3187502	0	1			0		other	0
+s1504	1231	Sound	Syll: se | Duration: 240	3187512	0	1			0		other	0
+s1504	1232	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3189902	0	1			0		other	0
+s1504	1233	Sound	Syll: za | Duration: 240	3195902	0	2			0		other	0
+s1504	1234	Nothing	Dial No.: 3 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3198303	0	1			0		other	0
+s1504	1235	Sound	Syll: be | Duration: 245	3201423	0	2			0		other	0
+s1504	1236	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3203903	0	1			0		other	0
+s1504	1237	Sound	Syll: tu | Duration: 240	3203913	0	1			0		other	0
+s1504	1238	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3206303	0	1			0		other	0
+s1504	1239	Sound	Syll: mi | Duration: 240	3212303	0	2			0		other	0
+s1504	1240	Nothing	Dial No.: 3 | Current ISI: 355 ms. | Current Pos: 1066 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 43 ms. | Pos Diff: 130	3214710	0	1			0		other	0
+s1504	1241	Sound	Syll: po | Duration: 240	3218260	0	1			0		other	0
+s1504	1242	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3220616	0	1			0		other	0
+s1504	1243	Sound	Syll: la | Duration: 240	3220626	0	1			0		other	0
+s1504	1244	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3223003	0	1			0		other	0
+s1504	1245	Sound	Syll: za | Duration: 240	3229003	0	2			0		other	0
+s1504	1246	Nothing	Dial No.: 3 | Current ISI: 438 ms. | Current Pos: 1316 | Previous ISI: 395 ms. | Previous Pos: 1186 | ISI Diff: 43 ms. | Pos Diff: 130	3231403	0	1			0		other	0
+s1504	1247	Sound	Syll: be | Duration: 245	3235783	0	2			0		other	0
+s1504	1248	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3238204	0	1			0		other	0
+s1504	1249	Sound	Syll: tu | Duration: 240	3238214	0	2			0		other	0
+s1504	1250	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3240661	0	1			0		other	0
+s1504	1251	Sound	Syll: nu | Duration: 240	3246661	0	2			0		other	0
+s1504	1252	Nothing	Dial No.: 3 | Current ISI: 538 ms. | Current Pos: 1616 | Previous ISI: 492 ms. | Previous Pos: 1476 | ISI Diff: 46 ms. | Pos Diff: 140	3249063	0	1			0		other	0
+s1504	1253	Sound	Syll: ga | Duration: 240	3254443	0	2			0		other	0
+s1504	1254	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3256857	0	1			0		other	0
+s1504	1255	Sound	Syll: di | Duration: 240	3256867	0	1			0		other	0
+s1504	1256	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3259213	0	1			0		other	0
+s1504	1257	Sound	Syll: mi | Duration: 240	3265213	0	1			0		other	0
+s1504	1258	Nothing	Dial No.: 3 | Current ISI: 598 ms. | Current Pos: 1796 | Previous ISI: 598 ms. | Previous Pos: 1796 | ISI Diff: 0 ms. | Pos Diff: 0	3267604	0	1			0		other	0
+s1504	1259	Sound	Syll: po | Duration: 240	3273584	0	2			0		other	0
+s1504	1260	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3275905	0	1			0		other	0
+s1504	1261	Sound	Syll: la | Duration: 240	3275915	0	1			0		other	0
+s1504	1262	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3278304	0	1			0		other	0
+s1504	1263	Sound	Syll: nu | Duration: 240	3284304	0	2			0		other	0
+s1504	1264	Nothing	Dial No.: 3 | Current ISI: 598 ms. | Current Pos: 1796 | Previous ISI: 598 ms. | Previous Pos: 1796 | ISI Diff: 0 ms. | Pos Diff: 0	3286705	0	1			0		other	0
+s1504	1265	Sound	Syll: ga | Duration: 240	3292685	0	2			0		other	0
+s1504	1266	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3295005	0	1			0		other	0
+s1504	1267	Sound	Syll: di | Duration: 240	3295015	0	1			0		other	0
+s1504	1268	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3297405	0	1			0		other	0
+s1504	1269	Sound	Syll: mi | Duration: 240	3303405	0	2			0		other	0
+s1504	1270	Nothing	Dial No.: 3 | Current ISI: 555 ms. | Current Pos: 1666 | Previous ISI: 598 ms. | Previous Pos: 1796 | ISI Diff: -43 ms. | Pos Diff: -130	3305806	0	1			0		other	0
+s1504	1271	Sound	Syll: po | Duration: 240	3311356	0	1			0		other	0
+s1504	1272	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3313706	0	1			0		other	0
+s1504	1273	Sound	Syll: la | Duration: 240	3313716	0	1			0		other	0
+s1504	1274	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3316106	0	1			0		other	0
+s1504	1275	Sound	Syll: nu | Duration: 240	3322106	0	1			0		other	0
+s1504	1276	Nothing	Dial No.: 3 | Current ISI: 508 ms. | Current Pos: 1526 | Previous ISI: 555 ms. | Previous Pos: 1666 | ISI Diff: -47 ms. | Pos Diff: -140	3324506	0	1			0		other	0
+s1504	1277	Sound	Syll: ga | Duration: 240	3329586	0	2			0		other	0
+s1504	1278	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3331906	0	1			0		other	0
+s1504	1279	Sound	Syll: di | Duration: 240	3331916	0	1			0		other	0
+s1504	1280	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3334307	0	1			0		other	0
+s1504	1281	Sound	Syll: mi | Duration: 240	3340307	0	1			0		other	0
+s1504	1282	Nothing	Dial No.: 3 | Current ISI: 428 ms. | Current Pos: 1286 | Previous ISI: 472 ms. | Previous Pos: 1416 | ISI Diff: -44 ms. | Pos Diff: -130	3342713	0	1			0		other	0
+s1504	1283	Sound	Syll: po | Duration: 240	3346993	0	2			0		other	0
+s1504	1284	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3349317	0	1			0		other	0
+s1504	1285	Sound	Syll: la | Duration: 240	3349327	0	1			0		other	0
+s1504	1286	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3351753	0	1			0		other	0
+s1504	1287	Sound	Syll: ro | Duration: 240	3357753	0	2			0		other	0
+s1504	1288	Nothing	Dial No.: 3 | Current ISI: 428 ms. | Current Pos: 1286 | Previous ISI: 428 ms. | Previous Pos: 1286 | ISI Diff: 0 ms. | Pos Diff: 0	3360162	0	1			0		other	0
+s1504	1289	Sound	Syll: ki | Duration: 240	3364442	0	1			0		other	0
+s1504	1290	Nothing	Dial No.: 2 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3366866	0	1			0		other	0
+s1504	1291	Sound	Syll: se | Duration: 240	3366876	0	1			0		other	0
+s1504	1292	Nothing	Dial No.: 1 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3369259	0	1			0		other	0
+s1504	1293	Sound	Syll: za | Duration: 240	3375259	0	2			0		other	0
+s1504	1294	Nothing	Dial No.: 3 | Current ISI: 428 ms. | Current Pos: 1286 | Previous ISI: 428 ms. | Previous Pos: 1286 | ISI Diff: 0 ms. | Pos Diff: 0	3377663	0	1			0		other	0
+s1504	1295	Sound	Syll: be | Duration: 245	3381943	0	2			0		other	0
+s1504	1295	Response	1	3382673	730	1
+s1504	1296	Picture	Block #1 | Trial #9 | task_struct_seq_A_9.txt | Init. Dial Pos 1: 1173 | Init. ISI 1: 391 | Init. Dial Pos 2: 936 | Init. ISI 2: 312 | Init. Dial Pos 3: 1488 | Init. ISI 3: 496	3384676	0	1	8665	2	0	next	other	0
+s1504	1296	Response	1	3393313	8637	1
+s1504	1298	Picture	fixation	3393341	0	1	597717	2	0	next	other	0
+s1504	1298	Sound	Syll: se	3393341	0	2			0		other	0
+s1504	1299	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	3395715	0	1			0		other	0
+s1504	1300	Sound	Syll: nu | Duration: 240	3400675	0	2			0		other	0
+s1504	1301	Nothing	Dial No.: 2 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3403018	0	1			0		other	0
+s1504	1302	Sound	Syll: ga | Duration: 240	3406138	0	2			0		other	0
+s1504	1303	Nothing	Dial No.: 1 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	3408515	0	1			0		other	0
+s1504	1304	Sound	Syll: di | Duration: 240	3412425	0	2			0		other	0
+s1504	1305	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3414809	0	1			0		other	0
+s1504	1306	Sound	Syll: za | Duration: 240	3419769	0	2			0		other	0
+s1504	1307	Nothing	Dial No.: 2 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3422108	0	1			0		other	0
+s1504	1308	Sound	Syll: be | Duration: 245	3425228	0	2			0		other	0
+s1504	1309	Nothing	Dial No.: 1 | Current ISI: 304 ms. | Current Pos: 913 | Previous ISI: 364 ms. | Previous Pos: 1093 | ISI Diff: -60 ms. | Pos Diff: -180	3427762	0	1			0		other	0
+s1504	1310	Sound	Syll: tu | Duration: 240	3430802	0	2			0		other	0
+s1504	1311	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3433209	0	1			0		other	0
+s1504	1312	Sound	Syll: nu | Duration: 240	3438169	0	2			0		other	0
+s1504	1313	Nothing	Dial No.: 2 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3440509	0	1			0		other	0
+s1504	1314	Sound	Syll: ga | Duration: 240	3443629	0	1			0		other	0
+s1504	1315	Nothing	Dial No.: 1 | Current ISI: 304 ms. | Current Pos: 913 | Previous ISI: 304 ms. | Previous Pos: 913 | ISI Diff: 0 ms. | Pos Diff: 0	3446009	0	1			0		other	0
+s1504	1316	Sound	Syll: di | Duration: 240	3449049	0	1			0		other	0
+s1504	1317	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3451409	0	1			0		other	0
+s1504	1318	Sound	Syll: ro | Duration: 240	3456369	0	2			0		other	0
+s1504	1319	Nothing	Dial No.: 2 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3458710	0	1			0		other	0
+s1504	1320	Sound	Syll: ki | Duration: 240	3461830	0	2			0		other	0
+s1504	1321	Nothing	Dial No.: 1 | Current ISI: 337 ms. | Current Pos: 1013 | Previous ISI: 337 ms. | Previous Pos: 1013 | ISI Diff: 0 ms. | Pos Diff: 0	3464210	0	1			0		other	0
+s1504	1322	Sound	Syll: se | Duration: 240	3467580	0	2			0		other	0
+s1504	1323	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3469910	0	1			0		other	0
+s1504	1324	Sound	Syll: nu | Duration: 240	3474870	0	2			0		other	0
+s1504	1325	Nothing	Dial No.: 2 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3477210	0	1			0		other	0
+s1504	1326	Sound	Syll: ga | Duration: 240	3480330	0	2			0		other	0
+s1504	1327	Nothing	Dial No.: 1 | Current ISI: 384 ms. | Current Pos: 1153 | Previous ISI: 384 ms. | Previous Pos: 1153 | ISI Diff: 0 ms. | Pos Diff: 0	3482710	0	1			0		other	0
+s1504	1328	Sound	Syll: di | Duration: 240	3486550	0	2			0		other	0
+s1504	1329	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3488923	0	1			0		other	0
+s1504	1330	Sound	Syll: ro | Duration: 240	3493883	0	2			0		other	0
+s1504	1331	Nothing	Dial No.: 2 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3496218	0	1			0		other	0
+s1504	1332	Sound	Syll: ki | Duration: 240	3499338	0	2			0		other	0
+s1504	1333	Nothing	Dial No.: 1 | Current ISI: 241 ms. | Current Pos: 723 | Previous ISI: 317 ms. | Previous Pos: 953 | ISI Diff: -76 ms. | Pos Diff: -230	3501725	0	1			0		other	0
+s1504	1334	Sound	Syll: se | Duration: 240	3504135	0	2			0		other	0
+s1504	1335	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3506564	0	1			0		other	0
+s1504	1336	Sound	Syll: mi | Duration: 240	3511524	0	2			0		other	0
+s1504	1337	Nothing	Dial No.: 2 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3513969	0	1			0		other	0
+s1504	1338	Sound	Syll: po | Duration: 240	3517089	0	1			0		other	0
+s1504	1339	Nothing	Dial No.: 1 | Current ISI: 31 ms. | Current Pos: 93 | Previous ISI: 91 ms. | Previous Pos: 273 | ISI Diff: -60 ms. | Pos Diff: -180	3519474	0	2			0		other	0
+s1504	1340	Sound	Syll: la | Duration: 240	3519784	0	2			0		other	0
+s1504	1341	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3522117	0	1			0		other	0
+s1504	1342	Sound	Syll: nu | Duration: 240	3527077	0	2			0		other	0
+s1504	1343	Nothing	Dial No.: 2 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3529421	0	1			0		other	0
+s1504	1344	Sound	Syll: ga | Duration: 240	3532541	0	2			0		other	0
+s1504	1345	Nothing	Dial No.: 1 | Current ISI: 50 ms. | Current Pos: 150 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 50 ms. | Pos Diff: 150	3534919	0	1			0		other	0
+s1504	1346	Sound	Syll: di | Duration: 240	3535419	0	1			0		other	0
+s1504	1347	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3537874	0	1			0		other	0
+s1504	1348	Sound	Syll: za | Duration: 240	3542834	0	2			0		other	0
+s1504	1349	Nothing	Dial No.: 2 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3545223	0	1			0		other	0
+s1504	1350	Sound	Syll: be | Duration: 245	3548343	0	2			0		other	0
+s1504	1351	Nothing	Dial No.: 1 | Current ISI: 253 ms. | Current Pos: 760 | Previous ISI: 203 ms. | Previous Pos: 610 | ISI Diff: 50 ms. | Pos Diff: 150	3550819	0	1			0		other	0
+s1504	1352	Sound	Syll: tu | Duration: 240	3553349	0	2			0		other	0
+s1504	1353	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3555712	0	1			0		other	0
+s1504	1354	Sound	Syll: mi | Duration: 240	3560672	0	2			0		other	0
+s1504	1355	Nothing	Dial No.: 2 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3563013	0	1			0		other	0
+s1504	1356	Sound	Syll: po | Duration: 240	3566133	0	1			0		other	0
+s1504	1357	Nothing	Dial No.: 1 | Current ISI: 243 ms. | Current Pos: 730 | Previous ISI: 243 ms. | Previous Pos: 730 | ISI Diff: 0 ms. | Pos Diff: 0	3568512	0	1			0		other	0
+s1504	1358	Sound	Syll: la | Duration: 240	3570942	0	2			0		other	0
+s1504	1359	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3573313	0	1			0		other	0
+s1504	1360	Sound	Syll: ro | Duration: 240	3578273	0	2			0		other	0
+s1504	1361	Nothing	Dial No.: 2 | Current ISI: 312 ms. | Current Pos: 936 | Previous ISI: 312 ms. | Previous Pos: 936 | ISI Diff: 0 ms. | Pos Diff: 0	3580613	0	1			0		other	0
+s1504	1362	Sound	Syll: ki | Duration: 240	3583733	0	1			0		other	0
+s1504	1363	Nothing	Dial No.: 1 | Current ISI: 170 ms. | Current Pos: 510 | Previous ISI: 170 ms. | Previous Pos: 510 | ISI Diff: 0 ms. | Pos Diff: 0	3586113	0	1			0		other	0
+s1504	1364	Sound	Syll: se | Duration: 240	3587813	0	2			0		other	0
+s1504	1365	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3590213	0	1			0		other	0
+s1504	1366	Sound	Syll: mi | Duration: 240	3595173	0	1			0		other	0
+s1504	1367	Nothing	Dial No.: 2 | Current ISI: 385 ms. | Current Pos: 1156 | Previous ISI: 352 ms. | Previous Pos: 1056 | ISI Diff: 33 ms. | Pos Diff: 100	3597514	0	1			0		other	0
+s1504	1368	Sound	Syll: po | Duration: 240	3601364	0	1			0		other	0
+s1504	1369	Nothing	Dial No.: 1 | Current ISI: 170 ms. | Current Pos: 510 | Previous ISI: 170 ms. | Previous Pos: 510 | ISI Diff: 0 ms. | Pos Diff: 0	3603714	0	1			0		other	0
+s1504	1370	Sound	Syll: la | Duration: 240	3605414	0	1			0		other	0
+s1504	1371	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3607814	0	1			0		other	0
+s1504	1372	Sound	Syll: za | Duration: 240	3612774	0	2			0		other	0
+s1504	1373	Nothing	Dial No.: 2 | Current ISI: 422 ms. | Current Pos: 1266 | Previous ISI: 398 ms. | Previous Pos: 1196 | ISI Diff: 24 ms. | Pos Diff: 70	3615114	0	1			0		other	0
+s1504	1374	Sound	Syll: be | Duration: 245	3619334	0	2			0		other	0
+s1504	1375	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 170 ms. | Previous Pos: 510 | ISI Diff: -44 ms. | Pos Diff: -130	3621814	0	1			0		other	0
+s1504	1376	Sound	Syll: tu | Duration: 240	3623074	0	1			0		other	0
+s1504	1377	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3625427	0	1			0		other	0
+s1504	1378	Sound	Syll: nu | Duration: 240	3630387	0	2			0		other	0
+s1504	1379	Nothing	Dial No.: 2 | Current ISI: 508 ms. | Current Pos: 1526 | Previous ISI: 465 ms. | Previous Pos: 1396 | ISI Diff: 43 ms. | Pos Diff: 130	3632723	0	1			0		other	0
+s1504	1380	Sound	Syll: ga | Duration: 240	3637803	0	2			0		other	0
+s1504	1381	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3640162	0	1			0		other	0
+s1504	1382	Sound	Syll: di | Duration: 240	3641422	0	2			0		other	0
+s1504	1383	Nothing	Dial No.: 3 | Current ISI: 496 ms. | Current Pos: 1488 | Previous ISI: 496 ms. | Previous Pos: 1488 | ISI Diff: 0 ms. | Pos Diff: 0	3643841	0	1			0		other	0
+s1504	1384	Sound	Syll: mi | Duration: 240	3648801	0	1			0		other	0
+s1504	1385	Nothing	Dial No.: 2 | Current ISI: 592 ms. | Current Pos: 1776 | Previous ISI: 552 ms. | Previous Pos: 1656 | ISI Diff: 40 ms. | Pos Diff: 120	3651125	0	1			0		other	0
+s1504	1386	Sound	Syll: po | Duration: 240	3657045	0	2			0		other	0
+s1504	1387	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3659427	0	1			0		other	0
+s1504	1388	Sound	Syll: la | Duration: 240	3660687	0	2			0		other	0
+s1504	1389	Nothing	Dial No.: 3 | Current ISI: 452 ms. | Current Pos: 1358 | Previous ISI: 486 ms. | Previous Pos: 1458 | ISI Diff: -34 ms. | Pos Diff: -100	3663024	0	1			0		other	0
+s1504	1390	Sound	Syll: ro | Duration: 240	3667544	0	1			0		other	0
+s1504	1391	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3669926	0	1			0		other	0
+s1504	1392	Sound	Syll: ki | Duration: 240	3675926	0	2			0		other	0
+s1504	1393	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3678325	0	1			0		other	0
+s1504	1394	Sound	Syll: se | Duration: 240	3679585	0	2			0		other	0
+s1504	1395	Nothing	Dial No.: 3 | Current ISI: 349 ms. | Current Pos: 1048 | Previous ISI: 379 ms. | Previous Pos: 1138 | ISI Diff: -30 ms. | Pos Diff: -90	3681916	0	1			0		other	0
+s1504	1396	Sound	Syll: mi | Duration: 240	3685406	0	1			0		other	0
+s1504	1397	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3687717	0	1			0		other	0
+s1504	1398	Sound	Syll: po | Duration: 240	3693717	0	2			0		other	0
+s1504	1399	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3696116	0	1			0		other	0
+s1504	1400	Sound	Syll: la | Duration: 240	3697376	0	1			0		other	0
+s1504	1401	Nothing	Dial No.: 3 | Current ISI: 296 ms. | Current Pos: 888 | Previous ISI: 296 ms. | Previous Pos: 888 | ISI Diff: 0 ms. | Pos Diff: 0	3699728	0	1			0		other	0
+s1504	1402	Sound	Syll: za | Duration: 240	3702688	0	2			0		other	0
+s1504	1403	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3705023	0	1			0		other	0
+s1504	1404	Sound	Syll: be | Duration: 245	3711023	0	2			0		other	0
+s1504	1405	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3713526	0	1			0		other	0
+s1504	1406	Sound	Syll: tu | Duration: 240	3714786	0	2			0		other	0
+s1504	1407	Nothing	Dial No.: 3 | Current ISI: 432 ms. | Current Pos: 1298 | Previous ISI: 386 ms. | Previous Pos: 1158 | ISI Diff: 46 ms. | Pos Diff: 140	3717117	0	1			0		other	0
+s1504	1408	Sound	Syll: ro | Duration: 240	3721437	0	2			0		other	0
+s1504	1409	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3723818	0	1			0		other	0
+s1504	1410	Sound	Syll: ki | Duration: 240	3729818	0	2			0		other	0
+s1504	1411	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3732218	0	1			0		other	0
+s1504	1412	Sound	Syll: se | Duration: 240	3733478	0	1			0		other	0
+s1504	1413	Nothing	Dial No.: 3 | Current ISI: 542 ms. | Current Pos: 1628 | Previous ISI: 542 ms. | Previous Pos: 1628 | ISI Diff: 0 ms. | Pos Diff: 0	3735828	0	1			0		other	0
+s1504	1414	Sound	Syll: nu | Duration: 240	3741248	0	1			0		other	0
+s1504	1415	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3743624	0	1			0		other	0
+s1504	1416	Sound	Syll: ga | Duration: 240	3749624	0	2			0		other	0
+s1504	1417	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3752026	0	1			0		other	0
+s1504	1418	Sound	Syll: di | Duration: 240	3753286	0	1			0		other	0
+s1504	1419	Nothing	Dial No.: 3 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3755630	0	1			0		other	0
+s1504	1420	Sound	Syll: mi | Duration: 240	3761630	0	2			0		other	0
+s1504	1421	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3764030	0	1			0		other	0
+s1504	1422	Sound	Syll: po | Duration: 240	3770030	0	2			0		other	0
+s1504	1423	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3772427	0	1			0		other	0
+s1504	1424	Sound	Syll: la | Duration: 240	3773687	0	1			0		other	0
+s1504	1425	Nothing	Dial No.: 3 | Current ISI: 460 ms. | Current Pos: 1380 | Previous ISI: 516 ms. | Previous Pos: 1550 | ISI Diff: -56 ms. | Pos Diff: -170	3776019	0	1			0		other	0
+s1504	1426	Sound	Syll: nu | Duration: 240	3780619	0	2			0		other	0
+s1504	1427	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3783019	0	1			0		other	0
+s1504	1428	Sound	Syll: ga | Duration: 240	3789019	0	2			0		other	0
+s1504	1429	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3791419	0	1			0		other	0
+s1504	1430	Sound	Syll: di | Duration: 240	3792679	0	2			0		other	0
+s1504	1431	Nothing	Dial No.: 3 | Current ISI: 300 ms. | Current Pos: 900 | Previous ISI: 366 ms. | Previous Pos: 1100 | ISI Diff: -66 ms. | Pos Diff: -200	3795020	0	1			0		other	0
+s1504	1432	Sound	Syll: za | Duration: 240	3798020	0	2			0		other	0
+s1504	1433	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3800419	0	1			0		other	0
+s1504	1434	Sound	Syll: be | Duration: 245	3806419	0	2			0		other	0
+s1504	1435	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3808920	0	1			0		other	0
+s1504	1436	Sound	Syll: tu | Duration: 240	3810180	0	1			0		other	0
+s1504	1437	Nothing	Dial No.: 3 | Current ISI: 246 ms. | Current Pos: 740 | Previous ISI: 246 ms. | Previous Pos: 740 | ISI Diff: 0 ms. | Pos Diff: 0	3812532	0	1			0		other	0
+s1504	1438	Sound	Syll: ro | Duration: 240	3814992	0	2			0		other	0
+s1504	1439	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3817330	0	1			0		other	0
+s1504	1440	Sound	Syll: ki | Duration: 240	3823330	0	1			0		other	0
+s1504	1441	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3825730	0	1			0		other	0
+s1504	1442	Sound	Syll: se | Duration: 240	3826990	0	1			0		other	0
+s1504	1443	Nothing	Dial No.: 3 | Current ISI: 246 ms. | Current Pos: 740 | Previous ISI: 246 ms. | Previous Pos: 740 | ISI Diff: 0 ms. | Pos Diff: 0	3829329	0	1			0		other	0
+s1504	1444	Sound	Syll: za | Duration: 240	3831789	0	1			0		other	0
+s1504	1445	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3834128	0	1			0		other	0
+s1504	1446	Sound	Syll: be | Duration: 245	3840128	0	2			0		other	0
+s1504	1447	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3842630	0	1			0		other	0
+s1504	1448	Sound	Syll: tu | Duration: 240	3843890	0	1			0		other	0
+s1504	1449	Nothing	Dial No.: 3 | Current ISI: 213 ms. | Current Pos: 640 | Previous ISI: 213 ms. | Previous Pos: 640 | ISI Diff: 0 ms. | Pos Diff: 0	3846221	0	1			0		other	0
+s1504	1450	Sound	Syll: ro | Duration: 240	3848351	0	1			0		other	0
+s1504	1451	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3850721	0	1			0		other	0
+s1504	1452	Sound	Syll: ki | Duration: 240	3856721	0	1			0		other	0
+s1504	1453	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3859121	0	1			0		other	0
+s1504	1454	Sound	Syll: se | Duration: 240	3860381	0	1			0		other	0
+s1504	1455	Nothing	Dial No.: 3 | Current ISI: 213 ms. | Current Pos: 640 | Previous ISI: 213 ms. | Previous Pos: 640 | ISI Diff: 0 ms. | Pos Diff: 0	3862733	0	1			0		other	0
+s1504	1456	Sound	Syll: nu | Duration: 240	3864863	0	2			0		other	0
+s1504	1457	Nothing	Dial No.: 2 | Current ISI: 600 ms. | Current Pos: 1800 | Previous ISI: 600 ms. | Previous Pos: 1800 | ISI Diff: 0 ms. | Pos Diff: 0	3867234	0	1			0		other	0
+s1504	1458	Sound	Syll: ga | Duration: 240	3873234	0	2			0		other	0
+s1504	1459	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3875634	0	1			0		other	0
+s1504	1460	Sound	Syll: di | Duration: 240	3876894	0	2			0		other	0
+s1504	1461	Nothing	Dial No.: 3 | Current ISI: 213 ms. | Current Pos: 640 | Previous ISI: 213 ms. | Previous Pos: 640 | ISI Diff: 0 ms. | Pos Diff: 0	3879231	0	1			0		other	0
+s1504	1462	Sound	Syll: mi | Duration: 240	3881361	0	2			0		other	0
+s1504	1463	Nothing	Dial No.: 2 | Current ISI: 470 ms. | Current Pos: 1410 | Previous ISI: 520 ms. | Previous Pos: 1560 | ISI Diff: -50 ms. | Pos Diff: -150	3883783	0	1			0		other	0
+s1504	1464	Sound	Syll: po | Duration: 240	3888483	0	2			0		other	0
+s1504	1465	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3890880	0	1			0		other	0
+s1504	1466	Sound	Syll: la | Duration: 240	3892140	0	2			0		other	0
+s1504	1467	Nothing	Dial No.: 3 | Current ISI: 213 ms. | Current Pos: 640 | Previous ISI: 213 ms. | Previous Pos: 640 | ISI Diff: 0 ms. | Pos Diff: 0	3894523	0	1			0		other	0
+s1504	1468	Sound	Syll: za | Duration: 240	3896653	0	2			0		other	0
+s1504	1469	Nothing	Dial No.: 2 | Current ISI: 420 ms. | Current Pos: 1260 | Previous ISI: 420 ms. | Previous Pos: 1260 | ISI Diff: 0 ms. | Pos Diff: 0	3899023	0	1			0		other	0
+s1504	1470	Sound	Syll: be | Duration: 245	3903223	0	1			0		other	0
+s1504	1471	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3905723	0	1			0		other	0
+s1504	1472	Sound	Syll: tu | Duration: 240	3906983	0	1			0		other	0
+s1504	1473	Nothing	Dial No.: 3 | Current ISI: 213 ms. | Current Pos: 640 | Previous ISI: 213 ms. | Previous Pos: 640 | ISI Diff: 0 ms. | Pos Diff: 0	3909323	0	1			0		other	0
+s1504	1474	Sound	Syll: ro | Duration: 240	3911453	0	1			0		other	0
+s1504	1475	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1190 | Previous ISI: 396 ms. | Previous Pos: 1190 | ISI Diff: 0 ms. | Pos Diff: 0	3913823	0	1			0		other	0
+s1504	1476	Sound	Syll: ki | Duration: 240	3917783	0	1			0		other	0
+s1504	1477	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3920123	0	1			0		other	0
+s1504	1478	Sound	Syll: se | Duration: 240	3921383	0	1			0		other	0
+s1504	1479	Nothing	Dial No.: 3 | Current ISI: 213 ms. | Current Pos: 640 | Previous ISI: 213 ms. | Previous Pos: 640 | ISI Diff: 0 ms. | Pos Diff: 0	3923723	0	1			0		other	0
+s1504	1480	Sound	Syll: nu | Duration: 240	3925853	0	1			0		other	0
+s1504	1481	Nothing	Dial No.: 2 | Current ISI: 350 ms. | Current Pos: 1050 | Previous ISI: 350 ms. | Previous Pos: 1050 | ISI Diff: 0 ms. | Pos Diff: 0	3928224	0	1			0		other	0
+s1504	1482	Sound	Syll: ga | Duration: 240	3931724	0	1			0		other	0
+s1504	1483	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3934123	0	1			0		other	0
+s1504	1484	Sound	Syll: di | Duration: 240	3935383	0	2			0		other	0
+s1504	1485	Nothing	Dial No.: 3 | Current ISI: 213 ms. | Current Pos: 640 | Previous ISI: 213 ms. | Previous Pos: 640 | ISI Diff: 0 ms. | Pos Diff: 0	3937731	0	1			0		other	0
+s1504	1486	Sound	Syll: ro | Duration: 240	3939861	0	1			0		other	0
+s1504	1487	Nothing	Dial No.: 2 | Current ISI: 313 ms. | Current Pos: 940 | Previous ISI: 313 ms. | Previous Pos: 940 | ISI Diff: 0 ms. | Pos Diff: 0	3942229	0	1			0		other	0
+s1504	1488	Sound	Syll: ki | Duration: 240	3945359	0	1			0		other	0
+s1504	1489	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3947730	0	1			0		other	0
+s1504	1490	Sound	Syll: se | Duration: 240	3948990	0	1			0		other	0
+s1504	1491	Nothing	Dial No.: 3 | Current ISI: 213 ms. | Current Pos: 640 | Previous ISI: 213 ms. | Previous Pos: 640 | ISI Diff: 0 ms. | Pos Diff: 0	3951332	0	1			0		other	0
+s1504	1492	Sound	Syll: za | Duration: 240	3953462	0	1			0		other	0
+s1504	1493	Nothing	Dial No.: 2 | Current ISI: 283 ms. | Current Pos: 850 | Previous ISI: 283 ms. | Previous Pos: 850 | ISI Diff: 0 ms. | Pos Diff: 0	3955835	0	1			0		other	0
+s1504	1494	Sound	Syll: be | Duration: 245	3958665	0	2			0		other	0
+s1504	1495	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3961134	0	1			0		other	0
+s1504	1496	Sound	Syll: tu | Duration: 240	3962394	0	2			0		other	0
+s1504	1497	Nothing	Dial No.: 3 | Current ISI: 213 ms. | Current Pos: 640 | Previous ISI: 213 ms. | Previous Pos: 640 | ISI Diff: 0 ms. | Pos Diff: 0	3964724	0	2			0		other	0
+s1504	1498	Sound	Syll: mi | Duration: 240	3966854	0	1			0		other	0
+s1504	1499	Nothing	Dial No.: 2 | Current ISI: 250 ms. | Current Pos: 750 | Previous ISI: 250 ms. | Previous Pos: 750 | ISI Diff: 0 ms. | Pos Diff: 0	3969224	0	1			0		other	0
+s1504	1500	Sound	Syll: po | Duration: 240	3971724	0	1			0		other	0
+s1504	1501	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3974125	0	1			0		other	0
+s1504	1502	Sound	Syll: la | Duration: 240	3975385	0	1			0		other	0
+s1504	1503	Nothing	Dial No.: 3 | Current ISI: 213 ms. | Current Pos: 640 | Previous ISI: 213 ms. | Previous Pos: 640 | ISI Diff: 0 ms. | Pos Diff: 0	3977735	0	1			0		other	0
+s1504	1504	Sound	Syll: nu | Duration: 240	3979865	0	1			0		other	0
+s1504	1505	Nothing	Dial No.: 2 | Current ISI: 250 ms. | Current Pos: 750 | Previous ISI: 250 ms. | Previous Pos: 750 | ISI Diff: 0 ms. | Pos Diff: 0	3982236	0	1			0		other	0
+s1504	1506	Sound	Syll: ga | Duration: 240	3984736	0	1			0		other	0
+s1504	1507	Nothing	Dial No.: 1 | Current ISI: 126 ms. | Current Pos: 380 | Previous ISI: 126 ms. | Previous Pos: 380 | ISI Diff: 0 ms. | Pos Diff: 0	3987135	0	1			0		other	0
+s1504	1508	Sound	Syll: di | Duration: 240	3988395	0	2			0		other	0
+s1504	1508	Response	1	3990097	1702	1
+s1504	1509	Picture	Block #1 | Trial #10 | task_struct_seq_A_10.txt | Init. Dial Pos 1: 699 | Init. ISI 1: 233 | Init. Dial Pos 2: 1089 | Init. ISI 2: 363 | Init. Dial Pos 3: 1173 | Init. ISI 3: 391	3991058	0	1	8165	2	0	next	other	0
+s1504	1509	Response	1	3999056	7998	1
+s1504	1510	Picture	fixation	3999223	0	1	267282	2	0	next	other	0
+s1504	1511	Sound	Syll: ro	3999224	0	2			0		other	0
+s1504	1512	Nothing	Dial No.: 2 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4001625	0	1			0		other	0
+s1504	1513	Sound	Syll: ki | Duration: 240	4005255	0	1			0		other	0
+s1504	1514	Nothing	Dial No.: 3 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	4007626	0	1			0		other	0
+s1504	1515	Sound	Syll: se | Duration: 240	4011536	0	1			0		other	0
+s1504	1516	Nothing	Dial No.: 1 | Current ISI: 233 ms. | Current Pos: 699 | Previous ISI: 233 ms. | Previous Pos: 699 | ISI Diff: 0 ms. | Pos Diff: 0	4013926	0	1			0		other	0
+s1504	1517	Sound	Syll: nu | Duration: 240	4016256	0	1			0		other	0
+s1504	1518	Nothing	Dial No.: 2 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	4018627	0	1			0		other	0
+s1504	1519	Sound	Syll: ga | Duration: 240	4022257	0	2			0		other	0
+s1504	1520	Nothing	Dial No.: 3 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	4024626	0	1			0		other	0
+s1504	1521	Sound	Syll: di | Duration: 240	4028536	0	2			0		other	0
+s1504	1522	Nothing	Dial No.: 1 | Current ISI: 153 ms. | Current Pos: 459 | Previous ISI: 199 ms. | Previous Pos: 599 | ISI Diff: -46 ms. | Pos Diff: -140	4030937	0	1			0		other	0
+s1504	1523	Sound	Syll: mi | Duration: 240	4032467	0	1			0		other	0
+s1504	1524	Nothing	Dial No.: 2 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	4034838	0	1			0		other	0
+s1504	1525	Sound	Syll: po | Duration: 240	4038468	0	2			0		other	0
+s1504	1526	Nothing	Dial No.: 3 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	4040835	0	1			0		other	0
+s1504	1527	Sound	Syll: la | Duration: 240	4044745	0	2			0		other	0
+s1504	1528	Nothing	Dial No.: 1 | Current ISI: 36 ms. | Current Pos: 109 | Previous ISI: 103 ms. | Previous Pos: 309 | ISI Diff: -67 ms. | Pos Diff: -200	4047127	0	1			0		other	0
+s1504	1529	Sound	Syll: za | Duration: 240	4047487	0	1			0		other	0
+s1504	1530	Nothing	Dial No.: 2 | Current ISI: 363 ms. | Current Pos: 1089 | Previous ISI: 363 ms. | Previous Pos: 1089 | ISI Diff: 0 ms. | Pos Diff: 0	4049827	0	1			0		other	0
+s1504	1531	Sound	Syll: be | Duration: 245	4053457	0	2			0		other	0
+s1504	1532	Nothing	Dial No.: 3 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	4055927	0	1			0		other	0
+s1504	1533	Sound	Syll: tu | Duration: 240	4059837	0	1			0		other	0
+s1504	1534	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4062249	0	1			0		other	0
+s1504	1535	Sound	Syll: ro | Duration: 240	4062259	0	1			0		other	0
+s1504	1536	Nothing	Dial No.: 2 | Current ISI: 396 ms. | Current Pos: 1189 | Previous ISI: 396 ms. | Previous Pos: 1189 | ISI Diff: 0 ms. | Pos Diff: 0	4064635	0	1			0		other	0
+s1504	1537	Sound	Syll: ki | Duration: 240	4068595	0	2			0		other	0
+s1504	1538	Nothing	Dial No.: 3 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	4070935	0	1			0		other	0
+s1504	1539	Sound	Syll: se | Duration: 240	4074845	0	1			0		other	0
+s1504	1540	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4077236	0	1			0		other	0
+s1504	1541	Sound	Syll: za | Duration: 240	4077246	0	1			0		other	0
+s1504	1542	Nothing	Dial No.: 2 | Current ISI: 483 ms. | Current Pos: 1449 | Previous ISI: 446 ms. | Previous Pos: 1339 | ISI Diff: 37 ms. | Pos Diff: 110	4079634	0	1			0		other	0
+s1504	1543	Sound	Syll: be | Duration: 245	4084464	0	1			0		other	0
+s1504	1544	Nothing	Dial No.: 3 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	4086935	0	1			0		other	0
+s1504	1545	Sound	Syll: tu | Duration: 240	4090845	0	1			0		other	0
+s1504	1546	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4093228	0	1			0		other	0
+s1504	1547	Sound	Syll: mi | Duration: 240	4093238	0	1			0		other	0
+s1504	1548	Nothing	Dial No.: 2 | Current ISI: 523 ms. | Current Pos: 1569 | Previous ISI: 523 ms. | Previous Pos: 1569 | ISI Diff: 0 ms. | Pos Diff: 0	4095628	0	1			0		other	0
+s1504	1549	Sound	Syll: po | Duration: 240	4100858	0	1			0		other	0
+s1504	1550	Nothing	Dial No.: 3 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	4103229	0	1			0		other	0
+s1504	1551	Sound	Syll: la | Duration: 240	4107139	0	1			0		other	0
+s1504	1552	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4109536	0	1			0		other	0
+s1504	1553	Sound	Syll: nu | Duration: 240	4109546	0	1			0		other	0
+s1504	1554	Nothing	Dial No.: 2 | Current ISI: 549 ms. | Current Pos: 1649 | Previous ISI: 549 ms. | Previous Pos: 1649 | ISI Diff: 0 ms. | Pos Diff: 0	4111937	0	1			0		other	0
+s1504	1555	Sound	Syll: ga | Duration: 240	4117427	0	2			0		other	0
+s1504	1556	Nothing	Dial No.: 3 | Current ISI: 391 ms. | Current Pos: 1173 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 0 ms. | Pos Diff: 0	4119841	0	1			0		other	0
+s1504	1557	Sound	Syll: di | Duration: 240	4123751	0	1			0		other	0
+s1504	1558	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4126129	0	1			0		other	0
+s1504	1559	Sound	Syll: za | Duration: 240	4126139	0	1			0		other	0
+s1504	1560	Nothing	Dial No.: 2 | Current ISI: 549 ms. | Current Pos: 1649 | Previous ISI: 549 ms. | Previous Pos: 1649 | ISI Diff: 0 ms. | Pos Diff: 0	4128529	0	1			0		other	0
+s1504	1561	Sound	Syll: be | Duration: 245	4134019	0	2			0		other	0
+s1504	1562	Nothing	Dial No.: 3 | Current ISI: 424 ms. | Current Pos: 1273 | Previous ISI: 391 ms. | Previous Pos: 1173 | ISI Diff: 33 ms. | Pos Diff: 100	4136430	0	1			0		other	0
+s1504	1563	Sound	Syll: tu | Duration: 240	4140670	0	1			0		other	0
+s1504	1564	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4143030	0	1			0		other	0
+s1504	1565	Sound	Syll: nu | Duration: 240	4143040	0	1			0		other	0
+s1504	1566	Nothing	Dial No.: 2 | Current ISI: 549 ms. | Current Pos: 1649 | Previous ISI: 549 ms. | Previous Pos: 1649 | ISI Diff: 0 ms. | Pos Diff: 0	4145429	0	1			0		other	0
+s1504	1567	Sound	Syll: ga | Duration: 240	4150919	0	2			0		other	0
+s1504	1568	Nothing	Dial No.: 3 | Current ISI: 467 ms. | Current Pos: 1403 | Previous ISI: 424 ms. | Previous Pos: 1273 | ISI Diff: 43 ms. | Pos Diff: 130	4153230	0	1			0		other	0
+s1504	1569	Sound	Syll: di | Duration: 240	4157900	0	1			0		other	0
+s1504	1570	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4160239	0	1			0		other	0
+s1504	1571	Sound	Syll: mi | Duration: 240	4160249	0	1			0		other	0
+s1504	1572	Nothing	Dial No.: 2 | Current ISI: 549 ms. | Current Pos: 1649 | Previous ISI: 549 ms. | Previous Pos: 1649 | ISI Diff: 0 ms. | Pos Diff: 0	4162640	0	1			0		other	0
+s1504	1573	Sound	Syll: po | Duration: 240	4168130	0	1			0		other	0
+s1504	1574	Nothing	Dial No.: 3 | Current ISI: 507 ms. | Current Pos: 1523 | Previous ISI: 467 ms. | Previous Pos: 1403 | ISI Diff: 40 ms. | Pos Diff: 120	4170537	0	1			0		other	0
+s1504	1575	Sound	Syll: la | Duration: 240	4175607	0	1			0		other	0
+s1504	1576	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4177940	0	1			0		other	0
+s1504	1577	Sound	Syll: za | Duration: 240	4177950	0	1			0		other	0
+s1504	1578	Nothing	Dial No.: 2 | Current ISI: 549 ms. | Current Pos: 1649 | Previous ISI: 549 ms. | Previous Pos: 1649 | ISI Diff: 0 ms. | Pos Diff: 0	4180338	0	1			0		other	0
+s1504	1579	Sound	Syll: be | Duration: 245	4185828	0	2			0		other	0
+s1504	1580	Nothing	Dial No.: 3 | Current ISI: 507 ms. | Current Pos: 1523 | Previous ISI: 507 ms. | Previous Pos: 1523 | ISI Diff: 0 ms. | Pos Diff: 0	4188342	0	1			0		other	0
+s1504	1581	Sound	Syll: tu | Duration: 240	4193412	0	1			0		other	0
+s1504	1582	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4195792	0	1			0		other	0
+s1504	1583	Sound	Syll: ro | Duration: 240	4195802	0	1			0		other	0
+s1504	1584	Nothing	Dial No.: 2 | Current ISI: 549 ms. | Current Pos: 1649 | Previous ISI: 549 ms. | Previous Pos: 1649 | ISI Diff: 0 ms. | Pos Diff: 0	4198192	0	1			0		other	0
+s1504	1585	Sound	Syll: ki | Duration: 240	4203682	0	1			0		other	0
+s1504	1586	Nothing	Dial No.: 3 | Current ISI: 507 ms. | Current Pos: 1523 | Previous ISI: 507 ms. | Previous Pos: 1523 | ISI Diff: 0 ms. | Pos Diff: 0	4206078	0	1			0		other	0
+s1504	1587	Sound	Syll: se | Duration: 240	4211148	0	1			0		other	0
+s1504	1588	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4213532	0	1			0		other	0
+s1504	1589	Sound	Syll: mi | Duration: 240	4213542	0	1			0		other	0
+s1504	1590	Nothing	Dial No.: 2 | Current ISI: 549 ms. | Current Pos: 1649 | Previous ISI: 549 ms. | Previous Pos: 1649 | ISI Diff: 0 ms. | Pos Diff: 0	4215932	0	1			0		other	0
+s1504	1591	Sound	Syll: po | Duration: 240	4221422	0	2			0		other	0
+s1504	1592	Nothing	Dial No.: 3 | Current ISI: 507 ms. | Current Pos: 1523 | Previous ISI: 507 ms. | Previous Pos: 1523 | ISI Diff: 0 ms. | Pos Diff: 0	4223732	0	1			0		other	0
+s1504	1593	Sound	Syll: la | Duration: 240	4228802	0	1			0		other	0
+s1504	1594	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4231144	0	1			0		other	0
+s1504	1595	Sound	Syll: nu | Duration: 240	4231154	0	1			0		other	0
+s1504	1596	Nothing	Dial No.: 2 | Current ISI: 549 ms. | Current Pos: 1649 | Previous ISI: 549 ms. | Previous Pos: 1649 | ISI Diff: 0 ms. | Pos Diff: 0	4233539	0	1			0		other	0
+s1504	1597	Sound	Syll: ga | Duration: 240	4239029	0	1			0		other	0
+s1504	1598	Nothing	Dial No.: 3 | Current ISI: 507 ms. | Current Pos: 1523 | Previous ISI: 507 ms. | Previous Pos: 1523 | ISI Diff: 0 ms. | Pos Diff: 0	4241443	0	1			0		other	0
+s1504	1599	Sound	Syll: di | Duration: 240	4246513	0	1			0		other	0
+s1504	1600	Nothing	Dial No.: 1 | Current ISI: 0 ms. | Current Pos: 0 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4248833	0	1			0		other	0
+s1504	1601	Sound	Syll: ro | Duration: 240	4248843	0	1			0		other	0
+s1504	1602	Nothing	Dial No.: 2 | Current ISI: 549 ms. | Current Pos: 1649 | Previous ISI: 549 ms. | Previous Pos: 1649 | ISI Diff: 0 ms. | Pos Diff: 0	4251233	0	1			0		other	0
+s1504	1603	Sound	Syll: ki | Duration: 240	4256723	0	1			0		other	0
+s1504	1604	Nothing	Dial No.: 3 | Current ISI: 507 ms. | Current Pos: 1523 | Previous ISI: 507 ms. | Previous Pos: 1523 | ISI Diff: 0 ms. | Pos Diff: 0	4259033	0	1			0		other	0
+s1504	1604	Response	1	4263210	4177	1
+s1504	1605	Sound	Syll: se | Duration: 240	4264103	0	1			0		other	0
+s1504	1606	Picture	break	4266505	0	1	14997	2	0	next	other	0
+s1504	1606	Response	1	4281289	14784	1
+s1504	1607	Picture	Block #2 | Trial #1 | task_struct_seq_A_1.txt | Init. Dial Pos 1: 174 | Init. ISI 1: 58 | Init. Dial Pos 2: 1671 | Init. ISI 2: 557 | Init. Dial Pos 3: 1767 | Init. ISI 3: 589	4281502	0	1	26161	2	0	next	other	0
+s1504	1607	Response	1	4307609	26107	1
+s1504	1608	Picture	fixation	4307663	0	1	21496	2	0	next	other	0
+s1504	1609	Sound	Syll: la	4307664	0	2			0		other	0
+s1504	1610	Nothing	Dial No.: 3 | Current ISI: 589 ms. | Current Pos: 1767 | Previous ISI: 0 ms. | Previous Pos: 0 | ISI Diff: 0 ms. | Pos Diff: 0	4310034	0	2			0		other	0
+s1504	1611	Sound	Syll: nu | Duration: 240	4315924	0	1			0		other	0
+s1504	1612	Nothing	Dial No.: 2 | Current ISI: 557 ms. | Current Pos: 1671 | Previous ISI: 557 ms. | Previous Pos: 1671 | ISI Diff: 0 ms. | Pos Diff: 0	4318235	0	1			0		other	0
+s1504	1613	Sound	Syll: ga | Duration: 240	4323805	0	1			0		other	0
+s1504	1614	Nothing	Dial No.: 1 | Current ISI: 58 ms. | Current Pos: 174 | Previous ISI: 58 ms. | Previous Pos: 174 | ISI Diff: 0 ms. | Pos Diff: 0	4326135	0	1			0		other	0
+s1504	1615	Sound	Syll: di | Duration: 240	4326715	0	1			0		other	0
+s1504	1615	Response	1	4328088	1373	1

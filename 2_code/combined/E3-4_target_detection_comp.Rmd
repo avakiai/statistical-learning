@@ -1,0 +1,2409 @@
+---
+title: 'Target Detection: Exps 3 & 4'
+author: "Ava Kiai"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+# Init.
+```{r include=FALSE}
+library(tidyverse)
+library(reshape2)
+library(ggplot2)
+library(data.table)
+library(extrafont)
+par(family="LM Roman 10")
+library(lme4)
+library(broom)
+library(emmeans)
+library(car)
+source("summarySE.R")
+library(cluster) # clustering algorithms
+library(factoextra) # ibid & visualization
+library(wesanderson)
+pal <- wes_palette("Zissou1", 100, type = "continuous")
+
+library(DescTools) # for FisherZ()
+
+library(ggfortify) # for autoplot in PCA plotting
+
+```
+
+Aim: Explore Target Detection Task data from experiment 3, then use the finding to extrapolate to experiment 4. 
+
+First, load data... 
+```{r include=FALSE}
+exp_3_data <- read_csv("C:/Users/Ava/Desktop/Experiments/temporal_perception_SL/#E3_MasteR/exp_3_rt_data.csv") %>%
+  #   dplyr::select(2:6,8:9,11,13) %>%
+    mutate(subject = as.factor(subject),
+           target = as.factor(target),
+           tgt_pos = as.factor(tgt_pos),
+           tgt_word = as.factor(tgt_word))
+```
+
+```{r include=FALSE}
+exp_4_data <- read_csv("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1/exp_4_rt_data.csv") %>%
+  select(1:2,5:10,12,14) %>%
+  mutate(subject = as.factor(subject),
+         target = as.factor(target),
+         sess = as.factor(sess), 
+         tgt_pos = as.factor(tgt_pos), 
+         tgt_word = as.factor(tgt_word),
+         cond_order = as.factor(cond_order),
+         rt_secs = rt/1000) %>%
+  select(subject,cond_order,sess,trial:target_num,target:rt,rt_secs)
+```
+
+```{r include=FALSE}
+exp_4_data_delta <- read_csv("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1/exp_4_rt_data_delta.csv") %>%
+  select(subject,cond_order,sess,delta_rt,tgt_word:N,delta,rt_mean:ci) %>%
+  mutate(subject = as.factor(subject),
+         cond_order = as.factor(cond_order),
+         sess = as.factor(sess),
+         delta_rt = as.factor(delta_rt),
+         tgt_word = as.factor(tgt_word))
+exp_4_data_delta$delta_rt <- factor(exp_4_data_delta$delta_rt, levels = c("D1-2", "D2-3", "D1-3"))
+
+
+```
+
+```{r, include=FALSE}
+# Generate Deltas for Experiment 3 Data...
+exp_3_data_sum <- exp_3_data %>%
+    summarySE(measurevar="rt", groupvars=c("subject","tgt_pos","tgt_word"), na.rm=TRUE)
+
+options(scipen=999)
+
+exp_3_data_delta <- exp_3_data_sum %>% 
+  arrange(subject, tgt_word) %>%
+  group_by(subject, tgt_word) %>%
+  mutate(delta = rt_median - lead(rt_median,default=first(rt_median))) %>%
+  mutate(delta = round(delta,digits=5))
+
+#This works for 1-2 and 2-3, but for 3-1 it pulls the "1" not from the same group, but from the next item in the array.
+# Add a column where each rt_median is subtracted by value in n+2, and then shift tha column down so this "1-3" item sits at the tgt_pos 3 row...
+exp_3_data_delta <- exp_3_data_delta %>%
+    arrange(subject,tgt_word) %>%
+    group_by(subject,tgt_word) %>%
+    mutate(delta1.3 = rt_median - lead(rt_median,n=2)) %>%
+    mutate(delta1.3 = data.table::shift(delta1.3,n=2))
+# take those values in tgt_pos 3 rows...
+vals.1.3 <- exp_3_data_delta$delta1.3[which(exp_3_data_delta$tgt_pos==3)]
+# add them to the delta col... 
+exp_3_data_delta$delta[which(exp_3_data_delta$tgt_pos==3)] <- vals.1.3
+# and remove the temp col
+exp_3_data_delta <- exp_3_data_delta[,-11]
+
+exp_3_data_delta <- exp_3_data_delta %>%
+  select(subject:N,delta,rt_mean:ci) %>%
+  dplyr::rename(., delta_rt = tgt_pos) %>%
+  mutate(
+    delta_rt = case_when(delta_rt==1 ~ "D1-2",
+                         delta_rt==2 ~ "D2-3",
+                         delta_rt==3 ~ "D1-3"))
+exp_3_data_delta$delta_rt <- factor(exp_3_data_delta$delta_rt, levels = c("D1-2", "D2-3", "D1-3"))
+
+```
+
+
+For the exploratory graphs here, we chose to maintain word as a grouping factor, which may help visualize some of the variance. (In the main analyses for the two studies, we went straight for collapsing these levels.)
+
+## Plot "delta" RTs
+First do some summary stats... 
+```{r}
+# Summary
+# filter for structured condition in experiment 4
+exp_4_data_delta_s <- dplyr::filter(exp_4_data_delta,sess=="struct")
+  # summarize by word
+  e4dd_sum <- exp_4_data_delta %>%
+      summarySE(measurevar = "delta",groupvars = c("delta_rt","tgt_word","sess"), na.rm=TRUE)
+  e4dd_sum_s <- exp_4_data_delta_s %>%
+      summarySE(measurevar = "delta",groupvars = c("delta_rt","tgt_word"), na.rm=TRUE)
+
+  e3dd_sum <- exp_3_data_delta %>%
+    summarySE(measurevar = "delta",groupvars = c("delta_rt","tgt_word"), na.rm=TRUE)
+```
+
+Then plot... These plots will show participant RT averages for each delta for each word separately. 
+```{r}
+# Exp 3
+ggplot() +
+  geom_point(exp_3_data_delta, mapping=aes(x = delta_rt, y = delta, group = interaction(subject,tgt_word), color = subject),size = 2) +
+  geom_line(exp_3_data_delta, mapping=aes(x = delta_rt, y = delta, group = interaction(subject,tgt_word), color = subject),size = .5) +
+  geom_line(data = e3dd_sum, mapping=aes(x = delta_rt, y = delta_mean, group = tgt_word), size = 1) + 
+  ylab(expression(Delta*"Median RT [msec]")) + 
+  xlab("target position") +
+  theme_classic() +
+  ggtitle("experiment 3")
+
+# Exp 4 - Struct
+ggplot() +
+  geom_point(exp_4_data_delta_s, mapping=aes(x = delta_rt, y = delta, group = interaction(subject,tgt_word), color = subject),size = 2) +
+  geom_line(exp_4_data_delta_s, mapping=aes(x = delta_rt, y = delta, group = interaction(subject,tgt_word), color = subject),size = .5) +
+  geom_line(data = e4dd_sum_s, mapping=aes(x = delta_rt, y = delta_mean, group = tgt_word), size = 1) + 
+  ylab(expression(Delta*"Median RT [msec]")) + 
+  xlab("target position") +
+  theme_classic() +
+  ggtitle("experiment 4 (structure only)")
+
+# Exp 4 - Struct & Random
+ggplot() +
+  geom_point(exp_4_data_delta, mapping=aes(x = delta_rt, y = delta, group = interaction(subject,tgt_word), color = subject),size = 2) +
+  geom_line(exp_4_data_delta, mapping=aes(x = delta_rt, y = delta, group = interaction(subject,tgt_word), color = subject),size = .5) +
+  geom_line(data = e4dd_sum, mapping=aes(x = delta_rt, y = delta_mean, group = tgt_word), size = 1) +
+  facet_grid(~ sess) + 
+  ylab(expression(Delta*"Median RT [msec]")) + 
+  xlab("target position") +
+  theme_classic() +
+  ggtitle("experiment 4")
+
+```
+From looking at the above graph, it's not clear that there's any natural clustering of data within delta positions. 
+
+## RT by Position Plots
+```{r}
+# Exp 4 data for the Structured condition only:
+exp_4_data_s <- dplyr::filter(exp_4_data,sess=="struct")
+
+# summarize by subject, position and word
+  # experiment 3
+    e3_sum <- exp_3_data %>%
+        summarySE(measurevar = "rt",groupvars = c("subject","tgt_pos","tgt_word"), na.rm=TRUE)
+  # experiment 4
+    e4_sum_s <- exp_4_data_s %>%
+        summarySE(measurevar = "rt",groupvars = c("subject","tgt_pos","tgt_word"), na.rm=TRUE)
+    e4_sum <- exp_4_data %>%
+        summarySE(measurevar = "rt",groupvars = c("subject","tgt_pos","tgt_word","sess"), na.rm=TRUE)
+  
+  # position and word 
+    # experiment 3
+      e3_sum2 <- e3_sum %>%
+        summarySE(measurevar = "rt_median",groupvars = c("tgt_pos","tgt_word"), na.rm=TRUE)
+    # experiment 4
+      e4_sum_s2 <- e4_sum_s %>%
+          summarySE(measurevar = "rt_median",groupvars = c("tgt_pos","tgt_word"), na.rm=TRUE)
+      e4_sum2 <- e4_sum %>%
+          summarySE(measurevar = "rt_median",groupvars = c("tgt_pos","tgt_word","sess"), na.rm=TRUE)
+```
+
+# Data Exploration: Experiments 3 & 4 
+```{r}
+# Exp 3
+ggplot() +
+  geom_point(e3_sum, mapping=aes(x = tgt_pos, y = rt_median, group = interaction(subject,tgt_word), color = subject),size = 2) +
+  geom_line(e3_sum, mapping=aes(x = tgt_pos, y = rt_median, group = interaction(subject,tgt_word), color = subject),size = .5) +
+  geom_line(e3_sum2, mapping=aes(x = tgt_pos, y = rt_median_mean, group = tgt_word), size = 1) +
+  ylab("Median RT [msec]") + 
+  xlab("target position") +
+  theme_classic() +
+  ggtitle("experiment 3")
+
+# Exp 4 - Struct
+ggplot() +
+  geom_point(e4_sum_s, mapping=aes(x = tgt_pos, y = rt_median, group = interaction(subject,tgt_word), color = subject),size = 2) +
+  geom_line(e4_sum_s, mapping=aes(x = tgt_pos, y = rt_median, group = interaction(subject,tgt_word), color= subject),size = .5) +
+  geom_line(e4_sum_s2, mapping=aes(x = tgt_pos, y = rt_median_mean, group = tgt_word), size = 1) +
+  ylab("Median RT [msec]") + 
+  xlab("target position") +
+  theme_classic() +
+  ggtitle("experiment 4 (structure only)")
+  
+# Exp 4 - Full
+ggplot() +
+  geom_point(e4_sum, mapping=aes(x = tgt_pos, y = rt_median, group = interaction(subject,tgt_word), color = subject),size = 2) +
+  geom_line(e4_sum, mapping=aes(x = tgt_pos, y = rt_median, group = interaction(subject,tgt_word), color = subject),size = .5) +
+  geom_line(e4_sum2, mapping=aes(x = tgt_pos, y = rt_median_mean, group = tgt_word), size = 1) +
+  facet_grid(~ sess) +
+  ylab("Median RT [msec]") + 
+  xlab("target position") +
+  theme_classic() +
+  ggtitle("experiment 4")
+
+
+```
+
+#Combine experiment 3 & 4 data to run another glm... 
+```{r}
+combined_data <- rbind(
+  exp_3_data %>% mutate(exp="exp 3") %>% add_column(cond_order = NA, .after = "subject") %>% add_column(sess = NA, .before = "block"),
+  exp_4_data_s %>% mutate(exp="exp 4") %>% add_column(block = NA, .before = "trial")) %>%
+  select(exp,subject:rt_secs)
+
+
+combined.mod.log <- glmer(rt_secs ~ tgt_pos + exp + (1 | exp/subject), data = combined_data, family = Gamma(link = "log"))
+summary(combined.mod.log)
+
+# Anova
+Anova(combined.mod.log)
+
+# Residuals 
+plot(residuals(slope_mod.3.log))
+
+```
+Using a simple random intercept model, with experiment as between-subjects grouping variable and predictor, we find both an effect of target position (as expected), and experiment. This may suggest that the participants did not perform the same way for the two experiments. 
+## Contrasts
+```{r}
+(combined.emm <- emmeans(combined.mod.log, specs = pairwise ~ exp|tgt_pos, adjust = "tukey", transform = "response"))
+
+combined.emm$contrasts %>%
+     summary(infer=TRUE) %>%
+     rbind() %>%
+     as.data.frame()
+
+plot(combined.emm, comparisons = TRUE)
+pwpp(combined.emm$emmeans, method = "pairwise")
+```
+Between experiments, RTs to target positions varied -- it seems they are consistently lower in experiment 3. 
+
+```{r}
+(combined.emm2 <- emmeans(combined.mod.log, specs = pairwise ~ tgt_pos|exp, adjust = "tukey", transform = "response"))
+
+combined.emm2$contrasts %>%
+     summary(infer=TRUE) %>%
+     rbind() %>%
+     as.data.frame()
+
+plot(combined.emm2, comparisons = TRUE)
+pwpp(combined.emm2$emmeans, method = "pairwise")
+```
+But the behavior within experiments is the same. With a larger marginal decrease in RT between 1 and 2,3, and a smaller but still significant decrease between 2 & 3. 
+## Parameter Exploration
+```{r}
+glance(combined.mod.log)
+
+# plot estimates
+tidy(combined.mod.log,conf.int=TRUE) %>% as_tibble() %>%
+  #dplyr::filter(term != "(Intercept)") %>% 
+  .[c(1:4),] %>%
+  ggplot(aes(term, estimate, ymin=conf.low, ymax=conf.high)) +
+  geom_pointrange() +
+  geom_hline(yintercept = 0) 
+
+```
+
+
+# Notes on Linear Modelling
+Source: https://stats.stackexchange.com/questions/122009/extracting-slopes-for-cases-from-a-mixed-effects-model-lme4
+We're going to start with the baseline data, plot that, and then plot the parameter estimates of the random intercept and random slope models, to see which fits bets. 
+
+Note that if you enter (1|subject), you are modelling only random intercepts (the slope estimates for each level of the predictor would be the exact same for all subjects, and only the intercept would vary). 
+x + (x|subject) models a different [slope for each level of the fixed effects factor (i.e. the difference between the intercept and that y-value?)].
+Notice that the intercepts are also different whether the model is random intercepts only or random intercepts and slopes. 
+
+Question: what does this do to the overall variance?
+Answer: The residual variance in the random effects remains the same, but the variance accounted for by the intercept goes down (becomes split between the slope parameters). Fixed effects are unchanged, of course.
+
+#-----------------------------------------------------------------------------------------------------------------------------------
+# Training Set: Experiment 3 Data
+
+You can check back to these values to check the raw mean/median values, for a sanity check against the estimates derived from the models. 
+```{r include=FALSE}
+# per subject, per target position (random effect)
+exp_3_data %>%
+  summarySE(measurevar = "rt_secs",groupvars = c("subject","tgt_pos"), na.rm=TRUE)
+
+# per position only (fixed effect)
+exp_3_data %>%
+    summarySE(measurevar = "rt_secs",groupvars = c("tgt_pos"), na.rm=TRUE)
+```
+
+### Base Plot
+```{r}
+base_plot <- ggplot(exp_3_data, aes(x = tgt_pos, y = rt_secs)) +
+  stat_summary(aes(fill = tgt_pos), fun.y = median, geom = "bar", color = "black") + 
+  scale_fill_brewer(palette = "Pastel2") + 
+  ylab("Median RT") + 
+  xlab("Target Position") + 
+  guides(fill = FALSE) + 
+  theme_classic()
+
+base_plot
+```
+
+### True Medians Plot
+```{r}
+true_medians <- base_plot + 
+  stat_summary(aes(group = subject), fun.y = median,
+               geom = "point", shape = 19, size = 3, color = "lightsteelblue4") + 
+  stat_summary(aes(group = subject), fun.y = median, 
+               geom = "line", size = 1.2, color = "lightsteelblue4", alpha = 0.6) + 
+  annotate(geom = "text", x = 2, y = 0.1, size = 4, 
+           label = "circles = true means \n triangles = intercept model \n squares = intercepts & slopes model")
+
+true_medians
+
+```
+
+Question Time: 
+Should we actually use the log or the identity link function? 
+See: https://stats.stackexchange.com/questions/363724/calculate-backtransform-coefficients-of-a-gamma-type-inverse-glmm-in-r
+- Using the inverse means incremental change in estimates refers to increments or decrements in the *speed* of responses. Hence, if a parameter is positive, it means that factor leads to a positive _increase_ in reaction speed and therefore a _decrease_ in reaction time. 
+- The identity scale lets the parameter value give the estimated change in response, given a one-unit change in the predictor. 
+- The log scale give the proportional change in response given a one-unit change in the predictor. 
+
+Logically, I would opt for the identity, for simplicity, or log, for theoretical value (we can talk about proportional changes between factors, which is valuable if not every participants shares the same median RT values). But, what does it mean for the models to have different fits, depending on the link function? By this analysis, we would have to go with the inverse. (See chunk after three Random Intercept Models.)
+
+Rand Intercept Model | INVERSE
+```{r include=FALSE}
+intercept_mod.3.inv <- glmer(rt_secs ~  tgt_pos + (1| subject), data = exp_3_data, family = Gamma(link = "inverse"))
+
+summary(intercept_mod.3.inv)
+
+# Estimates (Coefficients) for fixed effects
+coef(summary(intercept_mod.3.inv))[,"Estimate"]
+
+# Intercepts and Slopes for each subject [Fixed effects coefficient - indivdual variance]
+coef(intercept_mod.3.inv)
+
+# Variance components for each subject 
+ranef(intercept_mod.3.inv)
+
+
+## Diagnostic Plots
+plot(intercept_mod.3.inv, type = c("p", "smooth"))
+plot(residuals(intercept_mod.3.inv))
+plot(intercept_mod.3.inv, sqrt(abs(resid(.))) ~ fitted(.), type = c("p", "smooth"))
+
+## Posterior P
+iqr_rts <- sapply(simulate(intercept_mod.3.inv, 1000), IQR)
+obs_rts<- IQR(exp_3_data$rt_secs, na.rm = TRUE)
+post.pred.p <- mean(obs_rts >= c(obs_rts, iqr_rts))
+```
+
+~ Rand Intercept Model | IDENTITY
+```{r include=FALSE}
+intercept_mod.3.id <- glmer(rt_secs ~  tgt_pos + (1| subject), data = exp_3_data, family = Gamma(link = "identity"))
+
+summary(intercept_mod.3.id)
+
+# Estimates (Coefficients) for fixed effects
+coef(summary(intercept_mod.3.id))[,"Estimate"]
+
+# Intercepts and Slopes for each subject [Fixed effects coefficient - indivdual variance]
+coef(intercept_mod.3.id)
+
+# Variance components for each subject 
+ranef(intercept_mod.3.id)
+
+
+## Diagnostic Plots
+plot(intercept_mod.3.id, type = c("p", "smooth"))
+plot(residuals(intercept_mod.3.id))
+plot(intercept_mod.3.id, sqrt(abs(resid(.))) ~ fitted(.), type = c("p", "smooth"))
+
+## Posterior P
+iqr_rts <- sapply(simulate(intercept_mod.3.id, 1000), IQR)
+obs_rts<- IQR(exp_3_data$rt_secs, na.rm = TRUE)
+post.pred.p <- mean(obs_rts >= c(obs_rts, iqr_rts))
+```
+
+### **~ Rand Intercept Model | LOG
+```{r}
+intercept_mod.3.log <- glmer(rt_secs ~  tgt_pos + (1| subject), data = exp_3_data, family = Gamma(link = "log"))
+
+summary(intercept_mod.3.log)
+
+# Estimates (Coefficients) for fixed effects
+#coef(summary(intercept_mod.3.log))[,"Estimate"]
+
+# Intercepts and Slopes for each subject [Fixed effects coefficient - indivdual variance]
+#coef(intercept_mod.3.log)
+
+# Variance components for each subject 
+#ranef(intercept_mod.3.log)
+
+
+## Diagnostic Plots
+plot(residuals(intercept_mod.3.log))
+#plot(intercept_mod.3.log, type = c("p", "smooth"))
+#plot(intercept_mod.3.log, sqrt(abs(resid(.))) ~ fitted(.), type = c("p", "smooth"))
+
+## Posterior P
+#iqr_rts <- sapply(simulate(intercept_mod.3.log, 1000), IQR)
+#obs_rts<- IQR(exp_3_data$rt_secs, na.rm = TRUE)
+#post.pred.p <- mean(obs_rts >= c(obs_rts, iqr_rts))
+
+```
+
+### Comparison of Link functions. 
+```{r}
+anova(intercept_mod.3.id,intercept_mod.3.inv,intercept_mod.3.log) %>% rownames_to_column("model") %>% as_tibble()
+```
+
+I'm choosing to ignore this bit of information for the moment and go with the log link function for clarity/ theoretical grounding. 
+
+### Tranforming Coefficients from the log scale
+```{r}
+fixed_coefs.intercept.3 <- tidy(intercept_mod.3.log,effects = "fixed")[,c("term", "estimate")] 
+fixed_coefs.intercept.3 <- fixed_coefs.intercept.3 %>%
+   mutate(estimate.resp = c(exp(fixed_coefs.intercept.3$estimate[1]),
+                            exp(fixed_coefs.intercept.3$estimate[2]+fixed_coefs.intercept.3$estimate[1]),
+                            exp(fixed_coefs.intercept.3$estimate[3]+fixed_coefs.intercept.3$estimate[1])))
+
+random_coefs.intercept.3 <- as.data.frame(coef(intercept_mod.3.log)$subject) %>% dplyr::rename(tgt_pos1 = `(Intercept)`)
+random_coefs.intercept.3 <- random_coefs.intercept.3 %>%
+  mutate(`1` = exp(tgt_pos1),
+         `2` = exp(tgt_pos1+tgt_pos2),
+         `3` = exp(tgt_pos1+tgt_pos3)) %>%
+  rownames_to_column("subject") %>%
+  gather(key = "tgt_pos", value = "estimate", tgt_pos1, tgt_pos2, tgt_pos3) %>%
+  gather(key = "tgt_pos.resp", value = "estimate.resp", `1`, `2`, `3`)
+  
+  random_coefs.intercept.3$tgt_pos <- factor(random_coefs.intercept.3$tgt_pos, labels = c(1,2,3))
+```
+
+
+### Parameter Exploration
+Source on how to work with model data: https://benwhalley.github.io/just-enough-r/models-are-data-too.html#models-are-data-too
+```{r}
+# all estimates
+tidy(intercept_mod.3.log,conf.int=TRUE) %>% as_tibble()
+
+# all fit values
+glance(intercept_mod.3.log)
+
+# plot estimates
+tidy(intercept_mod.3.log,conf.int=TRUE) %>% as_tibble() %>% 
+  #dplyr::filter(term != "(Intercept)") %>% 
+  .[c(1:3),] %>%
+  ggplot(aes(term, estimate, ymin=conf.low, ymax=conf.high)) +
+  geom_pointrange() +
+  geom_hline(yintercept = 0) 
+
+# augment pulls out the fitted estimate and the residuals for all observations
+augment(intercept_mod.3.log) %>%
+   ggplot(aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_smooth()
+```
+
+
+### Intercept Plot
+```{r}
+fixed_slopes_plot <- true_medians + 
+  geom_point(aes(x = as.numeric(tgt_pos.resp)-0.1, y = estimate.resp), data = random_coefs.intercept.3, shape = 17, size = 3, color = "lightsteelblue3") +
+  geom_line(aes(x = as.numeric(tgt_pos.resp)-0.1, y = estimate.resp, group = subject), data = random_coefs.intercept.3, color = "lightsteelblue3", alpha = 0.5, size = 1.2) 
+
+fixed_slopes_plot 
+
+```
+Black triangles are back-transformed estimates of RT for each target position, from model parameters. Only intercepts are allowed to vary between participants. 
+
+### **~ Rand Slope Model 
+```{r}
+slope_mod.3.log <- glmer(rt_secs ~ tgt_pos + (tgt_pos | subject), data = exp_3_data, family = Gamma(link = "log"))
+summary(slope_mod.3.log)
+
+# Estimates (Coefficients) for fixed effects
+#coef(summary(slope_mod.3.log))[,"Estimate"]
+
+# Intercepts and Slopes for each subject [Fixed effects coefficient - indivdual variance]
+#coef(slope_mod.3.log)
+
+# Variance components for each subject 
+#ranef(slope_mod.3.log)
+
+# Residuals 
+plot(residuals(slope_mod.3.log))
+#plot(slope_mod.3.log, sqrt(abs(resid(.))) ~ fitted(.), type = c("p", "smooth"))
+#plot(fitted(slope_mod.3.log))
+
+## Posterior P
+# iqr_rts <- sapply(simulate(slope_mod.3.log, 1000), IQR, na.rm = TRUE)
+# obs_rts <- IQR(exp_3_data$rt_secs, na.rm = TRUE)
+# post.pred.p <- mean(obs_rts >= c(obs_rts, iqr_rts))
+
+```
+
+### Transform coefs -> estimates (i.e. to response scale)
+```{r}
+
+fixed_coefs.slopes.3 <- tidy(slope_mod.3.log,effects = "fixed")[,c("term", "estimate")] 
+fixed_coefs.slopes.3 <- fixed_coefs.slopes.3 %>%
+   mutate(estimate.resp = c(exp(fixed_coefs.slopes.3$estimate[1]),
+                            exp(fixed_coefs.slopes.3$estimate[2]+fixed_coefs.slopes.3$estimate[1]),
+                            exp(fixed_coefs.slopes.3$estimate[3]+fixed_coefs.slopes.3$estimate[1])))
+
+random_coefs.slopes.3 <- as.data.frame(coef(slope_mod.3.log)$subject) %>% dplyr::rename(tgt_pos1 = `(Intercept)`)
+random_coefs.slopes.3 <- random_coefs.slopes.3 %>%
+  mutate(`1` = exp(tgt_pos1),
+         `2` = exp(tgt_pos1+tgt_pos2),
+         `3` = exp(tgt_pos1+tgt_pos3)) %>%
+  rownames_to_column("subject") %>%
+  gather(key = "tgt_pos", value = "estimate", tgt_pos1, tgt_pos2, tgt_pos3) %>%
+  gather(key = "tgt_pos.resp", value = "estimate.resp", `1`, `2`, `3`)
+  
+  random_coefs.slopes.3$tgt_pos <- factor(random_coefs.slopes.3$tgt_pos, labels = c(1,2,3))
+
+```
+
+### Parameter Exploration
+Source on how to work with model data: https://benwhalley.github.io/just-enough-r/models-are-data-too.html#models-are-data-too
+```{r}
+# all estimates
+tidy(slope_mod.3.log,conf.int=TRUE) %>% as_tibble()
+# all fit values
+glance(slope_mod.3.log)
+# plot estimates
+tidy(slope_mod.3.log,conf.int=TRUE) %>% as_tibble() %>%
+  #dplyr::filter(term != "(Intercept)") %>% 
+  .[c(1:3),] %>%
+  ggplot(aes(term, estimate, ymin=conf.low, ymax=conf.high)) +
+  geom_pointrange() +
+  geom_hline(yintercept = 0) 
+
+  ggplot(aes(term, estimate)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+
+augment(slope_mod.3.log) %>%
+   ggplot(aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_smooth()
+
+```
+
+## -> Slopes Plot
+```{r}
+slopes_plot <- fixed_slopes_plot + 
+  geom_point(aes(x = as.numeric(tgt_pos.resp)+0.1, y = estimate.resp), data = random_coefs.slopes.3, shape = 15, size = 3, color = "lightsteelblue1") +
+  geom_line(aes(x = as.numeric(tgt_pos.resp)+0.1, y = estimate.resp, group = subject), data = random_coefs.slopes.3, alpha = 0.6, color = "lightsteelblue1") 
+
+slopes_plot
+```
+
+## Model Eval
+```{r}
+anova(intercept_mod.3.log,slope_mod.3.log)
+
+```
+The slopes model is penalized and it appears the random slopes plot does not account for the data better than the random intercept plot. This suggests that subjects did not behave differently on the task, and that one slope is sufficient to account for the variance between participants. 
+
+
+
+## -> Plot Coefficients
+```{r}
+
+
+coef_plot <- ggplot() +
+# intercepts
+  geom_point(aes(x = as.numeric(tgt_pos)-0.1, y = estimate), data = random_coefs.intercept.3, shape = 17, size = 3, color = "lightsteelblue3") +
+  geom_line(aes(x = as.numeric((tgt_pos))-0.1, y = estimate, group = subject), data = random_coefs.intercept.3, alpha = 0.6, color = "lightsteelblue3")  + 
+# slopes
+  geom_point(aes(x = as.numeric((tgt_pos))+0.1, y = estimate), data = random_coefs.slopes.3, shape = 15, size = 3, color = "lightsteelblue1") +
+  geom_line(aes(x = as.numeric((tgt_pos))+0.1, y = estimate, group = subject), data = random_coefs.slopes.3, alpha = 0.6, color = "lightsteelblue1") +
+  
+  scale_fill_brewer(palette = "Pastel2") +
+  scale_y_reverse() +
+  ylab("coefficients") + 
+  xlab("fixed effects") + 
+  guides(fill = FALSE) + 
+  theme_classic() 
+
+coef_plot
+
+```
+
+#-------------------------------------------------------------------------------------------
+# Final Version for 
+```{r}
+intercept_mod.3.log.block <- glmer(rt_secs ~  tgt_pos*block + (1| subject), data = exp_3_data, family = Gamma(link = "log"))
+summary(intercept_mod.3.log.block)
+
+exp_3_data.sc <- exp_3_data %>% mutate(rt = scale(rt), rt_secs = scale(rt_secs))
+
+
+intercept_mod.3.block.sc <- glmer(rt ~  tgt_pos*block + (1| subject), data = exp_3_data.sc, family = gaussian(link = "identity"))
+summary(intercept_mod.3.block.sc)
+
+intercept_mod.3.sc <- glmer(rt ~  tgt_pos + (1| subject), data = exp_3_data.sc, family = gaussian(link = "identity"))
+summary(intercept_mod.3.sc)
+
+library(fitdistrplus)
+descdist(as.numeric(exp_3_data.sc$rt[!is.na(exp_3_data.sc$rt)]), discrete = FALSE)
+fit.norm  <- fitdist(as.numeric(exp_3_data.sc$rt[!is.na(exp_3_data.sc$rt)]), "norm")
+summary(fit.norm)
+
+par(mfrow=c(2,2))
+plot.legend <- c("normal")
+denscomp(list(fit.norm), legendtext = plot.legend)
+cdfcomp (list(fit.norm), legendtext = plot.legend)
+qqcomp  (list(fit.norm), legendtext = plot.legend)
+ppcomp  (list(fit.norm), legendtext = plot.legend)
+
+shapiro.test(sample(as.numeric(exp_3_data.sc$rt[!is.na(exp_3_data.sc$rt)]),200 ))
+
+anova(intercept_mod.3.block.sc,intercept_mod.3.sc)
+```
+#-------------------------------------------------------------------------------------------
+
+# Test Set: Experiment 4
+
+### Base Plot
+```{r}
+base_plot.4 <- ggplot(exp_4_data_s, aes(x = tgt_pos, y = rt_secs)) +
+  stat_summary(aes(fill = tgt_pos), fun.y = median, geom = "bar", color = "black") + 
+  scale_fill_brewer(palette = "Pastel2") + 
+  ylab("Median RT") + 
+  xlab("Target Position") + 
+  guides(fill = FALSE) + 
+  theme_classic()
+
+base_plot.4
+```
+
+### True Medians Plot
+```{r}
+true_medians.4 <- base_plot.4 + 
+  stat_summary(aes(group = subject), fun.y = median,
+               geom = "point", shape = 19, size = 3, color = "lightsteelblue4") + 
+  stat_summary(aes(group = subject), fun.y = median, 
+               geom = "line", size = 1.2, color = "lightsteelblue4", alpha = 0.6) + 
+  annotate(geom = "text", x = 2, y = 0.1, size = 4, 
+           label = "circles = true means \n triangles = intercept model \n squares = intercepts & slopes model")
+
+true_medians.4
+
+```
+
+### **~ Rand Intercept Model | LOG
+```{r}
+intercept_mod.4.log <- glmer(rt_secs ~  tgt_pos + (1| subject), data = exp_4_data_s, family = Gamma(link = "log"))
+
+summary(intercept_mod.4.log)
+
+# Estimates (Coefficients) for fixed effects
+#coef(summary(intercept_mod.4.log))[,"Estimate"]
+
+# Intercepts and Slopes for each subject [Fixed effects coefficient - indivdual variance]
+#coef(intercept_mod.4.log)
+
+# Variance components for each subject 
+#ranef(intercept_mod.4.log)
+
+
+## Diagnostic Plots
+plot(residuals(intercept_mod.4.log))
+
+```
+
+### Tranforming Coefficients from the log scale
+```{r}
+fixed_coefs.intercept.4 <- tidy(intercept_mod.4.log,effects = "fixed")[,c("term", "estimate")] 
+fixed_coefs.intercept.4 <- fixed_coefs.intercept.4 %>%
+   mutate(estimate.resp = c(exp(fixed_coefs.intercept.4$estimate[1]),
+                            exp(fixed_coefs.intercept.4$estimate[2]+fixed_coefs.intercept.4$estimate[1]),
+                            exp(fixed_coefs.intercept.4$estimate[3]+fixed_coefs.intercept.4$estimate[1])))
+
+random_coefs.intercept.4 <- as.data.frame(coef(intercept_mod.3.log)$subject) %>% dplyr::rename(tgt_pos1 = `(Intercept)`)
+random_coefs.intercept.4 <- random_coefs.intercept.4 %>%
+  mutate(`1` = exp(tgt_pos1),
+         `2` = exp(tgt_pos1+tgt_pos2),
+         `3` = exp(tgt_pos1+tgt_pos3)) %>%
+  rownames_to_column("subject") %>%
+  gather(key = "tgt_pos", value = "estimate", tgt_pos1, tgt_pos2, tgt_pos3) %>%
+  gather(key = "tgt_pos.resp", value = "estimate.resp", `1`, `2`, `3`)
+  
+  random_coefs.intercept.4$tgt_pos <- factor(random_coefs.intercept.4$tgt_pos, labels = c(1,2,3))
+```
+
+
+### Parameter Exploration
+```{r}
+# all estimates
+tidy(intercept_mod.4.log,conf.int=TRUE) %>% as_tibble()
+# all fit values
+glance(intercept_mod.4.log)
+# plot estimates
+tidy(intercept_mod.4.log,conf.int=TRUE) %>% as_tibble() %>% 
+  #dplyr::filter(term != "(Intercept)") %>% 
+  .[c(1:3),] %>%
+  ggplot(aes(term, estimate, ymin=conf.low, ymax=conf.high)) +
+  geom_pointrange() +
+  geom_hline(yintercept = 0) 
+
+# augment pulls out the fitted estimate and the residuals for all observations
+augment(intercept_mod.4.log) %>%
+   ggplot(aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_smooth()
+```
+
+
+### Intercept Plot
+```{r}
+fixed_slopes_plot <- true_medians + 
+  geom_point(aes(x = as.numeric(tgt_pos.resp)-0.1, y = estimate.resp), data = random_coefs.intercept.4, shape = 17, size = 3, color = "lightsteelblue3") +
+  geom_line(aes(x = as.numeric(tgt_pos.resp)-0.1, y = estimate.resp, group = subject), data = random_coefs.intercept.4, color = "lightsteelblue3", alpha = 0.5, size = 1.2) 
+
+fixed_slopes_plot 
+
+```
+Black triangles are back-transformed estimates of RT for each target position, from model parameters. Only intercepts are allowed to vary between participants. 
+
+### ~ Rand Slope Model 
+```{r}
+slope_mod.4.log <- glmer(rt_secs ~ tgt_pos + (tgt_pos | subject), data = exp_4_data_s, family = Gamma(link = "log"))
+summary(slope_mod.4.log)
+
+# Estimates (Coefficients) for fixed effects
+#coef(summary(slope_mod.4.log))[,"Estimate"]
+
+# Intercepts and Slopes for each subject [Fixed effects coefficient - indivdual variance]
+#coef(slope_mod.4.log)
+
+# Variance components for each subject 
+#ranef(slope_mod.4.log)
+
+# Residuals 
+plot(residuals(slope_mod.4.log))
+#plot(slope_mod.4.log, sqrt(abs(resid(.))) ~ fitted(.), type = c("p", "smooth"))
+#plot(fitted(slope_mod.4.log))
+
+## Posterior P
+# iqr_rts <- sapply(simulate(slope_mod.4.log, 1000), IQR, na.rm = TRUE)
+# obs_rts <- IQR(exp_3_data$rt_secs, na.rm = TRUE)
+# post.pred.p <- mean(obs_rts >= c(obs_rts, iqr_rts))
+
+```
+
+### Transform coefs -> estimates (i.e. to response scale)
+```{r}
+
+fixed_coefs.slopes.4 <- tidy(slope_mod.4.log,effects = "fixed")[,c("term", "estimate")] 
+fixed_coefs.slopes.4 <- fixed_coefs.slopes.4 %>%
+   mutate(estimate.resp = c(exp(fixed_coefs.slopes.4$estimate[1]),
+                            exp(fixed_coefs.slopes.4$estimate[2]+fixed_coefs.slopes.4$estimate[1]),
+                            exp(fixed_coefs.slopes.4$estimate[3]+fixed_coefs.slopes.4$estimate[1])))
+
+random_coefs.slopes.4 <- as.data.frame(coef(slope_mod.4.log)$subject) %>% dplyr::rename(tgt_pos1 = `(Intercept)`)
+random_coefs.slopes.4 <- random_coefs.slopes.4 %>%
+  mutate(`1` = exp(tgt_pos1),
+         `2` = exp(tgt_pos1+tgt_pos2),
+         `3` = exp(tgt_pos1+tgt_pos3)) %>%
+  rownames_to_column("subject") %>%
+  gather(key = "tgt_pos", value = "estimate", tgt_pos1, tgt_pos2, tgt_pos3) %>%
+  gather(key = "tgt_pos.resp", value = "estimate.resp", `1`, `2`, `3`)
+  
+  random_coefs.slopes.4$tgt_pos <- factor(random_coefs.slopes.4$tgt_pos, labels = c(1,2,3))
+
+```
+
+### Parameter Exploration
+```{r}
+# all estimates
+tidy(slope_mod.4.log,conf.int=TRUE) %>% as_tibble()
+
+# all fit values
+glance(slope_mod.4.log)
+
+# plot estimates
+tidy(slope_mod.4.log,conf.int=TRUE) %>% as_tibble() %>%
+  #dplyr::filter(term != "(Intercept)") %>% 
+  .[c(1:3),] %>%
+  ggplot(aes(term, estimate, ymin=conf.low, ymax=conf.high)) +
+  geom_pointrange() +
+  geom_hline(yintercept = 0) 
+
+augment(slope_mod.4.log) %>%
+   ggplot(aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_smooth()
+
+```
+
+## -> Slopes Plot
+```{r}
+slopes_plot <- fixed_slopes_plot + 
+  geom_point(aes(x = as.numeric(tgt_pos.resp)+0.1, y = estimate.resp), data = random_coefs.slopes.4, shape = 15, size = 3, color = "lightsteelblue1") +
+  geom_line(aes(x = as.numeric(tgt_pos.resp)+0.1, y = estimate.resp, group = subject), data = random_coefs.slopes.4, alpha = 0.6, color = "lightsteelblue1") 
+
+slopes_plot
+```
+
+# Model Eval
+```{r}
+anova(intercept_mod.4.log,slope_mod.4.log)
+
+```
+The slopes model is again penalized and it appears the random slopes plot does not account for the data better than the random intercept plot. This is more obvious than in the data set for experiment 3, as the transformed coefficients fit visibly less well the raw data than before. Given similarity in the task, this may just be due to 
+
+
+#-> Plot Coefficients
+```{r}
+
+coef_plot <- ggplot() +
+# intercepts
+  geom_point(aes(x = as.numeric(tgt_pos)-0.1, y = estimate), data = random_coefs.intercept.4, shape = 17, size = 3, color = "lightsteelblue3") +
+  geom_line(aes(x = as.numeric((tgt_pos))-0.1, y = estimate, group = subject), data = random_coefs.intercept.4, alpha = 0.6, color = "lightsteelblue3")  + 
+# slopes
+  geom_point(aes(x = as.numeric((tgt_pos))+0.1, y = estimate), data = random_coefs.slopes.4, shape = 15, size = 3, color = "lightsteelblue1") +
+  geom_line(aes(x = as.numeric((tgt_pos))+0.1, y = estimate, group = subject), data = random_coefs.slopes.4, alpha = 0.6, color = "lightsteelblue1") +
+  
+  scale_fill_brewer(palette = "Pastel2") +
+  scale_y_reverse() +
+  ylab("coefficients") + 
+  xlab("fixed effects") + 
+  guides(fill = FALSE) + 
+  theme_classic() 
+
+coef_plot
+
+```
+#-------------------------------------------------------------------------------------------
+# Cluster, A1
+A cluster analysis is optimied for multidimensional data, it is not particularly meaningful for 1D data. This is because the whole data set can be sorted based on a single dimension, which is not possible for multivariate data. 
+Other techniques, like kernel density estimation, are better suited for this. 
+
+To show why this is not particularly helpful, see the following: 
+
+The most theoretically motivated arrangement is where we have two arrays, one for RT, one for target position. However, kmeans clusters requires that all our data be on the same scale. This is already a bit problematic because the target position array is categorical (i.e. we don't have such a thing as a position 1.5, and it's not very meaningful to posit one). But nonetheless, let's see what it gives...
+
+Primary source: https://uc-r.github.io/kmeans_clustering
+More on this package: https://www.datanovia.com/en/blog/cluster-analysis-in-r-simplified-and-enhanced/
+Kernel density, see jupyter: https://stats.stackexchange.com/questions/40454/determine-different-clusters-of-1d-data-from-database
+
+
+##v1: against target position
+```{r}
+# step 1: remove na data
+cluster_3 <- exp_3_data %>% select(tgt_pos,rt) %>% na.omit() %>% mutate(tgt_pos = as.numeric(tgt_pos)) %>%
+# step 2: scale (znorm) variables
+  scale()
+# step 3: compute distance matrix (here using Euclidean)
+euc.dist.cluster_3 <- get_dist(cluster_3,method = "euclidean")
+# step 4: visualize the distance matrix: 
+fviz_dist(euc.dist.cluster_3, gradient = list(low = "#0A7EA2", mid = "#C1D1D3", high = "#FFD7AE"))
+```
+The matrix shows n divisons of target position against rt_sub-n. This is somewhat meaningless because it's not grouping rt by target position, but by the similarity of rt values to these arbitrary tgt position values.
+
+For 3 clusters... 
+```{r}
+# step 4: compute k means on 3
+k3.cluster_3 <- kmeans(cluster_3, centers = 3, nstart = 25)
+# get info
+str(k3.cluster_3)
+# step 5: plot k means clusters
+fviz_cluster(k3.cluster_3, data = cluster_3)
+```
+Now, I suppose this can be helpful, but i'm not sure what it gives that plotting raw data doesn't... 
+
+Let's try it for 2 clusters... 
+```{r}
+k2.cluster_3 <- kmeans(cluster_3, centers = 2, nstart = 25)
+fviz_cluster(k2.cluster_3, data = cluster_3)
+```
+And for 4... 
+```{r}
+k4.cluster_3 <- kmeans(cluster_3, centers = 4, nstart = 25)
+fviz_cluster(k4.cluster_3, data = cluster_3)
+```
+And for 1... 
+```{r}
+k1.cluster_3 <- kmeans(cluster_3, centers = 1, nstart = 25)
+fviz_cluster(k1.cluster_3, data = cluster_3)
+```
+
+##v2: rt vs. rt
+I tried also plotting rt against itself, thinking this might let the clustering occur more naturally. 
+```{r}
+# step 1: remove na data & znorm
+cluster_3b <- data.frame(exp_3_data$rt, exp_3_data$rt) %>% na.omit() %>% scale()
+# compute distance matrix (here using Euclidean)
+euc.dist.cluster_3b <- get_dist(cluster_3,method = "euclidean")
+# visualize
+fviz_dist(euc.dist.cluster_3b, gradient = list(low = "#0A7EA2", mid = "#C1D1D3", high = "#FFD7AE"))
+```
+
+```{r}
+# step 4: compute k means on 3
+k3.cluster_3b <- kmeans(cluster_3b, centers = 3, nstart = 25)
+# get info
+str(k3.cluster_3b)
+# step 5: plot k means clusters
+fviz_cluster(k3.cluster_3b, data = cluster_3b)
+```
+But it just renders clusters along identity lines. 
+
+## v3: rt 1D
+I also tried just doing a 1D rt, but the functions throw an error, saying the data need to be of at least 2 dimensions. 
+```{r}
+cluster_3c <- exp_3_data %>% select(rt) %>% na.omit() %>% scale()
+euc.dist.cluster_3c <- get_dist(cluster_3c,method = "euclidean")
+#fviz_dist(euc.dist.cluster_3c, gradient = list(low = "#0A7EA2", mid = "#C1D1D3", high = "#FFD7AE"))
+```
+
+```{r}
+k3.cluster_3c <- kmeans(cluster_3c, centers = 3, nstart = 25)
+str(k3.cluster_3c)
+fviz_cluster(k3.cluster_3c, data = cluster_3c)
+# Throws error: Error in fviz_cluster(k3.cluster_3c, data = cluster_3c) : The dimension of the data < 2! No plot.
+```
+
+
+
+## v4: rt3 vs. rt4
+So I thought, why not try to make a 2D array that includes data from both sets? Although we'd have to throw out quite a bit of data to make the arrays equal lengths. 
+
+
+```{r}
+cluster_3.5 <- exp_3_data %>% select(rt) %>% na.omit() %>% scale() %>% 
+  sample(size=nrow(exp_4_data %>% select(rt) %>% na.omit())) %>%
+  cbind(exp_4_data %>% select(rt) %>% na.omit() %>% scale()) %>%
+  as.data.frame() %>%
+  dplyr::rename(rt3 = ".", rt4 = rt)
+euc.dist.cluster_3.5 <- get_dist(cluster_3.5,method = "euclidean")
+fviz_dist(euc.dist.cluster_3c, gradient = list(low = "#0A7EA2", mid = "#C1D1D3", high = "#FFD7AE"))
+```
+
+```{r}
+k3.cluster_3.5 <- kmeans(cluster_3.5, centers = 3, nstart = 25)
+str(k3.cluster_3.5)
+fviz_cluster(k3.cluster_3.5, data = cluster_3.5)
+```
+
+```{r}
+k2.cluster_3.5 <- kmeans(cluster_3.5, centers = 2, nstart = 25)
+str(k2.cluster_3.5)
+fviz_cluster(k2.cluster_3.5, data = cluster_3.5)
+```
+
+```{r}
+k1.cluster_3.5 <- kmeans(cluster_3.5, centers = 1, nstart = 25)
+str(k1.cluster_3.5)
+fviz_cluster(k1.cluster_3.5, data = cluster_3.5)
+```
+
+```{r}
+k4.cluster_3.5 <- kmeans(cluster_3.5, centers = 4, nstart = 25)
+str(k4.cluster_3.5)
+fviz_cluster(k4.cluster_3.5, data = cluster_3.5)
+```
+
+
+```{r}
+k5.cluster_3.5 <- kmeans(cluster_3.5, centers = 5, nstart = 25)
+str(k5.cluster_3.5)
+fviz_cluster(k5.cluster_3.5, data = cluster_3.5)
+```
+Ok, well that seemed to work reasonably well... At least we have well-formed plots.
+So what's the optimal cluster size?
+### Elbow Method
+```{r}
+set.seed(123)
+
+# function to compute total within-cluster sum of square 
+wss <- function(k) {
+  kmeans(cluster_3.5, k, nstart = 10 )$tot.withinss
+}
+
+# Compute and plot wss for k = 1 to k = 15
+k.values <- 1:15
+
+# extract wss for 2-15 clusters
+wss_values <- map_dbl(k.values, wss)
+
+plot(k.values, wss_values,
+       type="b", pch = 19, frame = FALSE, 
+       xlab="Number of clusters K",
+       ylab="Total within-clusters sum of squares")
+```
+Looks like 3 clusters is indeed optimal... 
+
+Or
+```{r}
+fviz_nbclust(cluster_3.5, kmeans, method = "wss")
+```
+
+### Silhouette Method
+```{r}
+# function to compute average silhouette for k clusters
+avg_sil <- function(k) {
+  km.res <- kmeans(cluster_3.5, centers = k, nstart = 25)
+  ss <- silhouette(km.res$cluster, dist(cluster_3.5))
+  mean(ss[, 3])
+}
+
+# Compute and plot wss for k = 2 to k = 15
+k.values <- 2:15
+
+# extract avg silhouette for 2-15 clusters
+avg_sil_values <- map_dbl(k.values, avg_sil)
+
+plot(k.values, avg_sil_values,
+       type = "b", pch = 19, frame = FALSE, 
+       xlab = "Number of clusters K",
+       ylab = "Average Silhouettes")
+
+#or
+
+#fviz_nbclust(cluster_3.5, kmeans, method = "silhouette")
+
+```
+
+### Gap Statistic
+```{r}
+# Note: this has trouble converging.
+gap_stat <- clusGap(cluster_3.5, FUN = kmeans, nstart = 25,
+                    K.max = 10, B = 50)
+fviz_gap_stat(gap_stat)
+```
+
+## "Final"
+
+```{r}
+final.clustering <- kmeans(cluster_3.5, 3, nstart = 25)
+fviz_cluster(final.clustering, data = cluster_3.5)
+cluster_3.5 %>%
+  mutate(Cluster = final.clustering$cluster) %>%
+  group_by(Cluster) %>%
+  summarise_all("mean")
+
+```
+```{r}
+exp_3_data %>% select(rt,tgt_pos) %>% na.omit() %>% mutate(rt = scale(rt)) %>%
+  group_by(tgt_pos) %>%
+  summarise_all("mean")
+
+exp_3_data %>% select(rt,tgt_pos) %>% na.omit() -> exp_3_array
+
+write.csv(exp_3_array,"exp3array",row.names = FALSE)
+
+```
+#---------------------------------------------------------------------------------
+# Cluster, A2
+## v1: targets matrix (exp 3) 
+```{r}
+cluster.5 <- exp_3_data %>% select(target,rt) %>% na.omit() %>%
+  group_by_at("target") %>%
+  mutate(row_id=1:n()) %>%
+  ungroup() %>%
+  spread(key = target,value = rt) %>%
+  select(-row_id) %>%
+  select("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")
+
+# because the row numbers are not equal, sample from each col rows == nmax of shortest column
+n_rows <- cluster.5 %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+cluster.5.temp <- cluster.5[1:min(n_rows),]
+for (i in 1:length(n_rows)) {cluster.5.temp[,i] <- sample(as.matrix(cluster.5[1:n_rows[i],i]),size = min(n_rows))}
+
+cluster.5.unscale <- cluster.5.temp 
+cluster.5.scale <- cluster.5.temp %>% scale()
+
+```
+
+### Correlate... Using base R. 
+Source: https://www.datanovia.com/en/lessons/heatmap-in-r-static-and-interactive-visualization/
+http://www.sthda.com/english/wiki/ggplot2-quick-correlation-matrix-heatmap-r-software-and-data-visualization
+```{r}
+cormat <- cor(cluster.5.unscale) # round to three digits
+round(cor(cluster.5.unscale),2)
+```
+###Heatmap...
+```{r}
+heatmap(cormat)
+```
+###Melt...
+```{r}
+melted_cormat <- melt(cormat) %>%
+  mutate(value = round(value,2))
+head(melted_cormat)
+```
+###Plot...
+```{r}
+ggplot(data = melted_cormat, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_text(aes(Var2, Var1, label = value), color = "black", size = 3) +
+  scale_fill_gradientn(colours = pal) +
+  theme_minimal() +
+  labs(fill = "corr") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold"),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank()) #+
+  #ggsave('target_cluster.png', width = 4, height = 4)
+```
+
+###HClust...
+Source: https://www.datanovia.com/en/courses/hierarchical-clustering-in-r-the-essentials/
+```{r}
+hclust.syll <- hclust(euc.dist.cluster_syll, method = "ward.D2")
+plot(hclust.syll, cex = 0.5)
+```
+
+###Clust...
+```{r}
+k3.cluster_syll <- kmeans(cluster.5.scale, centers = 3, nstart = 25)
+str(k3.cluster_syll)
+fviz_cluster(k3.cluster_syll, data = cluster.5.scale)
+```
+
+```{r}
+k4.cluster_syll <- kmeans(cluster.5.scale, centers = 4, nstart = 25)
+str(k4.cluster_syll)
+fviz_cluster(k4.cluster_syll, data = cluster.5.scale)
+```
+
+```{r}
+k2.cluster_syll <- kmeans(cluster.5.scale, centers = 2, nstart = 25)
+str(k2.cluster_syll)
+fviz_cluster(k2.cluster_syll, data = cluster.5.scale)
+```
+
+Init. Cluster... 
+So, the following doesn't render well because it's grouping by individual RTs instead of by column. 
+```{r}
+# euc.dist.cluster_syll <- get_dist(cluster.5.unscale,method = "euclidean")
+# head(round(as.matrix(euc.dist.cluster_syll), 2))[, 1:12]
+# fviz_dist(euc.dist.cluster_syll, gradient = list(low = "#0A7EA2", mid = "#C1D1D3", high = "#FFD7AE"))
+```
+
+## v1.1: (exp 3 + exp 4)
+```{r}
+all_rts_tgt <- rbind(exp_3_data %>%  dplyr::select(target,rt) %>% na.omit() %>% mutate(rt = scale(rt)), 
+                    exp_4_data_s %>%  dplyr::select(target,rt) %>% na.omit() %>% mutate(rt = scale(rt))) %>%
+  group_by_at("target") %>%
+  dplyr::mutate(row_id=1:n()) %>%
+  ungroup() %>%
+  spread(key = target,value = rt) %>%
+   dplyr::select(-row_id) %>%
+   dplyr::select("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")
+
+# because the row numbers are not equal, sample from each col rows == nmax of shortest column
+n_rows <- all_rts_tgt %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+all_rts <- all_rts_tgt[1:min(n_rows),]
+for (i in 1:length(n_rows)) {all_rts[,i] <- sample(as.matrix(all_rts_tgt[1:n_rows[i],i]),size = min(n_rows))}
+
+all_rts_cor <- cor(all_rts)
+
+#heatmap(all_rts_cor, Rowv=TRUE, Colv = TRUE)
+```
+###Melt...
+```{r}
+all_rts_melted_cor <- melt(all_rts_cor) %>%
+    mutate(value = round(value,2))
+```
+###Plot...
+```{r}
+ggplot(data = all_rts_melted_cor, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_text(aes(Var2, Var1, label = value), color = "black", size = 3) +
+  scale_fill_gradientn(colours = pal) +
+  theme_minimal() +
+  labs(fill = "corr") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold"),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank())
+```
+###HCluster...
+Source: https://www.datanovia.com/en/blog/cluster-analysis-in-r-simplified-and-enhanced/
+```{r}
+all_rts.euc <- get_dist(all_rts,method = "euclidean")
+hclust.all <- hclust(all_rts.euc, method = "ward.D2")
+plot(hclust.all, cex = 0.5)
+```
+###Cluster...
+```{r}
+k3.cluster_all <- kmeans(all_rts, centers = 3, nstart = 25)
+str(k3.cluster_all)
+fviz_cluster(k3.cluster_all, data = all_rts)
+```
+
+## v1.2: one subject
+```{r}
+sub_g2501 <- exp_3_data %>% filter(subject == unique(exp_3_data$subject)[10]) %>% select(target,rt) %>% na.omit() %>%
+  group_by_at("target") %>%
+  mutate(row_id=1:n()) %>%
+  ungroup() %>%
+  spread(key = target,value = rt) %>%
+  select(-row_id) %>%
+  select("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")
+
+# because the row numbers are not equal, sample from each col rows == nmax of shortest column
+n_rows <- sub_g2501 %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+sub_g2501.rts <- sub_g2501[1:min(n_rows),]
+for (i in 1:length(n_rows)) {sub_g2501.rts[,i] <- sample(as.matrix(sub_g2501[1:n_rows[i],i]),size = min(n_rows))}
+
+sub_g2501.rts.cor <- cor(sub_g2501.rts)
+
+#heatmap(sub_g2501.rts.cor, Rowv=TRUE, Colv = TRUE)
+```
+###Melt...
+```{r}
+sub_g2501.rts.cor.melted <- melt(sub_g2501.rts.cor) %>%
+    mutate(value = round(value,2))
+
+```
+###Plot...
+```{r}
+ggplot(data = sub_g2501.rts.cor.melted, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_text(aes(Var2, Var1, label = value), color = "black", size = 3) +
+  scale_fill_gradientn(colours = pal) +
+  theme_minimal() +
+  labs(fill = "corr") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold"),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank()) #+
+  #ggsave('target_cluster.png', width = 4, height = 4)
+```
+###HClust... 
+```{r}
+sub_g2501.rts.cor.euc <- get_dist(sub_g2501.rts,method = "euclidean")
+hclust.all <- hclust(sub_g2501.rts.cor.euc, method = "ward.D2")
+plot(sub_g2501.rts.cor.euc, cex = 0.5)
+```
+###KClust...
+```{r}
+sub_g2501.rts.clust <- kmeans(sub_g2501.rts, centers = 3, nstart = 10)
+str(sub_g2501.rts.clust)
+fviz_cluster(sub_g2501.rts.clust, data = sub_g2501.rts)
+
+```
+
+
+### Return when new R: 
+This tutorial not helpful: https://www.datanovia.com/en/lessons/heatmap-in-r-static-and-interactive-visualization/
+because...
+```{r}
+#  package ‘ComplexHeatmap’ is not available (for R version 3.6.1)
+
+# library(ComplexHeatmap)
+# Heatmap(cormat, 
+#         column_title = "", row_title = "",
+#         row_names_gp = gpar(fontsize = 7) # Text size for row name
+#         cluster_columns = FALSE)
+        
+```
+
+```{r}
+# library(dendextend)
+# row_dend = hclust(dist(df)) # row clustering
+# col_dend = hclust(dist(t(df))) # column clustering
+# Heatmap(cormat, 
+#         row_names_gp = gpar(fontsize = 6.5),
+#         cluster_columns = FALSE)
+# 
+#         cluster_rows = color_branches(row_dend, k = 4),
+#         cluster_columns = color_branches(col_dend, k = 2))
+```
+
+#-------------------------------------------------------------------------------------------
+# Cluster A3
+# - Exp 3 -  
+## 1. Take averges of RT per Subject x Target ID
+```{r}
+exp_3_avgs <- exp_3_data %>% summarySE(measurevar = "rt", groupvars = c("subject","target","tgt_pos"),na.rm=TRUE) 
+```
+## 2. Matrix Format
+```{r}
+exp_3_mat <- exp_3_avgs %>% dplyr::select(target,rt_median) %>% na.omit() %>%
+  group_by_at("target") %>%
+  dplyr::mutate(row_id=1:n()) %>%
+  ungroup() %>%
+  spread(key = target,value = rt_median) %>%
+  dplyr::select(-row_id) %>%
+  dplyr::select("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")
+
+# because the row numbers are not equal, sample from each col rows == nmax of shortest column
+n_rows <- exp_3_mat %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+exp_3_matout <- exp_3_mat[1:min(n_rows),]
+for (i in 1:length(n_rows)) {exp_3_matout[,i] <- sample(as.matrix(exp_3_mat[1:n_rows[i],i]),size = min(n_rows))}
+```
+
+## 3. Correlate and Melt (Syllables)
+```{r}
+c <- cor(exp_3_matout)
+
+exp_3_matout.cor.melted <- melt(exp_3_matout.cor) %>%
+    mutate(value = round(value,2))
+```
+
+## PCA on Cor
+```{r}
+eigen.3.sc <- eigen(exp_3_matout.cor)
+for (r in eigen.3.sc$values) {
+  print(r / sum(eigen.3.sc$values))
+}
+exp3.pca.scaled <- prcomp(exp_3_matout.cor, scale = TRUE)
+exp3.pca.scaled
+
+pca.plot.scaled <- autoplot(exp3.pca.scaled, data = exp_3_matout.cor, colour = 'orange', label = TRUE)
+
+# # SD of first two components x sqrt num of obs
+# # Consider using more values... 
+# scaling <- exp3.pca.scaled$sdev[1:2] * sqrt(nrow(exp_3_matout.cor))
+# 
+# pc1 <- rowSums(t( 
+#   t(
+#     sweep(exp_3_matout.cor, 2 ,colMeans(exp_3_matout.cor))
+#     ) * eigen.3.sc$vectors[,1] * -1) / scaling[1])
+# pc2 <- rowSums(t(t(sweep(exp_3_matout.cor[,2:7], 2, colMeans(exp_3_matout.cor[,2:7]))) * eigen.3.sc$vectors[,2]) / scaling[2])
+
+df <- data.frame(exp3.pca.scaled$rotation[,1:2]) %>%
+  rownames_to_column(var = "syllable") %>%
+  add_column(position = as.factor(rep(1:3,4)),
+             word = as.factor(rep(1:4,each = 3)))
+
+pca.plot.scaled
+
+ggplot(df, aes(x=PC1, y=PC2)) + 
+  geom_point(aes(color = position), size = 2) +
+  geom_text(aes(label = syllable), hjust=1.5, vjust=0) +
+  #geom_line(aes(group = word), alpha = 0.6) +
+  scale_color_brewer(palette = "Dark2") +
+  theme_classic()
+
+ggplot(df, aes(x=PC1, y=PC2)) + 
+  geom_point(aes(color = word), size = 2) +
+  geom_text(aes(label = syllable), hjust=1.5, vjust=0) +
+  #geom_line(aes(group = word), alpha = 0.6) +
+  scale_color_manual(values=wes_palette("Zissou1")[c(1,3,4,5)]) +
+  theme_classic()
+
+```
+
+### ... Aside on PCA
+Source: https://aaronschlegel.me/principal-component-analysis-r-example.html
+
+```{r}
+exp_3_covmat <- cov(exp_3_matout)
+
+#Total variance is equal to the sum of the eigenvalues: 
+sum(diag(exp_3_covmat))
+
+# Eigen decomposition: 
+eigen.3 <- eigen(exp_3_covmat)
+
+# The eigenvectors represent the principal components of S. The eigenvalues of S are used to find the proportion of the total variance explained by the components.
+
+for (s in eigen.3$values) {
+  print(s / sum(eigen.3$values))
+}
+
+plot(eigen.3$values, xlab = 'Eigenvalue Number', ylab = 'Eigenvalue Size', main = 'Scree Graph')
+lines(eigen.3$values)
+
+# PCA with R
+pca.3 <- prcomp(exp_3_covmat)
+# The calculation is done by a singular value decomposition of the (centered and possibly scaled) data matrix, not by using eigen on the covariance matrix. This is generally the preferred method for numerical accuracy.
+summary(pca.3)
+
+ pca.plot <- autoplot(pca.3, data = exp_3_covmat) + 
+    geom_text(aes(label=colnames()),hjust=0, vjust=0)
+pca.plot
+
+```
+
+
+## 4. Heatmap
+```{r}
+ggplot(data = exp_3_matout.cor.melted, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_text(aes(Var2, Var1, label = value), color = "black", size = 2) +
+  scale_fill_gradientn(colours = pal) +
+  theme_minimal() +
+  labs(fill = "corr") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold"),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank()) +
+  ggsave('exp_3.png', width = 6, height = 4)
+
+
+exp_3.cov.melted <- melt(exp_3_covmat) %>%
+    mutate(value = round(value,2))
+ggplot(data = exp_3.cov.melted, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_text(aes(Var2, Var1, label = value), color = "black", size = 2) +
+  scale_fill_gradientn(colours = pal) +
+  theme_minimal() +
+  labs(fill = "cov") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold"),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank()) +
+  ggsave('exp_3_cov.png', width = 6, height = 4)
+
+
+```
+Relevant questions: 
+Are words learned? (Triplets)
+Are positions learned? (1 vs. 2 vs. 3)
+Are duplets learned? (1-2 or 2-3)
+
+Recall these are response times, so they tell us principally about how predictable or easy to recognize a syllable was. While some differences may exist in the latter, the former we were able to show is present in the data. 
+
+
+# - Exp 4 -  
+## 1. Take averges
+```{r}
+exp_4_avgs <- exp_4_data_s %>% summarySE(measurevar = "rt", groupvars = c("subject","target"),na.rm=TRUE) %>% na.omit()
+```
+## 2-4.
+```{r}
+exp_4_mat <- exp_4_avgs %>% dplyr::select(target,rt_median) %>% na.omit() %>%
+  group_by_at("target") %>%
+  dplyr::mutate(row_id=1:n()) %>%
+  ungroup() %>%
+  spread(key = target,value = rt_median) %>%
+  dplyr::select(-row_id) %>%
+  dplyr::select("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")
+
+# because the row numbers are not equal, sample from each col rows == nmax of shortest column
+n_rows <- exp_4_mat %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+exp_4_matout <- exp_4_mat[1:min(n_rows),]
+for (i in 1:length(n_rows)) {exp_4_matout[,i] <- sample(as.matrix(exp_4_mat[1:n_rows[i],i]),size = min(n_rows))}
+
+exp_4_matout.cor <- cor(exp_4_matout)
+
+exp_4_matout.cor.melted <- melt(exp_4_matout.cor) %>%
+    mutate(value = round(value,2))
+
+ggplot(data = exp_4_matout.cor.melted, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_text(aes(Var2, Var1, label = value), color = "black", size = 2) +
+  scale_fill_gradientn(colours = pal) +
+  theme_minimal() +
+  labs(fill = "corr") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold"),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank())
+  ggsave('exp_4.png', width = 6, height = 4)
+
+```
+
+# - E3 Subject-wise -
+```{r}
+for (curr_subj in 1:length(unique(exp_3_data$subject))) {
+  subj_avgs_mat <- exp_3_data %>% filter(subject == unique(exp_3_data$subject)[curr_subj]) %>%
+  dplyr::select(target,rt) %>% na.omit() %>%
+  group_by_at("target") %>%
+  dplyr::mutate(row_id=1:n()) %>%
+  ungroup() %>%
+  spread(key = target,value = rt) %>%
+  dplyr::select(-row_id)
+
+# because the row numbers are not equal, sample from each col rows == nmax of shortest column
+n_rows <- subj_avgs_mat %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+  if (curr_subj == 26) {
+    curr_data <- curr_data %>% 
+    mutate(tu = as.numeric(rep(NA,nrow(curr_data))))
+    N <- sort(n_rows)[2]
+  } else if (curr_subj == 21) { 
+    subj_avgs_mat <- subj_avgs_mat %>% 
+    mutate(be = as.numeric(rep(NA,nrow(subj_avgs_mat))))
+    N <- sort(n_rows)[2] 
+  } else if (curr_subj == 11) { 
+    subj_avgs_mat <- subj_avgs_mat %>% 
+    add_column(ro = as.numeric(rep(NA,nrow(subj_avgs_mat))))
+    n_rows <- subj_avgs_mat %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+    N <- sort(n_rows)[2]
+  } else if (curr_subj == 8) { 
+    subj_avgs_mat <- subj_avgs_mat %>% 
+    mutate(po = as.numeric(rep(NA,nrow(subj_avgs_mat))))
+    N <- sort(n_rows)[2] # select the second lowest length
+    # and maybe also ga? 
+  } else if (curr_subj == 2) { 
+    subj_avgs_mat <- subj_avgs_mat %>% 
+    add_column(be = as.numeric(rep(NA,nrow(subj_avgs_mat)))) %>%
+    add_column(ro = as.numeric(rep(NA,nrow(subj_avgs_mat))))
+    n_rows <- subj_avgs_mat %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+    N <- sort(n_rows)[3]
+  } else if (curr_subj == 1) { 
+    subj_avgs_mat <- subj_avgs_mat %>% 
+    mutate(be = as.numeric(rep(NA,nrow(subj_avgs_mat))))
+    N <- sort(n_rows)[2] 
+  } else {
+    N <- min(n_rows)
+  }
+subj_avgs_matout <- subj_avgs_mat[1:N,]
+
+for (i in 1:length(n_rows)) {
+  if (n_rows[i] < N) {subj_avgs_matout[,i] <- sample(as.matrix(subj_avgs_mat[1:N,i]), size = N)
+  } else {subj_avgs_matout[,i] <- sample(as.matrix(subj_avgs_mat[1:n_rows[i],i]), size = N)}
+}
+
+syll_order <- c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")
+subj_avgs_matout <- subj_avgs_matout %>%
+  dplyr::select(syll_order[syll_order %in% colnames(subj_avgs_matout)])
+
+subj_avgs_matout.cor <- cor(subj_avgs_matout)
+subj_avgs_matout.cov <- cov(subj_avgs_matout)
+
+subj_avgs_matout.cor.melted <- melt(subj_avgs_matout.cor) %>%
+    mutate(value = round(value,2))
+
+ggplot(data = subj_avgs_matout.cor.melted, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_text(aes(Var2, Var1, label = value), color = "black", size = 2) +
+  scale_fill_gradientn(colours = pal) +
+  theme_minimal() +
+  labs(fill = "corr") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold"),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank()) + 
+  ggsave(paste0('exp_3_subj_', curr_subj ,'.png'), width = 6, height = 4)
+}
+```
+
+# - E4 Subject-wise -
+```{r}
+for (curr_subj in 1:length(unique(exp_4_data_s$subject))) {
+  subj_avgs_mat <- exp_4_data_s %>% filter(subject == unique(exp_4_avgs$subject)[curr_subj]) %>%
+  dplyr::select(target,rt) %>% na.omit() %>%
+  group_by_at("target") %>%
+  dplyr::mutate(row_id=1:n()) %>%
+  ungroup() %>%
+  spread(key = target,value = rt) %>%
+  dplyr::select(-row_id)
+
+# because the row numbers are not equal, sample from each col rows == nmax of shortest column
+n_rows <- subj_avgs_mat %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+if (curr_subj == 12) {
+    subj_avgs_mat <- subj_avgs_mat %>% 
+    add_column(be = as.numeric(rep(NA,nrow(subj_avgs_mat))))
+    n_rows <- subj_avgs_mat %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+    N <- sort(n_rows)[2]
+} else if (curr_subj == 16) {
+    subj_avgs_mat <- subj_avgs_mat %>% 
+    add_column(be = as.numeric(rep(NA,nrow(subj_avgs_mat)))) %>%
+    add_column(se = as.numeric(rep(NA,nrow(subj_avgs_mat)))) %>%
+    mutate(za = as.numeric(rep(NA,nrow(subj_avgs_mat)))) %>%
+    mutate(ga = as.numeric(rep(NA,nrow(subj_avgs_mat))))
+    n_rows <- subj_avgs_mat %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+    N <- sort(n_rows)[5]
+} else if (curr_subj == 2) {
+    subj_avgs_mat <- subj_avgs_mat %>% 
+    mutate(be = as.numeric(rep(NA,nrow(subj_avgs_mat)))) %>%
+    mutate(tu = as.numeric(rep(NA,nrow(subj_avgs_mat))))
+    N <- sort(n_rows)[3]
+} else {
+      N <- min(n_rows)
+
+}
+
+subj_avgs_matout <- subj_avgs_mat[1:N,]
+for (i in 1:length(n_rows)) {
+  if (n_rows[i] < N) {subj_avgs_matout[,i] <- sample(as.matrix(subj_avgs_mat[1:N,i]), size = N)
+  } else {subj_avgs_matout[,i] <- sample(as.matrix(subj_avgs_mat[1:n_rows[i],i]), size = N)}
+}
+  
+  
+# when the length of the row to be subset is smaller than N, that can only be because it's a 
+# column of NAs, so as many rows as N itself
+syll_order <- c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")
+subj_avgs_matout <- subj_avgs_matout %>%
+  dplyr::select(syll_order[syll_order %in% colnames(subj_avgs_matout)])
+
+
+  
+subj_avgs_matout.cor <- cor(subj_avgs_matout)
+
+subj_avgs_matout.cor.melted <- melt(subj_avgs_matout.cor) %>%
+    mutate(value = round(value,2))
+
+ggplot(data = subj_avgs_matout.cor.melted, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_text(aes(Var2, Var1, label = value), color = "black", size = 2) +
+  scale_fill_gradientn(colours = pal) +
+  theme_minimal() +
+  labs(fill = "corr") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold"),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank()) + 
+  ggsave(paste0('exp_4_subj_', curr_subj ,'.png'), width = 6, height = 4)
+}
+```
+
+
+
+
+
+# Diagnostics
+
+
+```{r}
+problematics.3 <- c(1,2,8,20,26)
+problematics.4 <- c(2,16)
+
+curr.diag <- exp_3_data %>% filter(subject == unique(exp_3_data$subject)[problematics.3[5]])
+```
+
+
+## RT
+```{r}
+
+curr.diag
+
+ggplot() +
+  geom_point(data = data_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(tgt_word)), size = 2) +
+  geom_line(data = data_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = tgt_word, colour = factor(tgt_word)),size = .5) +
+  geom_point(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median), colour = "BLACK") +
+  geom_errorbar(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci), colour = "BLACK", width = 0.1, size = 0.8) +
+  geom_line(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = 1), colour = "BLACK", size = .9) +
+  scale_colour_brewer(palette = "Paired") +
+  labs(colour= "Trial/Word") + ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') +
+  scale_x_discrete(limits=c(1:3)) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"))
+
+```
+
+## Hist
+```{r}
+
+```
+
+## Cov
+```{r}
+subj_avgs_matout.cov <- cov(subj_avgs_matout)
+
+subj_avgs_matout.cov.melted <- melt(subj_avgs_matout.cov) %>%
+    mutate(value = round(value,2))
+
+ggplot(data = subj_avgs_matout.cov.melted, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_text(aes(Var2, Var1, label = value), color = "black", size = 2) +
+  scale_fill_gradientn(colours = pal) +
+  theme_minimal() +
+  labs(fill = "corr") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold"),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank()) + 
+  ggsave(paste0('exp_3_subj_', curr_subj ,'_cov.png'), width = 6, height = 4)
+
+```
+
+## Heatmap
+```{r}
+
+```
+
+
+#-------------------------------------------------------------------------------------------
+# Combined E3 & E4
+## Cor()
+```{r}
+exp_4_data_comb <- exp_4_data_s %>%
+    mutate(subject = as.character(subject)) %>% 
+    mutate(subject = ifelse(subject == "s1911", "s1912", subject))
+
+exps.3.4.data <- rbind(exp_3_data %>% mutate(exp="exp 3") %>% 
+    add_column(cond_order = NA, .after = "subject") %>% 
+    add_column(sess = NA, .before = "block") %>%
+    dplyr::select(-detect, -rt_sc),
+  exp_4_data_comb %>% mutate(exp="exp 4") %>% 
+    add_column(block = NA, .before = "trial")) %>%
+  mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+# N = 53
+
+# For each subject, compute a correlation matrix between syllables and then z transform that data. Put matrices into a list, and average them. Then transform back to rho. 
+  all.list  <- list()
+  all.cor.list  <- list()
+  all.cor.z.list  <- list()
+  all.cor.diss.z.list <- list()
+  all.cor.diss.list <- list()
+
+for (curr_subj in unique(exps.3.4.data$subject)) {
+  curr_data <- exps.3.4.data %>% 
+    filter(subject == curr_subj) %>%
+    dplyr::select(target,rt) %>% 
+    na.omit() %>%
+    group_by(target) %>%
+    dplyr::mutate(row_id=1:n()) %>%
+    ungroup() %>%  
+    spread(key = target, value = rt) %>%
+    #ungroup(subject)
+    dplyr::select(-row_id) 
+  
+# find minimum number of rows, N
+  n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+# exceptions
+  if(curr_subj == "s1107") { # 3/26
+    # subject had only 2 entires in tu, so just make the column NA to preserve other data
+    curr_data <- curr_data %>% 
+    mutate(tu = as.numeric(rep(NA,nrow(curr_data))))
+    N <- sort(n_rows)[2] # select the second lowest length
+  } else if (curr_subj == "l2805") { # 3/21
+    curr_data <- curr_data %>% 
+    mutate(be = as.numeric(rep(NA,nrow(curr_data))))
+    N <- sort(n_rows)[2] 
+  } else if (curr_subj == "h0207") { # 3/11
+    curr_data <- curr_data %>% 
+    add_column(ro = as.numeric(rep(NA,nrow(curr_data))))
+    n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+    N <- sort(n_rows)[2]
+  } else if (curr_subj == "g0609") { # 3/8
+    curr_data <- curr_data %>% 
+    mutate(po = as.numeric(rep(NA,nrow(curr_data))))
+    N <- sort(n_rows)[2] # select the second lowest length
+    # and maybe also ga? 
+  } else if (curr_subj == "b0207") { # 3/2
+    curr_data <- curr_data %>% 
+    add_column(be = as.numeric(rep(NA,nrow(curr_data))),.after = "za") %>%
+    add_column(ro = as.numeric(rep(NA,nrow(curr_data))),.after = "di")
+    n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+    N <- sort(n_rows)[3]
+  } else if (curr_subj == "a0604") { # 3/1
+    curr_data <- curr_data %>% 
+    mutate(be = as.numeric(rep(NA,nrow(curr_data))))
+    N <- sort(n_rows)[2] 
+  } else if (curr_subj == "s2205") { # 4/16    
+    curr_data <- curr_data %>% 
+    add_column(be = as.numeric(rep(NA,nrow(curr_data))),.after = "za") %>%
+    add_column(se = as.numeric(rep(NA,nrow(curr_data))),.after = "ki") %>%
+    mutate(za = as.numeric(rep(NA,nrow(curr_data)))) %>%
+    mutate(ga = as.numeric(rep(NA,nrow(curr_data))))
+    n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+    N <- sort(n_rows)[5]
+  } else if (curr_subj == "s0310") { # 4/12
+    # subject is missing be data, so just make it NA, N is the same
+    curr_data <- curr_data %>% 
+    add_column(be = as.numeric(rep(NA,nrow(curr_data))),.after = "za")
+    n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+    N <- sort(n_rows)[2]
+  } else if (curr_subj == "a2605") { # 4/2
+    curr_data <- curr_data %>% 
+    mutate(be = as.numeric(rep(NA,nrow(curr_data)))) %>%
+    mutate(tu = as.numeric(rep(NA,nrow(curr_data))))
+    N <- sort(n_rows)[3]
+  } else {
+    N <- min(n_rows)
+  }
+# create output matrix with N rows
+  curr_data.mat <- curr_data[1:N,]
+# shuffle longer columns into shorter new matrix
+  for (i in 1:length(curr_data.mat)) {
+  if (n_rows[i] < N) {curr_data.mat[,i] <- sample(as.matrix(curr_data[1:N,i]), size = N)
+  } else {curr_data.mat[,i] <- sample(as.matrix(curr_data[1:n_rows[i],i]), size = N)}
+  }
+
+  
+# take correlation(), then transform to z values()
+  curr_data.cor <- cor(curr_data.mat) # corr
+  curr_data.cor.z <- FisherZ(cor(curr_data.mat)) # corr - fisher
+  curr_data.cor.diss.z <- FisherZ(1-cor(curr_data.mat)) # diss - fisher
+  curr_data.cor.diss <- 1-(cor(curr_data.mat)) # diss
+
+# append
+  all.list <- append(all.list, list(curr_data.mat))
+  all.cor.list <- append(all.cor.list, list(curr_data.cor))
+  all.cor.z.list <- append(all.cor.z.list, list(curr_data.cor.z))
+  all.cor.diss.z.list <- append(all.cor.diss.z.list, list(curr_data.cor.diss.z))
+  all.cor.diss.list <- append(all.cor.diss, list(curr_data.cor.diss))
+}
+
+# avg.z.list <- reduce(all.z.list, `+`, na.rm = TRUE) / length(all.z.list)
+# ^ can't handle NAs
+
+# avg.cor.list <- rowMeans(do.call(cbind, all.cor.list), na.rm = TRUE)
+# ^ doesn't perform intended function (mean matrix), but also, the Inf values generated
+# by the Fisher transform make the outputs Inf. Possible solution is to recode z of Inf
+# for cor of 1 to the z value for a correlation of 0.99...
+
+# But I wonder if it's necesary to perform the z transform. Why not just average the correlation
+# matrices? After all, they are all on the same scale and express relationships between the items, 
+# rather than absolute values, which is what we intended. 
+# So now, just find how to perform matrix average that ignores NAs in the correlation matrix.
+
+# Fisher Z merely makes the sampling distribution more normal to make calculation easier, but
+# it's not required if the computation is performed on a computer that can handle the exact 
+# (however skewed) true distribution: https://stats.stackexchange.com/questions/420142/why-is-fisher-transformation-necessary
+
+# Ok, these work! For the z's, the diag is infinite
+# all.cor <- apply(simplify2array(all.cor.list), 1:2, mean, na.rm= TRUE)
+# all.z <- apply(simplify2array(all.cor.z.list), 1:2, mean, na.rm= TRUE)
+# The results of these two are nearly identical -- identical out to about 3 digits, but indeed the z's are normal-ish
+
+# all.diss.z <- FisherZ(all.cor.diss)
+# apply(simplify2array(all.cor.diss),1:2, na.rm = TRUE)
+```
+
+Lucia's version: 
+1. Take correlations for each subject, z transform | I did not z transform. 
+2. Sample 200 times from each participant's correlations for each within vs. across category
+3. Compute wilcoxon
+
+For each test, we look at the correlation between items in each category vs. items outside that category.
+## -> Ordinal Position
+Within: 
+1s: (all ones vs. all other ones) nu vs. ro, nu vs. mi, etc.  
+2s: (all 2s vs. all other twos) ga vs. ki, etc. 
+3s: (all threes vs. all other threes) di vs. se, etc. 
+... together 
+
+Across:
+1-2s, 2-3s: (crossed positions within words) nu vs. ga, ga vs. di, nu vs. di | basically, word identity
+```{r}
+# indices for each matrix
+wn.OP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10), # 1s
+             c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), #2s
+             c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12)) #3s
+ac.OP <- list(c(1,2),c(2,3),c(1,3),
+              c(4,5),c(5,6),c(4,6), 
+             c(7,8),c(7,9),c(8,9),
+             c(10,11),c(11,12),c(10,12)) 
+
+# collect all possible values
+wn.arr <- list()
+for (i in 1:length(wn.OP)) {
+    wn.arr <- append(wn.arr, mapply(function(x, y) x[y][2], all.cor.list, wn.OP[i], SIMPLIFY = FALSE))
+} 
+
+ac.arr <- list()
+for (i in 1:length(ac.OP)) {
+  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    ac.arr <- append(ac.arr, mapply(function(x, y) x[y][2], all.cor.list, ac.OP[i], SIMPLIFY = FALSE))
+} 
+
+within.OP <- cbind(wn.arr[!is.na(wn.arr)]) %>% as.numeric()
+across.OP <- cbind(ac.arr[!is.na(ac.arr)]) %>% as.numeric()
+
+# compute maximum length
+n.op <- round(min(length(within.OP),length(across.OP))*(4/5))
+
+# sample & bootstrap to produce a matrix and bootstrapped means
+set.seed(42)
+within.OP.samp <- replicate(200, sample(within.OP, size = n.op, replace = TRUE)) 
+within.OP.means <- replicate(200, mean(sample(within.OP, size = n.op, replace = TRUE))) 
+
+across.OP.samp <- replicate(200, sample(across.OP, size = n.op, replace = TRUE)) 
+across.OP.means <- replicate(200, mean(sample(across.OP, size = n.op, replace = TRUE))) 
+
+
+(wt.OP <- wilcox.test(within.OP.samp,across.OP.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
+
+
+```
+
+
+## -> Transitional Probability
+Within:
+.33's: same as first row for Ordinal Position
+1's: same as second two rows for Ordinal Position
+Across: 
+.33-1's: (crossed probabilities within words) nu vs. ga, ro vs. ki
+
+but paper reads:
+Low vs. Hi: 
+i.e. .33s vs. 1s...
+```{r}
+# indices for each matrix
+wn.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10), # low TP
+              c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
+             c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12))
+ac.TP <- list(c(1,2),c(4,5),c(7,8),c(10,11)) # .33-1 crosses within words
+# wn.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10)) # low TP
+# ac.TP <- list(c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
+#              c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12))
+
+
+wn.tp.arr <- list()
+for (i in 1:length(wn.TP)) {
+  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    wn.tp.arr <- append(wn.tp.arr, mapply(function(x, y) x[y][2], all.cor.list, wn.TP[i], SIMPLIFY = FALSE))
+} 
+
+ac.tp.arr <- list()
+for (i in 1:length(ac.TP)) {
+  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    ac.tp.arr <- append(ac.tp.arr, mapply(function(x, y) x[y][2], all.cor.list, ac.TP[i], SIMPLIFY = FALSE))
+} 
+
+within.TP <- cbind(wn.tp.arr[!is.na(wn.tp.arr)]) %>% as.numeric()
+across.TP <- cbind(ac.tp.arr[!is.na(ac.tp.arr)]) %>% as.numeric()
+
+n.tp <- round(min(length(within.TP),length(across.TP))*(4/5))
+
+set.seed(42)
+within.TP.samp <- replicate(200, sample(within.TP, size = n.tp, replace = TRUE)) 
+within.TP.means <- replicate(200, mean(sample(within.TP, size = n.tp, replace = TRUE))) 
+
+across.TP.samp <- replicate(200, sample(across.TP, size = n.tp, replace = TRUE)) 
+across.TP.means <- replicate(200, mean(sample(across.TP, size = n.tp, replace = TRUE))) 
+
+(wt.TP <- wilcox.test(within.TP.samp,across.TP.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
+```
+
+## -> Triplet Identity
+Within: all comparisons within a words of the form 1-2, 2-3, 1-3
+nu-ga, ga-di, nu-di
+across: "phantom word" comparisons of the form 1-2,2-3,1-3, but only across words
+nu-ki, nu-se
+```{r}
+wn.WI <- list(c(1,2),c(2,3),c(1,3),# nugadi
+              c(4,5),c(5,6),c(4,6),# rokise
+             c(7,8),c(7,9),c(8,9),# mipola
+             c(10,11),c(11,12),c(10,12))# zabetu
+ac.WI <- list(c(1,5),c(2,6),c(1,6),c(1,8),c(2,9),c(1,9),c(1,11),c(2,12),c(1,12),# nu-ki, ga-se, nu-se, nu-po, ga-la, nu-la, nu-be, ga-tu, nu-tu 
+              c(4,2),c(5,3),c(4,3),c(4,8),c(5,9),c(4,9),c(4,11),c(5,12),c(4,12), # ro-ga, ki-di, ro-di, ro-po, ki-la, ro-la, ro-be, ki-tu, ro-tu 
+              c(7,2),c(8,3),c(7,3),c(7,5),c(8,6),c(7,6),c(7,11),c(8,12),c(7,12), # mi-ga, po-di, mi-di, mi-ki, po-se, mi-se, mi-be, po-tu, mi-tu
+              c(10,2),c(11,3),c(10,3),c(11,5),c(10,6),c(11,6),c(10,8),c(11,9),c(10,9)) # za-ga, be-di, za-di, za-ki, be-ki, za-se, za-po, be-la, za-la 
+  
+# nope, these are all 3-1s  
+  # list(c(3,4),c(3,7),c(3,10), #di-ro, di-mi, di-za
+  #             c(6,1),c(6,7),c(6,10), #se-nu, se-mi, se-za
+  #             c(9,1),c(9,4),c(9,10), #la-nu, la-ro, la-za
+  #             c(12,1),c(12,4,c(12,7))) #za-nu, za-ro, za-mi 
+
+wn.WI.arr <- list()
+for (i in 1:length(wn.WI)) {
+  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    wn.WI.arr <- append(wn.WI.arr, mapply(function(x, y) x[y][2], all.cor.list, wn.WI[i], SIMPLIFY = FALSE))
+} 
+
+ac.WI.arr <- list()
+for (i in 1:length(ac.WI)) {
+  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    ac.WI.arr <- append(ac.WI.arr, mapply(function(x, y) x[y][2], all.cor.list, ac.WI[i], SIMPLIFY = FALSE))
+} 
+
+within.WI <- cbind(wn.WI.arr[!is.na(wn.WI.arr)]) %>% as.numeric()
+across.WI <- cbind(ac.WI.arr[!is.na(ac.WI.arr)]) %>% as.numeric()
+
+n.wi <- round(min(length(within.WI),length(across.WI))*(4/5))
+
+set.seed(42)
+within.WI.samp <- replicate(200, sample(within.WI, size = n.wi, replace = TRUE)) 
+within.WI.means <- replicate(200, mean(sample(within.WI, size = n.wi, replace = TRUE))) 
+
+across.WI.samp <- replicate(200, sample(across.WI, size = n.wi, replace = TRUE)) 
+across.WI.means <- replicate(200, mean(sample(across.WI, size = n.wi, replace = TRUE))) 
+
+(wt.WI <- wilcox.test(within.WI.samp,across.WI.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
+```
+
+
+##-> Duplet Identity
+Within: All proper duplets, 1-2s, 2-3s
+Across: 1-3's
+
+```{r}
+wn.di <- list(c(1,2),c(2,3),
+              c(4,5),c(5,6),
+             c(7,8),c(7,9),
+             c(10,11),c(11,12))
+ac.di <- list(c(1,3),c(4,6),c(8,9),c(10,12))
+
+
+wn.di.arr <- list()
+for (i in 1:length(wn.di)) {
+  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    wn.di.arr <- append(wn.di.arr, mapply(function(x, y) x[y][2], all.cor.list, wn.di[i], SIMPLIFY = FALSE))
+} 
+
+ac.di.arr <- list()
+for (i in 1:length(ac.di)) {
+  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    ac.di.arr <- append(ac.di.arr, mapply(function(x, y) x[y][2], all.cor.list, ac.di[i], SIMPLIFY = FALSE))
+} 
+
+within.di <- cbind(wn.di.arr[!is.na(wn.di.arr)]) %>% as.numeric()
+across.di <- cbind(ac.di.arr[!is.na(ac.di.arr)]) %>% as.numeric()
+
+n.di <- round(min(length(within.di),length(across.di))*(4/5))
+
+set.seed(42)
+within.di.samp <- replicate(200, sample(within.di, size = n.di, replace = TRUE))
+within.di.means <- replicate(200, mean(sample(within.di, size = n.di, replace = TRUE)))
+
+across.di.samp <- replicate(200, sample(across.di, size = n.di, replace = TRUE))
+across.di.means <- replicate(200, mean(sample(across.di, size = n.di, replace = TRUE)))
+
+(wt.DI <- wilcox.test(within.di.samp,across.di.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
+```
+
+This was essentiall 4 Mann-Whitney Tests:  if both x and y are given and paired is FALSE, a Wilcoxon rank sum test (equivalent to the Mann-Whitney test: see the Note) is carried out. In this case, the null hypothesis is that the distributions of x and y differ by a location shift of mu and the alternative is that they differ by some other location shift (and the one-sided alternative "greater" is that x is shifted to the right of y).
+
+P-values computed via normal approximation.
+
+Note that in the two-sample case the estimator for the difference in location parameters does not estimate the difference in medians (a common misconception) but rather the median of the difference between a sample from x and a sample from y.
+
+# Combine
+```{r}
+
+WA.wilcox <- data.frame(test = factor(c(
+"ordinal position",
+#"ordinal position",
+"transitional probability",
+#"transitional probability",
+"word identity",
+#"word identity",
+#"duplets",
+"duplets"), levels = c("ordinal position","transitional probability","word identity","duplets")),
+#group = as.factor(c("within","across","within","across","within","across","within","across")),
+mean = as.numeric(c(mean(within.OP.means)-mean(across.OP.means),
+mean(within.TP.means)-mean(across.TP.means),
+mean(within.WI.means)-mean(across.WI.means),
+mean(within.di.means)-mean(across.di.means))),
+w = as.numeric(c(
+wt.OP$statistic,
+#wt.OP$statistic,
+wt.TP$statistic,
+#wt.TP$statistic,
+wt.WI$statistic,
+#wt.WI$statistic,
+#wt.DI$statistic,
+wt.DI$statistic)),
+"CI low" = as.numeric(c(
+wt.OP$conf.int[1],
+#wt.OP$conf.int,
+wt.TP$conf.int[1],
+#wt.TP$conf.int,
+wt.WI$conf.int[1],
+#wt.WI$conf.int,
+#wt.DI$conf.int,
+wt.DI$conf.int[1])),
+"CI hi" = as.numeric(c(
+wt.OP$conf.int[2],
+wt.TP$conf.int[2],
+wt.WI$conf.int[2],
+wt.DI$conf.int[2])),
+p = as.numeric(c(
+wt.OP$p.value,
+#wt.OP$p.value,
+wt.TP$p.value,
+#wt.TP$p.value,
+wt.WI$p.value,
+#wt.WI$p.value,
+#wt.DI$p.value,
+wt.DI$p.value)))
+```
+
+
+
+```{r}
+ggplot(WA.wilcox) + 
+  geom_col(aes(test,mean), fill = "grey", color = "black") + 
+  geom_hline(yintercept = 0, color = "black", linetype="dashed") + 
+  scale_x_discrete(name = NULL) + 
+  scale_y_continuous(name = "within - across similarity (Pearson's r)") +
+  theme_classic() + 
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggsave('fig_similarity.png', width = w, height = h)  
+
+```
+
+
+
+Ignore this here... 
+Ok, now that we have a list with responses from each subject, sample 200 times and compute each time a dissimilarity matrix.
+1. Take raw rt values from each subject
+2. Put into a massive df
+3. Take subset
+4. Compute 1-corr, z norm
+5. Wilcoxon, heatmap
+
+
+
+### Ordinal Position - Rank Sum Test
+```{r}
+ordinal.z.1v2 <- as.data.frame(all.z) %>% gather(key = first, value = z_1, nu, ro, mi, za) %>%
+         gather(key = second, value = z_2, ga, ki, po, be) %>%
+  dplyr::select(z_1,z_2) 
+wilcox.test(ordinal.z.1v2$z_1,ordinal.z.1v2$z_2)
+
+ordinal.z.1v3 <- as.data.frame(all.z) %>% gather(key = first, value = z_1, nu, ro, mi, za) %>%
+         gather(key = second, value = z_3, di, se, la, tu) %>%
+  dplyr::select(z_1,z_3) 
+wilcox.test(ordinal.z.1v2$z_1,ordinal.z.1v2$z_3)
+
+ordinal.z.2v3 <- as.data.frame(all.z) %>% gather(key = first, value = z_2, ga, ki, po, be) %>%
+         gather(key = second, value = z_3, di, se, la, tu) %>%
+  dplyr::select(z_2,z_3) 
+wilcox.test(ordinal.z.2v3$z_2,ordinal.z.1v2$z_3)
+```
+True location shifts between pos 1 and pos 2 and pos 3 syllables are not equal to 0. 
+Marginally different 2 & 3. 
+Coding for ordinal position.
+
+### TP
+```{r}
+ordinal.z.1v33 <- as.data.frame(all.z) %>% gather(key = first, value = z_33, nu, ro, mi, za) %>%
+         gather(key = second, value = z_1, ga, ki, po, be, di, se, la, tu) %>%
+  dplyr::select(z_1,z_33) 
+wilcox.test(ordinal.z.1v33$z_1,ordinal.z.1v33$z_33)
+
+```
+Coding for transitional probability. 
+
+### Within vs. Across Words
+e.g. nu-ga, ga-di vs. nu/ga/di-everything else
+```{r}
+all.z.df <- as.data.frame(all.z)
+
+across = c(all.z.df[lower.tri(all.z.df)][-c(1, 12, 31, 39, 52, 57, 64, 66)])
+within = c(all.z.df[lower.tri(all.z.df)][c(1, 12, 31, 39, 52, 57, 64, 66)])
+within = c(within, rep(NA, length(across)-length(within)))
+within.vs.across <- as.data.frame(cbind(across, within))
+wilcox.test(within.vs.across$across,within.vs.across$within)
+
+
+
+```
+Note that across includes na-di, which is never seen. 
+Does that makes this a duplet test only? I suppose so. 
+
+
+word would have to include: the above, plus nu-di pairs. 
+```{r}
+
+```
+
+
+## Heatmap
+```{r}
+all.cor.melted <- melt(all.z) %>%
+    mutate(value = round(value,2))
+ggplot(data = all.cor.melted, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_text(aes(Var2, Var1, label = value), color = "black", size = 2) +
+  scale_fill_gradientn(colours = pal) +
+  theme_minimal() +
+  labs(fill = "Fisher's z") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold"),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank()) +
+  ggsave('exp_3_4_z.png',height = h, width = w)
+
+all.cor.melted <- melt(all.cor) %>%
+    mutate(value = round(value,2))
+ggplot(data = all.cor.melted, aes(x=Var1, y=Var2, fill=value)) + 
+  geom_tile() + 
+  geom_text(aes(Var2, Var1, label = value), color = "black", size = 2) +
+  scale_fill_gradientn(colours = pal) +
+  theme_minimal() +
+  labs(fill = "cor") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold"),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank()) +
+  ggsave('exp_3_4_cor.png', height = h, width = w)
+```
+
+
+```{r eval=FALSE, include=FALSE}
+# Scale()
+exps.3.4.data.mat <- exps.3.4.data %>%
+    #group_by(subject) %>%
+    #mutate(rt_secs = scale(rt))
+    dplyr::select(subject,target,rt, exp) %>%
+    na.omit() 
+
+# Wrangle()
+temp.1 <- exps.3.4.data.mat %>% 
+  filter(subject == "c0509") %>%
+  #arrange(subject) %>%
+  #group_by(subject) %>%
+  group_by(target) %>%
+  dplyr::mutate(row_id=1:n()) %>%
+  ungroup() %>%  
+  spread(key = target, value = rt) %>%
+  #ungroup(subject)
+  dplyr::select(-row_id, - subject, -exp) 
+
+
+
+n_rows <- temp.1 %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+temp.1.mat <- temp.1[1:min(n_rows),]
+for (i in 1:length(n_rows)) {temp.1.mat[,i] <- sample(as.matrix(temp.1[1:n_rows[i],i]),size = min(n_rows))}
+
+
+#exps.3.4.data.mat <- column_to_rownames(exps.3.4.data.mat, var = "subject") # not allowed because duplicates
+
+temp.1.cor.z <- cor(temp.1.mat) %>% FisherZ()
+
+temp.2 <- exps.3.4.data.mat %>% 
+  filter(subject == "b1111") %>%
+  #arrange(subject) %>%
+  #group_by(subject) %>%
+  group_by(target) %>%
+  dplyr::mutate(row_id=1:n()) %>%
+  ungroup() %>%  
+  spread(key = target, value = rt) %>%
+  #ungroup(subject)
+  dplyr::select(-row_id, - subject, -exp) 
+
+n_rows <- temp.2 %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
+temp.2.mat <- temp.2[1:min(n_rows),]
+for (i in 1:length(n_rows)) {temp.2.mat[,i] <- sample(as.matrix(temp.2[1:n_rows[i],i]),size = min(n_rows))}
+
+
+#exps.3.4.data.mat <- column_to_rownames(exps.3.4.data.mat, var = "subject") # not allowed because duplicates
+
+temp.2.cor.z <- cor(temp.2.mat) %>% FisherZ()
+
+temp.1.cor.z
+temp.2.cor.z
+
+mats.list <- list(temp.1.cor.z, temp.2.cor.z,temp.2.cor.z)
+averaged.z.mat <- reduce(mats.list, `+`) / length(mats.list)
+
+```
+
+
+```{r}
+ggplot() + 
+  geom_histogram(aes(exps.3.4.data.mat$rt[which(exps.3.4.data.mat$exp=="exp 3")]), bins = 50, alpha = 0.7, fill = "orchid4", color = "black") +
+  geom_histogram(aes(exps.3.4.data.mat$rt[which(exps.3.4.data.mat$exp=="exp 4")]), bins = 50, alpha = 0.6, fill = "cornflowerblue", color = "black") +
+  geom_vline(aes(xintercept=mean(exps.3.4.data.mat$rt[which(exps.3.4.data.mat$exp=="exp 3")])),
+           linetype="dashed", color = "purple") +
+  geom_vline(aes(xintercept=mean(exps.3.4.data.mat$rt[which(exps.3.4.data.mat$exp=="exp 4")])),
+         linetype="dashed", color = "blue") +
+  geom_text(aes(x = 700, y = 500, 
+                label = paste0("Exp 3: ",
+                               round(mean(exps.3.4.data.mat$rt[which(exps.3.4.data.mat$exp=="exp 3")]), digits = 2), " ms",
+                               " (N = ",length(unique(exp_3_data$subject)),")")), color = "purple") + 
+    geom_text(aes(x = 700, y = 460, 
+                  label = paste0("Exp 4: ",
+                                 round(mean(exps.3.4.data.mat$rt[which(exps.3.4.data.mat$exp=="exp 4")]), digits = 2), " ms",
+                   " (N = ",length(unique(exp_4_data_s$subject)),")")), color = "blue") + 
+  xlab("Reaction Time (ms)") + 
+  theme_bw() +
+  
+  geom_histogram(aes(exps.3.4.data.mat$rt))
+
+```
+
+
+
+```{r}
+# both <- rbind(exp_4_matout,exp_3_matout)
+# both.cor <- cor(exps.3.4.data, method = "pearson")
+
+# ordinal position: all As vs all Bs vs all Cs
+# ordinal.both <- both %>% gather(key = first, value = rt_1, nu, ro, mi, za) %>%
+#          gather(key = second, value = rt_2, ga, ki, po, be) %>%
+#          gather(key = third, value = rt_3, di, se, la, tu) %>%
+#   dplyr::select(rt_1,rt_2,rt_3) %>%
+#   cor() 
+# dissimilarity.ord <- 1-ordinal.both %>% FisherZ()
+
+
+
+# transitional probability: all As vs all Bs,y Cs
+# tp.both <- both %>% gather(key = `0.33`, value = rt_33, nu, ro, mi, za) %>%
+#          gather(key = `1`, value = rt_1, ga, ki, po, be,di, se, la, tu) %>%
+#   dplyr::select(rt_1,rt_33) %>%
+#   cor()
+# dissimilarity.tp <- 1-tp.both %>% FisherZ()
+
+
+# identity: as above, all sylls against each other
+# both.cor
+# dissimilarity.id <- 1-both.cor %>% FisherZ()
+
+# word
+# word.both <- both %>% gather(key = nugadi, value = rt_1, nu, ga, di) %>%
+#          gather(key = rokise, value = rt_2, ro, ki, se) %>%
+#          gather(key = mipola, value = rt_3, mi, po, la) %>%
+#          gather(key = zabetu, value = rt_4, za, be, tu) %>%
+#   dplyr::select(rt_1,rt_2, rt_3, rt_4) %>%
+#   cor()
+# dissimilarity.word <- 1-word.both %>% FisherZ()
+
+
+```
+
+## PCA
+```{r}
+both.cor <- cor(exps.3.4.data, method = "pearson")
+
+both.pca.scaled <- prcomp(both.cor, scale = TRUE)
+
+both.pca.df <- data.frame(both.pca.scaled$rotation[,1:2]) %>%
+  rownames_to_column(var = "syllable") %>%
+  add_column(position = as.factor(rep(1:3,4)),
+             word = as.factor(rep(1:4,each = 3)))
+
+ggplot(both.pca.df, aes(x=PC1, y=PC2)) + 
+  geom_point(aes(color = position), size = 2) +
+  geom_text(aes(label = syllable), hjust=1.5, vjust=0) +
+  geom_line(aes(group = word), alpha = 0.6) +
+  scale_color_brewer(palette = "Dark2") +
+  theme_classic()
+
+ggplot(both.pca.df, aes(x=PC1, y=PC2)) + 
+  geom_point(aes(color = word), size = 2) +
+  geom_text(aes(label = syllable), hjust=1.5, vjust=0) +
+  #geom_line(aes(group = word), alpha = 0.6) +
+  scale_color_manual(values=wes_palette("Zissou1")[c(1,3,4,5)]) +
+  theme_classic()
+
+
+
+```
+
+
+
+Garage of Notes... 
+
+This chunk was for transforming coeffcients to the response scale when the link function was the inverse. Transform coefs -> estimates (i.e. to response scale) | INVERSE
+```{r eval=FALSE, include=FALSE}
+#---------- Fixed Estimates
+fixed_coefs <- tidy(intercept_mod.3,effects = "fixed")[,c("term", "estimate")]
+
+## Back transform: 
+fixed_estimates <- fixed_coefs[,1] %>%
+  mutate(estimate = c(1/(as.numeric(fixed_coefs[1,2])),
+                      1/(as.numeric(fixed_coefs[1,2]+fixed_coefs[2,2])),
+                      1/(as.numeric(fixed_coefs[1,2]+fixed_coefs[3,2]))))
+
+# or you can use emmeans to get the same estimates on the response scale 
+emmeans(intercept_mod.3, specs = ~ tgt_pos, transform = "response")
+
+#----------- Random Estimates
+random_coefs <- as.data.frame(coef(intercept_mod.3)$subject) %>%
+  dplyr::rename(tgt_pos1 = `(Intercept)`)
+
+
+random_estimates <- random_coefs %>%
+  mutate(tgt_pos1.1 = 1/tgt_pos1,
+         tgt_pos2.1 = 1/(tgt_pos1+tgt_pos2),
+         tgt_pos3.1 = 1/(tgt_pos1+tgt_pos3)) %>%
+  select(tgt_pos1.1:tgt_pos3.1) %>%
+  rownames_to_column("subject") %>%
+  gather(key = "tgt_pos", value = "rt_secs", tgt_pos1.1, tgt_pos2.1, tgt_pos3.1)
+  random_estimates$tgt_pos <- factor(random_estimates$tgt_pos, labels = c(1,2,3))
+```
+
+Rand Slopes - Suppressed Intercept
+This means that the levels of the fixed effects are evaluated against a distribution with a mean of zero, instead of successive levels of the factor being evaluated against the mean of the first reference level. Unless we are to z-normalize our values, this doesn't seem to be a reasonable analysis, especially given that we're interested in contrasting each level (target position) again each other (or minimally, against the first).
+```{r eval=FALSE, include=FALSE}
+slope_mod.3.2 <- glmer(rt_secs ~ -1 + tgt_pos + (-1 + tgt_pos | subject), data = exp_3_data, family = Gamma)
+
+summary(slope_mod.3.2)
+
+# Estimates (Coefficients) for fixed effects
+coef(summary(slope_mod.3.2))[,"Estimate"]
+
+# Intercepts and Slopes for each subject [Fixed effects coefficient - indivdual variance]
+coef(slope_mod.3.2)
+
+# Variance components for each subject 
+ranef(slope_mod.3.2)
+
+
+anova(intercept_mod.3,slope_mod.3.2)
+```
+
+Rand Slopes - Numeric
+What happens if the fixed effects is numeric? What's the theoretical importance of this?  
+If it's numeric, this assumes the data are continuous, i.e. that 2 comes after 1 and that there's something meaningful about e.g. 1.5. This is not really the case for us. In addition, the df changes to 1 if it's numeric, k-1 for all levels, k, of the fixed effect if coded as a factor. 
+```{r eval=FALSE, include=FALSE}
+slope_mod.3.num <- glmer(rt_secs ~ as.numeric(tgt_pos) + (as.numeric(tgt_pos) | subject), data = exp_3_data, family = Gamma)
+
+summary(slope_mod.3.num)
+
+# Estimates (Coefficients) for fixed effects
+coef(summary(slope_mod.3.num))[,"Estimate"]
+
+# Intercepts and Slopes for each subject [Fixed effects coefficient - indivdual variance]
+coef(slope_mod.3.num)
+
+# Variance components for each subject 
+ranef(slope_mod.3.num)
+```
+
+
+```{r}
+
+```
+

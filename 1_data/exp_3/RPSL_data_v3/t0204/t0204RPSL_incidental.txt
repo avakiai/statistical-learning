@@ -1,0 +1,35 @@
+#Experiment: RPSL_incidental
+#Section: incidental
+#Session: Session (W or R) (W = Word, R = Random)
+#Language: A
+#DateTime: 09/19/2019 09:17:55
+#Subject: t0204
+#Sex: Sex
+#Age: Age
+
+
+Block	Sequence	Target Syllable	Total Detections
+1	cue_linfade_exp_seq_A_15.wav	se	17
+2	cue_linfade_exp_seq_A_12.wav	di	36
+3	cue_linfade_exp_seq_A_04.wav	po	54
+4	cue_linfade_exp_seq_A_08.wav	se	70
+5	cue_linfade_exp_seq_A_01.wav	ro	89
+6	cue_linfade_exp_seq_A_17.wav	tu	108
+7	cue_linfade_exp_seq_A_03.wav	be	120
+8	cue_linfade_exp_seq_A_16.wav	mi	138
+9	cue_linfade_exp_seq_A_10.wav	di	155
+10	cue_linfade_exp_seq_A_05.wav	ki	170
+11	cue_linfade_exp_seq_A_21.wav	za	189
+12	cue_linfade_exp_seq_A_07.wav	nu	206
+13	cue_linfade_exp_seq_A_24.wav	be	210
+14	cue_linfade_exp_seq_A_18.wav	po	225
+15	cue_linfade_exp_seq_A_14.wav	tu	244
+16	cue_linfade_exp_seq_A_19.wav	za	262
+17	cue_linfade_exp_seq_A_13.wav	ga	277
+18	cue_linfade_exp_seq_A_22.wav	ro	301
+19	cue_linfade_exp_seq_A_11.wav	la	319
+20	cue_linfade_exp_seq_A_06.wav	nu	338
+21	cue_linfade_exp_seq_A_20.wav	mi	357
+22	cue_linfade_exp_seq_A_09.wav	la	377
+23	cue_linfade_exp_seq_A_23.wav	ga	395
+24	cue_linfade_exp_seq_A_02.wav	ki	412

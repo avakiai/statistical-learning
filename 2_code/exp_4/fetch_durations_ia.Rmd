@@ -1,0 +1,249 @@
+---
+title: "fetch_durations_ia"
+author: "Ava Kiai"
+date: "5/1/2020"
+output: pdf_document
+---
+
+# Init. 
+```{r}
+library(tidyverse)
+setwd("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1")
+
+data_path <- ("C:/Users/Ava/Desktop/Experiments/interval_adjust/interval_adjust_data/dj_test_data")
+data_files_dur <- list.files(path = data_path, pattern = ".log") #,
+                  #  list.files(path = data_path, pattern = ".xlsx"))
+```
+
+# Load & Clean DF
+```{r message=FALSE, warning=FALSE}
+for (i in 1:length(data_files_dur)) {
+  
+  skip_rows <- which(grepl("Subject",readLines(file.path(data_path, data_files_dur[i]))))-1
+  curr_data <- read.table(file.path(data_path, data_files_dur[i]),
+                          header=TRUE,skip=skip_rows,fill=TRUE,sep="\t",comment.char = "")
+  curr_subj <- substr(data_files_dur[i], start = 1, stop = 5)
+
+  curr_sess <- ifelse(grepl("struct",data_files_dur[i]),"struct","rand")
+
+  end_line <- which(grepl("section_end",curr_data$Code),arr.ind = TRUE)
+  # if the end code isn't there because of data collection issues...
+      if (is_empty(end_line)) {
+        print(paste0("End code missing for subj. ",curr_subj," ",curr_sess,"... using nrow()."))
+        print(file.path(data_path, data_files_dur[i]))
+        # ...use end of file except for known exceptions: 
+        end_line <- nrow(curr_data)
+      } 
+  
+  curr_data <- curr_data[-c(end_line:nrow(curr_data)),] # trim at end code
+  
+  curr_data <- curr_data[,c(1:2,4:6)] # trim unneeded columns
+
+  # If any strangeness in file...
+   if (any(curr_data$Subject %in% c("Event Type","Picture","Sound","Nothing"))) {print(curr_subj) 
+    print(curr_sess) 
+   break}
+  
+  # add col for block
+  curr_data <- curr_data %>% add_column(Block = rep(NA,nrow(curr_data)), .after = "Subject") %>%
+                             add_column(Session = rep(curr_sess,nrow(curr_data)), .after = "Code")
+               
+      # Split only the Block and Trial parts of the Code
+      blk_trl_idx <- as.matrix(curr_data$Code[which(grepl("Block",curr_data$Code))]) %>%
+        sapply(str_split," ") %>%
+        lapply(function(x) {x[c(1:2,4:5)]}) %>%
+        unname() 
+      # Remove formatting, reshape, and turn into usable df
+      blk_trl_idx.df <- blk_trl_idx %>%
+        unlist() %>%
+        matrix(nrow=length(blk_trl_idx),ncol=4,byrow=TRUE) %>%
+        data.frame() %>%
+        unite("block", X1:X2, remove = TRUE, sep = " ") %>%
+        unite("trial", X3:X4, remove = TRUE, sep = " ")
+  
+  # number trials and blocks
+  for (j in 1:nrow(blk_trl_idx.df) ) {
+      b = parse_number(blk_trl_idx.df[j,1])
+      t = parse_number(blk_trl_idx.df[j,2])
+
+      start_row <- intersect(which(grepl(paste0("\\b",blk_trl_idx.df[j,2],"\\b"),curr_data$Code)),
+                which(grepl(blk_trl_idx.df[j,1],curr_data$Code)))
+      if (j == nrow(blk_trl_idx.df)) {
+                end_row <- length(curr_data$Code)
+      } else  { end_row <- intersect(which(grepl(paste0("\\b",blk_trl_idx.df[j+1,2],"\\b"),curr_data$Code)),
+                which(grepl(blk_trl_idx.df[j+1,1],curr_data$Code)))-1
+      }
+      
+      curr_data$Block[start_row:end_row] <- b
+      curr_data$Trial[start_row:end_row] <- t
+  }
+  # delete extraneous lines in df
+     curr_data <- curr_data[-which(curr_data$Code %in% "fixation"),] # fixation
+     esc_key <- which(grepl("Block",curr_data$Code))+1 # escape key
+     if (all(curr_data$Code[esc_key]==1)) {curr_data <- curr_data[-esc_key,]}
+     if (!(which(grepl("Block",curr_data$Code))[1]==1)) {curr_data <- curr_data[-c(1:(which(grepl("Block",curr_data$Code))[1]-1)),]} # any lines before trial start
+  # rename
+  curr_data$Subject <- curr_subj
+
+# add to general df
+if (i == 1) {raw_dur_data <- mutate_all(curr_data, as.character) 
+} else {raw_dur_data <- bind_rows(raw_dur_data, mutate_all(curr_data, as.character))} 
+
+}
+
+
+raw_dur_data <- raw_dur_data %>%
+  mutate(Subject = as.factor(Subject), 
+         Block = as.numeric(Block),
+         Trial = as.numeric(Trial),
+         Code = as.factor(Code),
+         Time = as.numeric(Time),
+         TTime = as.numeric(TTime))
+     
+n_subjs_dial <- length(unique(raw_dur_data$Subject))
+subj_IDs_dial <- unique(raw_dur_data$Subject)     
+
+# Remove trial identifiers and adjust timing
+raw_dur_data2 <- raw_dur_data
+raw_dur_data2 <- raw_dur_data2[-which(grepl("Block",raw_dur_data$Code)),] %>%
+  mutate(Time = Time*.1)
+
+
+```
+
+# Wrangle Trial Times, Diffs
+Dur will be same thing as Curr_ISI. 
+The Trial Time we will separate out for each dial and import into the other data file--there each dial and its preceeding syllable share a row. We will paste in the time that corresponds to the onset of the dial. That tells you the point in the trial when that dial came online. The Curr_ISI tell you how long it was. 
+The final onset time + that one's ISI tells you the total trial time, which here is exemplified by the response at the end of each trial ("1").
+```{r message=FALSE, warning=FALSE}
+# filter by 
+# subject
+  # session
+    # block
+      # trial
+raw_dur_data3 <- raw_dur_data2 %>% arrange(Subject, Session, Block, Trial) %>%
+  group_by(Subject, Session, Block, Trial) %>%
+  mutate(Dur = (Time - lead(Time,  default = first(Time)))*-1, # time since last onset (last onset-current onset)
+         TTime = Time - first(Time)) # time since start of trial (1st onset-current onset)
+```
+
+## Spread
+```{r}
+raw_dur_data4 <- raw_dur_data3 %>% 
+  add_column(Element = rep(NA,nrow(raw_dur_data3)), .before = "Code") %>%
+  add_column(Syll = rep(NA,nrow(raw_dur_data3)), .before = "Code") %>%
+  add_column(Dial = rep(NA,nrow(raw_dur_data3)), .before = "Code")
+
+raw_dur_data4$Element[which(str_detect(raw_dur_data4$Code,"Syll"))] <- "syll"
+raw_dur_data4$Element[which(str_detect(raw_dur_data4$Code,"Dial"))] <- "dial"
+
+dial_dur_data1 <- raw_dur_data4 %>%
+  filter(Element == "dial") %>%
+  mutate(Dial = str_sub(Code,1,11)) %>%
+  mutate(Dial = str_sub(Dial,11))
+
+raw_dur_data4$Dial[which(raw_dur_data4$Element=="dial")] <- dial_dur_data1$Dial
+
+
+syll_dur_data1 <- raw_dur_data4 %>%
+  filter(Element == "syll") %>%
+  mutate(Syll = str_sub(Code,1,8)) %>%
+  mutate(Syll = str_sub(Syll,7,8))
+
+raw_dur_data4$Syll[which(raw_dur_data4$Element=="syll")] <- syll_dur_data1$Syll 
+
+raw_dur_data5 <- raw_dur_data4 %>%
+    select(Subject, Block, Trial, Session, Syll, Dial, TTime, Dur) %>%
+    arrange(Subject, Block, Trial, Session) %>%
+    group_by(Subject, Block, Trial, Session) %>%
+    mutate(Dial = lead(Dial),
+           Curr_ISI = lead(Dur)) 
+
+raw_dur_data6 <- raw_dur_data5[which(!is.na(raw_dur_data5$Syll)),]
+
+raw_dur_data6 <- raw_dur_data6 %>%
+    arrange(Subject, Block, Trial, Session) %>%
+    group_by(Subject, Block, Trial, Session) %>%
+    mutate(temp.dial = lag(Dial,n=3),
+           temp.isi = lag(Curr_ISI,n=3))
+raw_dur_data7 <- raw_dur_data6
+raw_dur_data7$Dial[which(is.na(raw_dur_data6$Dial))] <- raw_dur_data6$temp.dial[which(is.na(raw_dur_data6$Dial))]
+raw_dur_data7$Curr_ISI[which(is.na(raw_dur_data6$Dial))] <- raw_dur_data6$temp.isi[which(is.na(raw_dur_data6$Dial))]
+
+wrangle_dial_data_red <- raw_dur_data7 %>% select(Subject:Curr_ISI) %>% ungroup() %>%
+        mutate(Session = as.factor(Session),
+               Syll = as.factor(Syll),
+               Dial = as.factor(Dial))
+
+```
+
+```{r warning=FALSE}
+# Add Condition Order Column
+subjs_SR <- sort(c("s1911","n1906","m0207","h0502","h1209","s0310","t0506","b0704","s2205","s1302"))
+subjs_RS <- sort(c("a2012","m2208","a2605","m1105","s2609","w2804","b2707","s2502","f0511","s1504"))
+
+wrangle_dial_data_red <- wrangle_dial_data_red %>% mutate(Cond_Order = 0) 
+wrangle_dial_data_red$Cond_Order[which(wrangle_dial_data_red$Subject %in% subjs_SR)] = "struct-rand"
+wrangle_dial_data_red$Cond_Order[which(wrangle_dial_data_red$Subject %in% subjs_RS)] = "rand-struct"
+
+# Add Word Tag Column
+wrangle_dial_data_red <- wrangle_dial_data_red %>% mutate(Word = 0) 
+words <- list(`1` = c("nu","ga","di"),
+              `2` = c("ro","ki","se"),
+              `3` = c("mi","po","la"),
+              `4` = c("za","be","tu"))
+wrangle_dial_data_red <- wrangle_dial_data_red %>% 
+  mutate(
+    Word = case_when(Syll %in% words$`1` ~ 1,
+              Syll %in% words$`2` ~ 2,
+              Syll %in% words$`3` ~ 3,
+              Syll%in% words$`4` ~ 4,
+              TRUE ~ NA_real_)) %>%   
+  mutate(Word = as.factor(Word))
+
+# Add Position Column
+wrangle_dial_data_red <- wrangle_dial_data_red %>% mutate(Gap = 0) 
+gaps <- list(`1` = c("nu","ro","mi","za"),
+              `2` = c("ga","ki","po","be"),
+              `3` = c("di","se","la","tu"))
+wrangle_dial_data_red <- wrangle_dial_data_red %>% 
+  mutate(
+    Gap = case_when(Session=="struct" & Syll %in% gaps$`1` ~ 1,
+              Session=="struct" & Syll %in% gaps$`2` ~ 2,
+              Session=="struct" & Syll %in% gaps$`3` ~ 3,
+              TRUE ~ NA_real_)) %>%  
+  mutate(Gap = as.factor(Gap))
+
+
+dial_data_red <- wrangle_dial_data_red
+```
+# Cross-check ending points data
+```{r}
+ends_red <- subset(dial_data_red, FALSE)
+for (curr_subj in 1:n_subjs_dial) {
+  curr_dial_subj <- dial_data_red[which(dial_data_red$Subject==subj_IDs_dial[curr_subj]),]
+  for (curr_blk in 1:max(curr_dial_subj$Block)) {
+  curr_dial_subj_blk <- curr_dial_subj[which(curr_dial_subj$Block==curr_blk),]
+    for (curr_trl in 1:max(curr_dial_subj_blk$Trial)) {
+    curr_dial_subj_blk_trl <- curr_dial_subj_blk[which(curr_dial_subj_blk$Trial==curr_trl),]
+      for (curr_sess in c("struct","rand")) {
+      curr_dial_subj_blk_trl_sess <- curr_dial_subj_blk_trl[which(curr_dial_subj_blk_trl$Session==curr_sess),]
+        ends_red <- bind_rows(ends_red,tail(curr_dial_subj_blk_trl_sess,n=3))
+      } 
+    } 
+  } 
+}
+ends_red$Point <- as.factor(rep("end",nrow(ends_red)))
+```
+
+```{r}
+ending_points_data$Curr_ISI[which(ending_points_data$Curr_ISI==0)] <- 1
+both_teams <- cbind(ending_points_data$Curr_ISI,round(ends_red$Curr_ISI))
+
+discrepancies <- which((both_teams[,1]==both_teams[,2])==FALSE)
+
+both_teams[discrepancies,]
+
+25 27 32
+```
+

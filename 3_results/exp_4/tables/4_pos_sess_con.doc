@@ -1,0 +1,9 @@
+
+<table style="text-align:center"><tr><td colspan="8" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">session</td><td>sess</td><td>estimated marginal diff.</td><td>estimate</td><td>SE</td><td>z ratio</td><td>p value</td><td>s value</td></tr>
+<tr><td colspan="8" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">rand</td><td>rand</td><td>0.015</td><td>0.015</td><td>0.006</td><td>2.453</td><td>< .001</td><td>3.555</td></tr>
+<tr><td style="text-align:left">rand</td><td>rand</td><td>0.047</td><td>0.047</td><td>0.006</td><td>7.731</td><td>< .001</td><td>43.832</td></tr>
+<tr><td style="text-align:left">rand</td><td>rand</td><td>0.031</td><td>0.031</td><td>0.006</td><td>5.324</td><td>< .001</td><td>20.647</td></tr>
+<tr><td style="text-align:left">struct</td><td>struct</td><td>0.072</td><td>0.072</td><td>0.006</td><td>12.692</td><td>< .001</td><td>117.615</td></tr>
+<tr><td style="text-align:left">struct</td><td>struct</td><td>0.093</td><td>0.093</td><td>0.006</td><td>16.373</td><td>< .001</td><td>195.151</td></tr>
+<tr><td style="text-align:left">struct</td><td>struct</td><td>0.020</td><td>0.020</td><td>0.005</td><td>4.006</td><td>< .001</td><td>11.399</td></tr>
+<tr><td colspan="8" style="border-bottom: 1px solid black"></td></tr></table>

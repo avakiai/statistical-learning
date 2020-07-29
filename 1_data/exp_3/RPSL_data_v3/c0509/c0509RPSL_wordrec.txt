@@ -1,0 +1,26 @@
+#Experiment: RPSL_wordrec
+#Section: wordrec
+#DateTime: 09/26/2019 12:58:56
+#Subject: c0509
+#Sex: Sex
+#Age: Age
+#Handedness: Handedness
+
+
+Trial	Order	Seq1	Seq2	ITI	ISI	Resp	RT
+1	1	rokise.wav	turoki.wav	1200	400	3	991.201000000001
+2	1	mipola.wav	dizabe.wav	1200	400	3	822.927000000003
+3	2	dizabe.wav	rokise.wav	1200	400	2	1790.774
+4	1	nugadi.wav	semipo.wav	1200	400	3	542.417000000001
+5	1	mipola.wav	lanuga.wav	1200	400	2	546.146000000008
+6	2	lanuga.wav	zabetu.wav	1200	400	2	1186.02499999999
+7	1	zabetu.wav	dizabe.wav	1200	400	3	489.865000000005
+8	1	rokise.wav	semipo.wav	1200	400	2	533.659
+9	2	lanuga.wav	rokise.wav	1200	400	3	633.160000000003
+10	1	zabetu.wav	turoki.wav	1200	400	3	409.672000000006
+11	2	dizabe.wav	nugadi.wav	1200	400	2	633.472000000009
+12	1	nugadi.wav	lanuga.wav	1200	400	2	625.434000000008
+13	2	turoki.wav	mipola.wav	1200	400	2	1632.269
+14	2	turoki.wav	nugadi.wav	1200	400	2	567.262000000002
+15	2	semipo.wav	mipola.wav	1200	400	3	2144.91
+16	2	semipo.wav	zabetu.wav	1200	400	2	2931.416

@@ -1,0 +1,270 @@
+Scenario - _RPSL_pretest
+Logfile written - 10/02/2019 11:23:17
+
+Subject	Trial	Event Type	Code	Time	TTime	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur	Stim Type	Pair Index
+
+t2311	1	Picture	instruct	166	0	1	262517	1	0	next	other	0
+t2311	1	Response	1	262233	262067	0
+t2311	2	Sound	tempo_seq_A_16.wav	274669	11986	1			12000		other	0
+t2311	3	Picture	ISI	309852	0	2	5168	2	0	next	other	0
+t2311	4	Sound	tempo_seq_rand_16.wav	316693	1673	1			0		other	0
+t2311	5	Picture	Wait for response	351855	0	2	7001	2	0	next	other	0
+t2311	5	Response	2	358473	6618	0
+t2311	6	Sound	tempo_seq_rand_09.wav	370844	11989	1			12000		other	0
+t2311	7	Picture	ISI	406025	0	1	5167	1	0	next	other	0
+t2311	8	Sound	tempo_seq_A_05.wav	412695	1503	1			0		other	0
+t2311	9	Picture	Wait for response	447862	0	1	3000	1	0	next	other	0
+t2311	9	Response	2	450393	2532	0
+t2311	10	Sound	tempo_seq_A_12.wav	462855	11994	1			12000		other	0
+t2311	11	Picture	ISI	498031	0	1	5167	2	0	next	other	0
+t2311	12	Sound	tempo_seq_rand_28.wav	504698	1499	1			0		other	0
+t2311	13	Picture	Wait for response	539867	0	1	4321	15	0	next	other	0
+t2311	13	Response	2	543833	3966	0
+t2311	14	Sound	tempo_seq_rand_21.wav	556181	11992	1			12000		other	0
+t2311	15	Picture	ISI	591370	0	2	5167	2	0	next	other	0
+t2311	16	Sound	tempo_seq_A_09.wav	597701	1163	1			0		other	0
+t2311	17	Picture	Wait for response	632873	0	1	3667	1	0	next	other	0
+t2311	17	Response	2	636154	3280	0
+t2311	18	Sound	tempo_seq_rand_42.wav	648533	11993	1			12000		other	0
+t2311	19	Picture	ISI	683710	0	1	5167	1	0	next	other	0
+t2311	20	Sound	tempo_seq_A_07.wav	690703	1826	1			0		other	0
+t2311	21	Picture	Wait for response	725879	0	1	8167	1	0	next	other	0
+t2311	21	Response	2	733673	7794	0
+t2311	22	Sound	tempo_seq_A_19.wav	746041	11995	1			12000		other	0
+t2311	23	Picture	ISI	781216	0	1	5167	1	0	next	other	0
+t2311	24	Sound	tempo_seq_rand_11.wav	787706	1323	1			0		other	0
+t2311	25	Picture	Wait for response	822885	0	2	3500	2	0	next	other	0
+t2311	25	Response	2	825914	3028	0
+t2311	26	Sound	tempo_seq_rand_08.wav	838381	11995	1			12000		other	0
+t2311	27	Picture	ISI	873555	0	1	5167	1	0	next	other	0
+t2311	28	Sound	tempo_seq_A_08.wav	879708	986	1			0		other	0
+t2311	29	Picture	Wait for response	914891	0	1	3000	1	0	next	other	0
+t2311	29	Response	3	917513	2622	0
+t2311	30	Sound	tempo_seq_A_09.wav	929888	11996	1			12000		other	0
+t2311	31	Picture	ISI	965061	0	1	5166	2	0	next	other	0
+t2311	32	Sound	tempo_seq_rand_33.wav	971711	1483	1			0		other	0
+t2311	33	Picture	Wait for response	1006897	0	1	2500	1	0	next	other	0
+t2311	33	Response	3	1009114	2217	0
+t2311	34	Sound	tempo_seq_rand_03.wav	1021395	11997	1			12000		other	0
+t2311	35	Picture	ISI	1056567	0	1	5167	1	0	next	other	0
+t2311	36	Sound	tempo_seq_A_20.wav	1063712	1978	1			0		other	0
+t2311	37	Picture	Wait for response	1098903	0	1	3163	13	0	next	other	0
+t2311	37	Response	3	1101914	3011	0
+t2311	38	Sound	tempo_seq_rand_19.wav	1114063	11997	1			12000		other	0
+t2311	39	Picture	ISI	1149240	0	1	5167	1	0	next	other	0
+t2311	40	Sound	tempo_seq_A_14.wav	1155716	1310	1			0		other	0
+t2311	41	Picture	Wait for response	1190742	0	1	3000	1	0	next	other	0
+t2311	41	Response	3	1193354	2612	0
+t2311	42	Sound	tempo_seq_A_15.wav	1205739	11997	1			12000		other	0
+t2311	43	Picture	ISI	1240912	0	2	5167	2	0	next	other	0
+t2311	44	Sound	tempo_seq_rand_17.wav	1247718	1639	1			0		other	0
+t2311	45	Picture	Wait for response	1282748	0	1	7334	1	0	next	other	0
+t2311	45	Response	3	1289594	6846	0
+t2311	46	Sound	tempo_seq_A_01.wav	1302079	11997	1			12000		other	0
+t2311	47	Picture	ISI	1337252	0	1	5167	1	0	next	other	0
+t2311	48	Sound	tempo_seq_rand_34.wav	1343720	1302	1			0		other	0
+t2311	49	Picture	Wait for response	1378754	0	1	2333	1	0	next	other	0
+t2311	49	Response	3	1381034	2280	0
+t2311	50	Picture	break	1381088	0	1	176011	1	0	next	other	0
+t2311	50	Response	1	1556954	175866	0
+t2311	51	Sound	tempo_seq_rand_23.wav	1569097	11999	1			12000		other	0
+t2311	52	Picture	ISI	1604269	0	1	5167	1	0	next	other	0
+t2311	53	Sound	tempo_seq_A_04.wav	1610728	1292	1			0		other	0
+t2311	54	Picture	Wait for response	1645771	0	1	10491	13	0	next	other	0
+t2311	54	Response	2	1655994	10223	0
+t2311	55	Sound	tempo_seq_A_05.wav	1668259	11997	1			12000		other	0
+t2311	56	Picture	ISI	1703442	0	1	5167	1	0	next	other	0
+t2311	57	Sound	tempo_seq_rand_39.wav	1709730	1121	1			0		other	0
+t2311	58	Picture	Wait for response	1744778	0	1	3167	2	0	next	other	0
+t2311	58	Response	2	1747754	2977	0
+t2311	59	Sound	tempo_seq_rand_22.wav	1759943	11999	1			12000		other	0
+t2311	60	Picture	ISI	1795114	0	2	5167	2	0	next	other	0
+t2311	61	Sound	tempo_seq_A_19.wav	1801733	1452	1			0		other	0
+t2311	62	Picture	Wait for response	1836783	0	1	3658	13	0	next	other	0
+t2311	62	Response	3	1840074	3291	0
+t2311	63	Sound	tempo_seq_A_22.wav	1852437	11996	1			12000		other	0
+t2311	64	Picture	ISI	1887620	0	2	5167	2	0	next	other	0
+t2311	65	Sound	tempo_seq_rand_10.wav	1894735	1948	1			0		other	0
+t2311	66	Picture	Wait for response	1929789	0	1	3667	2	0	next	other	0
+t2311	66	Response	2	1933195	3405	0
+t2311	67	Sound	tempo_seq_A_13.wav	1945453	11996	1			12000		other	0
+t2311	68	Picture	ISI	1980626	0	1	5167	1	0	next	other	0
+t2311	69	Sound	tempo_seq_rand_25.wav	1987738	1945	1			0		other	0
+t2311	70	Picture	Wait for response	2022795	0	1	10501	1	0	next	other	0
+t2311	70	Response	3	2032954	10159	0
+t2311	71	Sound	tempo_seq_rand_45.wav	2045295	11999	1			12000		other	0
+t2311	72	Picture	ISI	2080466	0	1	5167	1	0	next	other	0
+t2311	73	Sound	tempo_seq_A_01.wav	2086740	1108	1			0		other	0
+t2311	74	Picture	Wait for response	2121801	0	2	6668	2	0	next	other	0
+t2311	74	Response	2	2128155	6354	0
+t2311	75	Sound	tempo_seq_A_07.wav	2140468	11999	1			12000		other	0
+t2311	76	Picture	ISI	2175638	0	1	5167	1	0	next	other	0
+t2311	77	Sound	tempo_seq_rand_02.wav	2182743	1938	1			0		other	0
+t2311	78	Picture	Wait for response	2217807	0	13	14335	14	0	next	other	0
+t2311	78	Response	2	2231755	13948	0
+t2311	79	Sound	tempo_seq_rand_05.wav	2244140	11998	1			12000		other	0
+t2311	80	Picture	ISI	2279311	0	1	5167	1	0	next	other	0
+t2311	81	Sound	tempo_seq_A_15.wav	2285746	1267	1			0		other	0
+t2311	82	Picture	Wait for response	2320811	0	13	3837	14	0	next	other	0
+t2311	82	Response	2	2324235	3424	0
+t2311	83	Sound	tempo_seq_rand_37.wav	2336646	11999	1			12000		other	0
+t2311	84	Picture	ISI	2371817	0	1	5167	1	0	next	other	0
+t2311	85	Sound	tempo_seq_A_21.wav	2378749	1764	1			0		other	0
+t2311	86	Picture	Wait for response	2413820	0	1	2833	1	0	next	other	0
+t2311	86	Response	3	2416475	2655	0
+t2311	87	Sound	tempo_seq_A_18.wav	2428652	11998	1			12000		other	0
+t2311	88	Picture	ISI	2463823	0	1	5167	1	0	next	other	0
+t2311	89	Sound	tempo_seq_rand_35.wav	2470750	1760	1			0		other	0
+t2311	90	Picture	Wait for response	2505814	0	14	16013	14	0	next	other	0
+t2311	90	Response	3	2521515	15701	0
+t2311	91	Sound	tempo_seq_A_04.wav	2533825	11998	1			12000		other	0
+t2311	92	Picture	ISI	2568996	0	1	5167	1	0	next	other	0
+t2311	93	Sound	tempo_seq_rand_15.wav	2575753	1590	1			0		other	0
+t2311	94	Picture	Wait for response	2610833	0	1	16168	1	0	next	other	0
+t2311	94	Response	2	2626716	15883	0
+t2311	95	Sound	tempo_seq_rand_06.wav	2638997	11996	1			12000		other	0
+t2311	96	Picture	ISI	2674170	0	1	5167	2	0	next	other	0
+t2311	97	Sound	tempo_seq_A_02.wav	2680756	1419	1			0		other	0
+t2311	98	Picture	Wait for response	2715839	0	1	9167	1	0	next	other	0
+t2311	98	Response	3	2724955	9116	0
+t2311	99	Picture	break	2725007	0	1	116174	1	0	next	other	0
+t2311	99	Response	1	2840875	115869	0
+t2311	100	Sound	tempo_seq_rand_04.wav	2853180	12000	1			12000		other	0
+t2311	101	Picture	ISI	2888350	0	1	5167	2	0	next	other	0
+t2311	102	Sound	tempo_seq_A_16.wav	2894762	1245	1			0		other	0
+t2311	103	Picture	Wait for response	2929853	0	1	4333	1	0	next	other	0
+t2311	103	Response	3	2933755	3902	0
+t2311	104	Sound	tempo_seq_A_10.wav	2946184	11997	1			12000		other	0
+t2311	105	Picture	ISI	2981355	0	2	5168	2	0	next	other	0
+t2311	106	Sound	tempo_seq_rand_07.wav	2987765	1242	1			0		other	0
+t2311	107	Picture	Wait for response	3022859	0	1	3334	1	0	next	other	0
+t2311	107	Response	3	3025915	3057	0
+t2311	108	Sound	tempo_seq_rand_27.wav	3038191	11999	1			12000		other	0
+t2311	109	Picture	ISI	3073362	0	1	5167	1	0	next	other	0
+t2311	110	Sound	tempo_seq_A_22.wav	3079767	1238	1			0		other	0
+t2311	111	Picture	Wait for response	3114864	0	1	6167	1	0	next	other	0
+t2311	111	Response	3	3120636	5771	0
+t2311	112	Sound	tempo_seq_A_03.wav	3133028	11996	1			12000		other	0
+t2311	113	Picture	ISI	3168201	0	1	5167	1	0	next	other	0
+t2311	114	Sound	tempo_seq_rand_18.wav	3174769	1401	1			0		other	0
+t2311	115	Picture	Wait for response	3209871	0	1	7834	1	0	next	other	0
+t2311	115	Response	2	3217356	7485	0
+t2311	116	Sound	tempo_seq_rand_44.wav	3229702	11998	1			12000		other	0
+t2311	117	Picture	ISI	3264874	0	1	5167	1	0	next	other	0
+t2311	118	Sound	tempo_seq_A_10.wav	3271772	1731	1			0		other	0
+t2311	119	Picture	Wait for response	3306877	0	1	11501	1	0	next	other	0
+t2311	119	Response	3	3318156	11279	0
+t2311	120	Sound	tempo_seq_A_11.wav	3330375	11998	1			12000		other	0
+t2311	121	Picture	ISI	3365547	0	2	5167	2	0	next	other	0
+t2311	122	Sound	tempo_seq_rand_48.wav	3371774	1060	1			0		other	0
+t2311	123	Picture	Wait for response	3406883	0	1	10000	2	0	next	other	0
+t2311	123	Response	2	3416636	9753	0
+t2311	124	Sound	tempo_seq_A_02.wav	3428882	11999	1			12000		other	0
+t2311	125	Picture	ISI	3464053	0	2	5167	2	0	next	other	0
+t2311	126	Sound	tempo_seq_rand_20.wav	3470777	1557	1			0		other	0
+t2311	127	Picture	Wait for response	3505889	0	2	8001	2	0	next	other	0
+t2311	127	Response	3	3513596	7707	0
+t2311	128	Sound	tempo_seq_rand_41.wav	3525889	11999	1			12000		other	0
+t2311	129	Picture	ISI	3561060	0	1	5167	1	0	next	other	0
+t2311	130	Sound	tempo_seq_A_03.wav	3567780	1553	1			0		other	0
+t2311	131	Picture	Wait for response	3602895	0	2	3667	2	0	next	other	0
+t2311	131	Response	2	3606236	3341	0
+t2311	132	Sound	tempo_seq_rand_01.wav	3618559	11997	1			12000		other	0
+t2311	133	Picture	ISI	3653732	0	1	5167	1	0	next	other	0
+t2311	134	Sound	tempo_seq_A_06.wav	3660783	1883	1			0		other	0
+t2311	135	Picture	Wait for response	3695901	0	1	8501	1	0	next	other	0
+t2311	135	Response	2	3704156	8255	0
+t2311	136	Sound	tempo_seq_A_06.wav	3716402	12000	1			12000		other	0
+t2311	137	Picture	ISI	3751571	0	1	5167	2	0	next	other	0
+t2311	138	Sound	tempo_seq_rand_12.wav	3757785	1047	1			0		other	0
+t2311	139	Picture	Wait for response	3792907	0	1	5166	2	0	next	other	0
+t2311	139	Response	2	3797756	4849	0
+t2311	140	Sound	tempo_seq_A_08.wav	3810073	11999	1			12000		other	0
+t2311	141	Picture	ISI	3845244	0	1	5167	1	0	next	other	0
+t2311	142	Sound	tempo_seq_rand_30.wav	3851787	1376	1			0		other	0
+t2311	143	Picture	Wait for response	3886913	0	1	11167	2	0	next	other	0
+t2311	143	Response	2	3897757	10843	0
+t2311	144	Sound	tempo_seq_rand_26.wav	3910075	11994	1			12000		other	0
+t2311	145	Picture	ISI	3945251	0	1	5167	2	0	next	other	0
+t2311	146	Sound	tempo_seq_A_17.wav	3951791	1373	1			0		other	0
+t2311	147	Picture	Wait for response	3986920	0	1	7334	1	0	next	other	0
+t2311	147	Response	3	3994156	7237	0
+t2311	148	Picture	break	3994254	0	1	59171	1	0	next	other	0
+t2311	148	Response	1	4053036	58783	0
+t2311	149	Sound	tempo_seq_rand_47.wav	4065422	11998	1			12000		other	0
+t2311	150	Picture	ISI	4100593	0	2	5167	2	0	next	other	0
+t2311	151	Sound	tempo_seq_A_11.wav	4106795	1034	1			0		other	0
+t2311	152	Picture	Wait for response	4141930	0	1	17835	1	0	next	other	0
+t2311	152	Response	3	4159517	17587	0
+t2311	153	Sound	tempo_seq_rand_36.wav	4171762	11998	1			12000		other	0
+t2311	154	Picture	ISI	4206933	0	2	5168	2	0	next	other	0
+t2311	155	Sound	tempo_seq_A_23.wav	4213797	1697	1			0		other	0
+t2311	156	Picture	Wait for response	4248936	0	1	3334	1	0	next	other	0
+t2311	156	Response	2	4251996	3060	0
+t2311	157	Sound	tempo_seq_rand_40.wav	4264267	11997	1			12000		other	0
+t2311	158	Picture	ISI	4299440	0	1	5167	1	0	next	other	0
+t2311	159	Sound	tempo_seq_A_13.wav	4305800	1193	1			0		other	0
+t2311	160	Picture	Wait for response	4340942	0	1	3000	2	0	next	other	0
+t2311	160	Response	2	4343597	2655	0
+t2311	161	Sound	tempo_seq_A_17.wav	4355940	11998	1			12000		other	0
+t2311	162	Picture	ISI	4391112	0	1	5167	2	0	next	other	0
+t2311	163	Sound	tempo_seq_rand_43.wav	4397803	1525	1			0		other	0
+t2311	164	Picture	Wait for response	4432948	0	1	3334	1	0	next	other	0
+t2311	164	Response	3	4435917	2969	0
+t2311	165	Sound	tempo_seq_rand_13.wav	4448280	11998	1			12000		other	0
+t2311	166	Picture	ISI	4483451	0	2	5168	2	0	next	other	0
+t2311	167	Sound	tempo_seq_A_24.wav	4489805	1187	1			0		other	0
+t2311	168	Picture	Wait for response	4524953	0	2	3001	2	0	next	other	0
+t2311	168	Response	3	4527757	2804	0
+t2311	169	Sound	tempo_seq_A_14.wav	4539954	12000	1			12000		other	0
+t2311	170	Picture	ISI	4575124	0	1	5167	1	0	next	other	0
+t2311	171	Sound	tempo_seq_rand_29.wav	4581807	1516	1			0		other	0
+t2311	172	Picture	Wait for response	4616960	0	1	3000	1	0	next	other	0
+t2311	172	Response	3	4619757	2797	0
+t2311	173	Sound	tempo_seq_rand_31.wav	4631958	11998	1			12000		other	0
+t2311	174	Picture	ISI	4667129	0	1	5167	1	0	next	other	0
+t2311	175	Sound	tempo_seq_A_12.wav	4673809	1513	1			0		other	0
+t2311	176	Picture	Wait for response	4708965	0	2	2834	2	0	next	other	0
+t2311	176	Response	3	4711677	2712	0
+t2311	177	Sound	tempo_seq_rand_14.wav	4723798	11999	1			12000		other	0
+t2311	178	Picture	ISI	4758968	0	2	5168	3	0	next	other	0
+t2311	179	Sound	tempo_seq_A_18.wav	4765813	1677	1			0		other	0
+t2311	180	Picture	Wait for response	4800971	0	1	15834	1	0	next	other	0
+t2311	180	Response	2	4816637	15666	0
+t2311	181	Sound	tempo_seq_A_23.wav	4828805	11999	1			12000		other	0
+t2311	182	Picture	ISI	4863975	0	1	5167	1	0	next	other	0
+t2311	183	Sound	tempo_seq_rand_24.wav	4870815	1673	1			0		other	0
+t2311	184	Picture	Wait for response	4905978	0	1	5667	1	0	next	other	0
+t2311	184	Response	3	4911277	5299	0
+t2311	185	Sound	tempo_seq_A_21.wav	4923642	11997	1			12000		other	0
+t2311	186	Picture	ISI	4958814	0	2	5168	2	0	next	other	0
+t2311	187	Sound	tempo_seq_rand_46.wav	4965817	1836	1			0		other	0
+t2311	188	Picture	Wait for response	5000983	0	2	3667	3	0	next	other	0
+t2311	188	Response	3	5004477	3494	0
+t2311	189	Sound	tempo_seq_A_20.wav	5016649	11999	1			12000		other	0
+t2311	190	Picture	ISI	5051820	0	1	5167	1	0	next	other	0
+t2311	191	Sound	tempo_seq_rand_32.wav	5058820	1832	1			0		other	0
+t2311	192	Picture	Wait for response	5093990	0	1	5334	1	0	next	other	0
+t2311	192	Response	3	5099037	5047	0
+t2311	193	Sound	tempo_seq_A_24.wav	5111321	11998	1			12000		other	0
+t2311	194	Picture	ISI	5146493	0	1	5167	1	0	next	other	0
+t2311	195	Sound	tempo_seq_rand_38.wav	5152823	1163	1			0		other	0
+t2311	196	Picture	Wait for response	5187996	0	1	3000	1	0	next	other	0
+t2311	196	Response	3	5190877	2882	0
+t2311	197	Picture	section_end	5190996	0	1	20168	1	0	next	other	0
+t2311	198	Picture	section_end	5211164	0	1	32996	1	0	next	other	0
+
+
+{
+   "app": "Presentation Version 20.0 Build 07.26.17",
+   "device": "FUJITSU CELSIUS M740B",
+   "experiment": "{16CD3F60-04EC-4047-A39C-DBD7F4656802}",
+   "os": "Windows 10 64 bit",
+   "package": "",
+   "parameters": {
+      "configuration": "Default configuration"
+   },
+   "scenario": "RPSL_pretest.sce",
+   "subject": "t2311",
+   "timestamp": "2019/10/02 09:14:19 GMT"
+}

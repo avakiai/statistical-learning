@@ -1,0 +1,20 @@
+
+<table style="text-align:center"><caption><strong>Table S2. GLM Results</strong></caption>
+<tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"></td><td><em>Dependent variable:</em></td></tr>
+<tr><td></td><td colspan="1" style="border-bottom: 1px solid black"></td></tr>
+<tr><td style="text-align:left"></td><td>reaction time (s)</td></tr>
+<tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Intercept(Pos 1/Rand)</td><td>-0.54<sup>***</sup> (-0.58, -0.50)</td></tr>
+<tr><td style="text-align:left">Struct</td><td>0.002 (-0.04, 0.04)</td></tr>
+<tr><td style="text-align:left">Pos 2</td><td>-0.03<sup>**</sup> (-0.05, -0.01)</td></tr>
+<tr><td style="text-align:left">Pos 3</td><td>-0.08<sup>***</sup> (-0.10, -0.06)</td></tr>
+<tr><td style="text-align:left">Struct:Pos 2</td><td>-0.11<sup>***</sup> (-0.14, -0.08)</td></tr>
+<tr><td style="text-align:left">Struct:Pos 3</td><td>-0.09<sup>***</sup> (-0.12, -0.06)</td></tr>
+<tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">Fixed Effects</td><td>Session Order/Subject + Session</td></tr>
+<tr><td style="text-align:left">Fixed Effects Struct.</td><td>Rand. Int. + Rand. Slope</td></tr>
+<tr><td style="text-align:left">Observations</td><td>6,524</td></tr>
+<tr><td style="text-align:left">Log Likelihood</td><td>4,140.28</td></tr>
+<tr><td style="text-align:left">Akaike Inf. Crit.</td><td>-8,250.56</td></tr>
+<tr><td style="text-align:left">Bayesian Inf. Crit.</td><td>-8,148.81</td></tr>
+<tr><td colspan="2" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left"><em>Note:</em></td><td style="text-align:right"><sup>*</sup>p<0.1; <sup>**</sup>p<0.05; <sup>***</sup>p<0.01</td></tr>
+<tr><td style="text-align:left"></td><td style="text-align:right">Fitted using Gamma distribution and log link function.</td></tr>
+</table>

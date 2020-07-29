@@ -1,0 +1,103 @@
+Scenario - _RPSL_wordrec
+Logfile written - 09/26/2019 10:53:48
+
+Subject	Trial	Event Type	Code	Time	TTime	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur	Stim Type	Pair Index
+
+k1234	1	Picture	instruct	166	0	1	225181	1	0	next	other	0
+k1234	1	Response	1	225207	225040	0
+k1234	2	Sound	rokise.wav	237314	11967	1			12000		other	0
+k1234	3	Picture	ISI	244848	0	2	5167	2	0	next	other	0
+k1234	4	Sound	semipo.wav	251038	1023	1			0		other	0
+k1234	5	Picture	Wait for response	258682	0	1	10001	1	0	next	other	0
+k1234	5	Response	3	268487	9804	0
+k1234	6	Sound	turoki.wav	280654	11971	1			12000		other	0
+k1234	7	Picture	ISI	288351	0	1	5167	1	0	next	other	0
+k1234	8	Sound	mipola.wav	295040	1522	1			0		other	0
+k1234	9	Picture	Wait for response	302685	0	1	9000	2	0	next	other	0
+k1234	9	Response	3	311366	8681	0
+k1234	10	Sound	mipola.wav	323659	11974	1			12000		other	0
+k1234	11	Picture	ISI	331187	0	1	5167	1	0	next	other	0
+k1234	12	Sound	lanuga.wav	338041	1687	1			0		other	0
+k1234	13	Picture	Wait for response	345688	0	1	5000	1	0	next	other	0
+k1234	13	Response	2	350406	4719	0
+k1234	14	Sound	zabetu.wav	362667	11979	1			12000		other	0
+k1234	15	Picture	ISI	370355	0	2	5168	2	0	next	other	0
+k1234	16	Sound	turoki.wav	377042	1519	1			0		other	0
+k1234	17	Picture	Wait for response	384690	0	1	4000	2	0	next	other	0
+k1234	17	Response	2	388487	3796	0
+k1234	18	Sound	dizabe.wav	400669	11979	1			12000		other	0
+k1234	19	Picture	ISI	408358	0	1	5167	1	0	next	other	0
+k1234	20	Sound	nugadi.wav	415043	1517	1			0		other	0
+k1234	21	Picture	Wait for response	422693	0	1	3834	1	0	next	other	0
+k1234	21	Response	2	426487	3794	0
+k1234	22	Sound	nugadi.wav	438510	11983	1			12000		other	0
+k1234	23	Picture	ISI	446194	0	1	5167	2	0	next	other	0
+k1234	24	Sound	lanuga.wav	453044	1683	1			0		other	0
+k1234	25	Picture	Wait for response	460695	0	1	13167	1	0	next	other	0
+k1234	25	Response	2	473767	13072	0
+k1234	26	Sound	mipola.wav	485847	11984	1			12000		other	0
+k1234	27	Picture	ISI	493530	0	1	5167	1	0	next	other	0
+k1234	28	Sound	dizabe.wav	500046	1348	1			0		other	0
+k1234	29	Picture	Wait for response	507698	0	1	3663	14	0	next	other	0
+k1234	29	Response	2	511287	3589	0
+k1234	30	Sound	lanuga.wav	523346	11985	1			12000		other	0
+k1234	31	Picture	ISI	531033	0	1	5167	1	0	next	other	0
+k1234	32	Sound	zabetu.wav	538046	1847	1			0		other	0
+k1234	33	Picture	Wait for response	545700	0	1	13667	1	0	next	other	0
+k1234	33	Response	3	559207	13507	0
+k1234	34	Sound	lanuga.wav	571355	11987	1			12000		other	0
+k1234	35	Picture	ISI	579036	0	1	5167	1	0	next	other	0
+k1234	36	Sound	rokise.wav	586048	1845	1			0		other	0
+k1234	37	Picture	Wait for response	593703	0	1	10334	1	0	next	other	0
+k1234	37	Response	2	603847	10144	0
+k1234	38	Sound	semipo.wav	616024	11987	1			12000		other	0
+k1234	39	Picture	ISI	623705	0	1	5167	1	0	next	other	0
+k1234	40	Sound	zabetu.wav	630049	1177	1			0		other	0
+k1234	41	Picture	Wait for response	637706	0	1	9001	1	0	next	other	0
+k1234	41	Response	2	646567	8861	0
+k1234	42	Sound	nugadi.wav	658696	11990	1			12000		other	0
+k1234	43	Picture	ISI	666374	0	1	5167	1	0	next	other	0
+k1234	44	Sound	semipo.wav	673051	1510	1			0		other	0
+k1234	45	Picture	Wait for response	680709	0	1	7167	1	0	next	other	0
+k1234	45	Response	3	687767	7058	0
+k1234	46	Sound	turoki.wav	699865	11989	1			12000		other	0
+k1234	47	Picture	ISI	707544	0	1	5167	1	0	next	other	0
+k1234	48	Sound	nugadi.wav	714052	1341	1			0		other	0
+k1234	49	Picture	Wait for response	721711	0	1	7667	2	0	next	other	0
+k1234	49	Response	2	729207	7496	0
+k1234	50	Sound	dizabe.wav	741369	11991	1			12000		other	0
+k1234	51	Picture	ISI	749046	0	1	5167	2	0	next	other	0
+k1234	52	Sound	rokise.wav	756052	1839	1			0		other	0
+k1234	53	Picture	Wait for response	763714	0	1	5000	1	0	next	other	0
+k1234	53	Response	2	768567	4854	0
+k1234	54	Sound	rokise.wav	780704	11990	1			12000		other	0
+k1234	55	Picture	ISI	788382	0	1	5167	1	0	next	other	0
+k1234	56	Sound	turoki.wav	795054	1505	1			0		other	0
+k1234	57	Picture	Wait for response	802716	0	1	4000	2	0	next	other	0
+k1234	57	Response	3	806567	3851	0
+k1234	58	Sound	zabetu.wav	818707	11991	1			12000		other	0
+k1234	59	Picture	ISI	826384	0	1	5167	1	0	next	other	0
+k1234	60	Sound	dizabe.wav	833056	1505	1			0		other	0
+k1234	61	Picture	Wait for response	840718	0	1	9167	2	0	next	other	0
+k1234	61	Response	3	849767	9049	0
+k1234	62	Sound	semipo.wav	861878	11992	1			12000		other	0
+k1234	63	Picture	ISI	869554	0	1	5167	1	0	next	other	0
+k1234	64	Sound	mipola.wav	876057	1336	1			0		other	0
+k1234	65	Picture	Wait for response	883721	0	1	7834	1	0	next	other	0
+k1234	65	Response	3	891447	7726	0
+k1234	66	Picture	exp_end	891555	0	1	33985	1	0	next	other	0
+
+
+{
+   "app": "Presentation Version 20.0 Build 07.26.17",
+   "device": "FUJITSU CELSIUS M740B",
+   "experiment": "{16CD3F60-04EC-4047-A39C-DBD7F4656802}",
+   "os": "Windows 10 64 bit",
+   "package": "",
+   "parameters": {
+      "configuration": "Default configuration"
+   },
+   "scenario": "RPSL_wordrec.sce",
+   "subject": "k1234",
+   "timestamp": "2019/09/26 08:52:03 GMT"
+}

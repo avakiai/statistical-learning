@@ -1,0 +1,1753 @@
+---
+title: "RPSL - Study 3 - V2"
+output: html_notebook
+---
+## Init.
+```{r message=FALSE, include=FALSE}
+# output
+library(knitr)
+library(Cairo)
+  opts_chunk$set(dev="CairoPDF")
+
+# basics
+library(tidyverse)
+#library(reshape2)
+#library(ggplot2)
+#library(ggpubr)
+#library(gplots)
+library(fitdistrplus)
+
+library(Rmisc) # summary stats
+source("C:/Users/Ava/Desktop/Experiments/temporal_perception_SL/RPSL_scripts_v3/data_analysis_scripts/r_scripts/R_rainclouds.R")
+# stats
+library(lme4)
+#library(multcomp) 
+library(emmeans)
+
+# save tables
+library(stargazer)
+library(kableExtra)
+
+# advanced plotting & stats  
+#library(forcats)
+#library(effects)
+library(lsr) 
+library(pwr)
+library(RcppRoll) # for rolling means
+```
+
+## Aesthetics
+```{r message=FALSE, include=FALSE}
+# latex font
+library(extrafont)
+  #font_import(paths="C:/Users/Ava/AppData/Local/Microsoft/Windows/Fonts", pattern = "lmroman*", prompt = T) # only the first time
+  loadfonts(device = "win")
+  par(family="LM Roman 10")
+  
+# colors
+library("wesanderson")
+
+# default figure size
+w = 7
+h = 5
+```
+
+## Load
+```{r message=FALSE, include=FALSE}
+# initialize directories
+setwd("C:/Users/Ava/Desktop/Experiments/temporal_perception_SL/#E3_MasteR")
+data_path <- "C:/Users/Ava/Desktop/Experiments/temporal_perception_SL/RPSL_data_v3"
+data_files <- list.files(path = data_path, pattern = ".csv")
+
+# set figure path 
+fig_path <- "C:/Users/Ava/Desktop/Experiments/SL_paper_tex"
+
+# 1. Online SL: Target Detection Task 
+rt_data_orig <- read_csv(file.path(data_path,data_files[2]))
+  rt_data_orig_mini <- read_csv(file.path(data_path,data_files[1])) # summary data
+  
+# 2. Offline SL: Word Recognition Task
+wordrec_data_orig <- read_csv(file.path(data_path,data_files[5]))
+
+# 3. Pre/Post: Tempo Task 
+tempotask_data_orig <- read_csv(file.path(data_path,data_files[4]))
+
+```
+
+## ----------- Target Detection Task 
+Clean up data... 
+```{r}
+# Add blocks
+rt_data_clean <- rt_data_orig[which(rt_data_orig$code!=0),]
+  n_meta_blocks <- max(rt_data_orig$block)/max(rt_data_orig$tgt_pos)
+    meta_blocks <- array(rep(0,each=nrow(rt_data_clean)))
+    meta_blocks[which(rt_data_clean$block %in% c(1,2,3))] <- 1
+    meta_blocks[which(rt_data_clean$block %in% c(4,5,6))] <- 2
+    meta_blocks[which(rt_data_clean$block %in% c(7,8,9))] <- 3
+    meta_blocks[which(rt_data_clean$block %in% c(10,11,12))] <- 4
+    meta_blocks[which(rt_data_clean$block %in% c(13,14,15))] <- 5
+    meta_blocks[which(rt_data_clean$block %in% c(16,17,18))] <- 6
+    meta_blocks[which(rt_data_clean$block %in% c(19,20,21))] <- 7
+    meta_blocks[which(rt_data_clean$block %in% c(22,23,24))] <- 8
+  rt_data_clean <- add_column(rt_data_clean, meta_blocks, .after = 2)
+  
+# Rename & factorize columns
+rt_data_cleaned.1 <- rt_data_clean %>% 
+                     dplyr::select(2:6,8:11) %>%
+                     dplyr::rename(subject = subjID, trial = block, block = meta_blocks, target_num = code, target = target_syll) %>%
+                     mutate(subject = as.factor(subject),
+                            block = as.factor(block),
+                            target = as.factor(target), 
+                            tgt_pos = as.factor(tgt_pos), 
+                            tgt_word = as.factor(tgt_word),
+                            detect = case_when(detect==1 ~ 0,
+                                      detect==2 ~ 1),
+                            detect = as.numeric(detect))
+
+
+
+```
+
+Remove participants with < 50% detection accuracy... | Don't do this in this version.  
+```{r}
+# # 1. Remove bad participants...
+#   # Reject participants with less than 50% accuracy:
+#   rt_data_mini_sum1 <- rt_data_orig_mini %>%
+#     summarySE(measurevar = "accuracy",groupvars = c("subject"), na.rm = TRUE) 
+# 
+#   below_50_acc <- rt_data_mini_sum1[which(rt_data_mini_sum1$accuracy_mean<0.5),] 
+#   subjs_below <- below_50_acc$subject
+#   
+#   rt_data_cleaned.2 <- rt_data_cleaned.1
+#     for (subj in subjs_below) {
+#       rt_data_cleaned.2 <- rt_data_cleaned.2[!(rt_data_cleaned.2$subject==subj),]}
+#   
+#   
+#   
+#   # n original participants in target detection task 
+# N_rt_orig <- length(unique(rt_data_orig$subject))
+# # n participants that survived accuracy cut-off...
+# N_rt_prune1 <- length(unique(rt_data_prune1$subject))
+# Three subjects performed at an average accuracy below 50%, so we remove them, leaving 36 participants.
+
+```
+
+Remove data sets with technical/programming errors...
+```{r}
+rm_subjs <- c("b2308", # Did not respond at all
+              "b1912","r1028", "t0204", # Trials were not blocked, so block numbers meaningless.
+              "d2006", # Blocking messed up and didn't see all sylls; Block 6 = Target Positions 3,2,3; Blocks seen =  1-16, 1-8
+              "i0902") # Blocking technically ok, just didn't see all syllables; Blocks seen = 1-12 x 2
+
+rt_data_cleaned.2 <- rt_data_cleaned.1[which(!rt_data_cleaned.1$subject %in% rm_subjs),]
+  
+print(paste0("Of the original ", length(unique(rt_data_cleaned.1$subject)), " subjects, ", length(unique(rt_data_cleaned.2$subject)), " remain after removing participants with technical errors."))
+  
+```
+
+Remove those participants from Tempo Task and WordRec Task, for correlating...
+Note that wordrec_data has an N of 33, as one participant (s1311) has data for the target detection task but not for the offline task. This will just fall out in the correlation.
+Tempotask_data has the same N of 34 as the target detection task. 
+```{r}
+# First clean up a bit... 
+# ... use wordrec_data_orig for word rec analysis...
+wordrec_data_orig <- wordrec_data_orig %>%
+  dplyr::select(2:9) %>%
+  dplyr::rename(subject = subj_id) %>%
+  mutate(subject = as.factor(subject))
+
+# ... use wordrec_data for correlating with rt_data.
+wordrec_data <- filter(wordrec_data_orig, subject %in% unique(rt_data_cleaned.2$subject))
+
+# ... use orig for tempot task analysis... 
+tempotask_data_orig <- tempotask_data_orig %>%
+  dplyr::select(2:9) %>%
+  dplyr::rename(subject = subj_id) %>%
+  mutate(subject = as.factor(subject))
+
+# ... for correlating with rt_data.
+tempotask_data <- filter(tempotask_data_orig, subject %in% unique(rt_data_cleaned.2$subject))
+```
+
+##Visualize RT distributions
+```{r warning=FALSE}
+# view
+hist(rt_data_cleaned.2$rt)
+summary(rt_data_cleaned.2$rt)
+
+rts <- rt_data_cleaned.2$rt %>% na.omit() %>% as.numeric()
+
+descdist(rts, discrete = FALSE)
+descdist(rts, discrete = FALSE, boot = 500)
+```
+Distribution is gamma/lognormal.
+
+#Comparison of fits
+```{r warning=FALSE}
+fit.gam  <- fitdist(rts, "gamma")
+fit.ln <- fitdist(rts, "lnorm")
+summary(fit.gam)
+summary(fit.ln)
+
+par(mfrow=c(2,2))
+plot.legend <- c("gamma", "lognorm")
+denscomp(list(fit.gam, fit.ln), legendtext = plot.legend)
+cdfcomp (list(fit.gam, fit.ln), legendtext = plot.legend)
+qqcomp  (list(fit.gam, fit.ln), legendtext = plot.legend)
+ppcomp  (list(fit.gam, fit.ln), legendtext = plot.legend)
+
+gofstat(list(fit.gam, fit.ln), fitnames = c("gamma", "lognorm"))
+```
+Gamma distribution fits best. 
+
+Now remove some outliers... 
+# Outlier Removal
+```{r warning=FALSE}
+# Outlier Removal Method: median +- 3(mad) 
+# --> https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/mad
+# calculate
+mad_norm <- mad(rt_data_cleaned.2$rt,na.rm=TRUE)
+upper_bound_med <- median(rt_data_cleaned.2$rt,na.rm=TRUE)+(3*mad_norm)
+lower_bound_med <- median(rt_data_cleaned.2$rt,na.rm=TRUE)-(3*mad_norm)
+
+# filter & add scaled variables
+rt_data <- rt_data_cleaned.2 %>%
+  dplyr::filter(rt > lower_bound_med | is.na(rt), # keeps NAs, because these are miss markers
+         rt < upper_bound_med | is.na(rt)) %>%
+  mutate(rt_secs = rt/1000,
+         rt_sc = scale(rt))
+
+# replot
+rts.rm <- rt_data$rt %>% na.omit() %>% as.numeric()
+hist(rts.rm)
+descdist(rts.rm, discrete = FALSE)
+
+fit.norm <- fitdist(rts.rm, "norm")
+fit.gam  <- fitdist(rts.rm, "gamma")
+fit.ln <- fitdist(rts.rm, "lnorm")
+summary(fit.norm)
+summary(fit.gam)
+summary(fit.ln)
+
+par(mfrow=c(2,2))
+plot.legend <- c("norm","gamma", "lognorm")
+denscomp(list(fit.norm,fit.gam, fit.ln), legendtext = plot.legend)
+cdfcomp (list(fit.norm,fit.gam, fit.ln), legendtext = plot.legend)
+qqcomp  (list(fit.norm,fit.gam, fit.ln), legendtext = plot.legend)
+ppcomp  (list(fit.norm, fit.gam, fit.ln), legendtext = plot.legend)
+
+gofstat(list(fit.norm, fit.gam, fit.ln), fitnames = c("norm","gamma", "lognorm"))
+
+print(paste0("The method of removing +- 3 * the median absolute deviation results in a data loss of only ", round(1-length(rt_data$rt)/length(rt_data_cleaned.2$rt), digits = 3), "%. Meanwhile, although outlier removal makes the distribution much more normal (note scaling does not add any further normality), gamma remains the best fit."))
+```
+Summary statistics before and after outlier removal...
+```{r}
+summary(sort(rts))
+summary(sort(rts.rm))
+```
+# Save / Read data
+```{r include=FALSE}
+write.csv(rt_data,'exp_3_rt_data.csv', row.names = FALSE)
+rt_data <- read_csv('exp_3_rt_data.csv') %>%
+      mutate(subject = as.factor(subject),
+           target = as.factor(target),
+           tgt_pos = as.factor(tgt_pos),
+           tgt_word = as.factor(tgt_word))
+```
+
+
+
+
+```{r}
+# rescale y var
+# rt_data <- rt_data %>%
+#   mutate(rt_secs = rt/1000)
+# 
+# # rescale y   
+# rt_data_sum4 <- rt_data_sum4 %>%
+#   mutate(rt_secs_mean = rt_mean/1000)
+# 
+# # sort
+# rt_data_sum6 <- rt_data_sum6 %>%
+#   mutate(row_name = row_number())
+# rt_data_sum6_sorted <- rt_data_sum6[order(rt_data_sum6$rt_mean),]
+
+    
+```
+
+#_
+## Fig. 1. Plot RT ~ Pos x Block 
+```{r message=FALSE, warning=FALSE}
+rt_data_sum1 <- rt_data %>% # target position x block
+    summarySE(measurevar = "rt", groupvars = c("block","tgt_pos"),na.rm=TRUE) 
+rt_data_sum2 <- rt_data %>% # target position only
+    summarySE(measurevar = "rt", groupvars = c("tgt_pos"),na.rm=TRUE)
+  
+ggplot() +
+  geom_point(data = rt_data_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(block)), size = 2) +
+  geom_line(data = rt_data_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = block, colour = factor(block)),size = .5) +
+  geom_point(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_median), colour = "BLACK") +
+  geom_errorbar(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci), colour = "BLACK", width = 0.1, size = 0.8) +
+  geom_line(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = 1), colour = "BLACK", size = .9) +
+  
+  scale_colour_brewer(palette = "Paired") +
+  scale_y_continuous(limits=c(380,580)) +
+  #  annotate("text", x = 3.4, y = 570, label = paste("N =",toString(N))) +
+  labs(colour= "Block") + ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggsave('fig1a_rt_pos_block.png', width = w, height = h)
+dev.copy(pdf,file.path(fig_path,'exp3fig1a.pdf'), width = 6, height = 4)
+dev.off()
+```
+
+## Fig. 1b. Plot RT ~ Pos (Raincloud)
+```{r message=FALSE, warning=FALSE}
+rt_data_sum3 <- rt_data %>% # target position x subject
+    summarySE(measurevar = "rt", groupvars = c("tgt_pos","subject"),na.rm=TRUE)
+    
+ggplot(rt_data_sum3, aes(x = tgt_pos, y = rt_median, fill = tgt_pos)) +
+  geom_point(position = position_jitter(width = .07)) +
+  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE) + 
+  geom_boxplot(width = 0.1, alpha = 0.5, position = position_nudge(x=0.2,y=0)) +
+  #scale_fill_manual(values=wes_palette("Royal2")[c(3,4,5)]) +
+  scale_color_brewer(palette="Dark2") + 
+  scale_fill_brewer(palette="Pastel2") +
+#  scale_y_continuous(limits=c(380,580)) +
+  ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') +
+  guides(fill = FALSE, color = FALSE) + 
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggsave('fig1b_rt_pos.png', width = w, height = h)
+dev.copy(pdf,file.path(fig_path,'exp3fig1b.pdf'), width = 6, height = 4)
+dev.off()
+```
+
+
+## Fig. 2. Plot RT ~ Pos x Block x Subject
+```{r message=FALSE, warning=FALSE}
+rt_data_sum4 <- rt_data %>% # target position x block x subject
+    summarySE(measurevar = "rt", groupvars = c("block","tgt_pos","subject"),na.rm=TRUE) %>%
+    filter(subject != "b2308")
+
+ggplot(rt_data_sum4, mapping=aes(x=tgt_pos,y=rt_median,color=as.factor(block))) + 
+  geom_point(size=1) +
+  geom_line(aes(group=block), size=.5) +
+  geom_point(rt_data_sum3, mapping=aes(x=tgt_pos,y=rt_median), color="BLACK") +
+  geom_line(rt_data_sum3, mapping=aes(x=tgt_pos,y=rt_median,group=1), color="BLACK") +
+  geom_errorbar(rt_data_sum3, mapping=aes(x=tgt_pos,y=rt_median,ymin=rt_median-ci,ymax=rt_median+ci), color="BLACK",width=.3) +
+  
+  ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') + labs(color="Block") +
+  scale_color_brewer(palette="Paired") + 
+  facet_wrap(. ~ subject, ncol=7) +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggsave('fig2_rt_pos_block_subj.png',width=18,height=14)
+dev.copy(pdf,file.path(fig_path,'exp3fig2.pdf'))
+dev.off()
+
+```
+
+
+```{r}
+rt_data %>% summarySE(., measurevar = "rt_secs", groupvars = c("tgt_pos"), na.rm = TRUE)
+```
+
+## GLMM: RT ~ Pos x Block
+### Full 
+```{r}
+options(contrasts = c("contr.sum", "contr.poly"))
+# Full Model | Random Intercept Only | Block as Factor | Gamma-log function
+rt.mod.full.int.fct <- glmer(rt_secs ~ 1 + tgt_pos*block + (1 | subject), data = rt_data, family = Gamma(link = "log"), 
+                             control = glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)))
+summary(rt.mod.full.int.fct)
+plot(residuals(rt.mod.full.int.fct))
+qqnorm(resid(rt.mod.full.int.fct))
+Anova(rt.mod.full.int.fct, type = 2)
+anova(rt.mod.full.int.fct)
+```
+### *Lesser
+```{r}
+# Lesser Model | Random Intercept Only | Gamma-log function
+rt.mod.less.int <- glmer(rt_secs ~ 1 + tgt_pos + (1 | subject), data = rt_data, family = Gamma(link = "log"))
+  summary(rt.mod.less.int)
+  plot(residuals(rt.mod.less.int))
+  qqnorm(resid(rt.mod.less.int))
+  
+  car::Anova(rt.mod.less.int)
+
+#   res.table <- as.data.frame(coef(summary(rt.mod.less.int)))
+#   row.names(res.table) <- c("Tgt_Pos1","Tgt_Pos2","Tgt_Pos3")
+#   res.table$`Pr(>|z|)`<- c("<.001","<.001","<.001")
+#   res.table %>%
+#     kable() %>%
+#      kable_styling(bootstrap_options = c("striped", "hover")) %>%
+#      save_kable(file = 'target_glmm.png', self_contained = T) #width = w, height = h)
+# 
+# # png(file.path(fig_path, '/target_glmm.png'), width=480,height=480,bg = "white")
+# # grid.table(res.table)
+# # dev.off()
+
+  
+tidy(rt.mod.less.int,conf.int=TRUE) %>% as_tibble()
+# all fit values
+glance(rt.mod.less.int)
+# plot estimates
+tidy(rt.mod.less.int,conf.int=TRUE) %>% as_tibble() %>% 
+  .[c(1:3),] %>%
+  ggplot(aes(term, estimate, ymin=conf.low, ymax=conf.high)) +
+  geom_pointrange() +
+  geom_hline(yintercept = 0) 
+
+# augment pulls out the fitted estimate and the residuals for all observations
+augment(rt.mod.less.int) %>%
+   ggplot(aes(x=.fitted, y=.resid)) +
+  geom_point() +
+  geom_smooth()  
+  
+  
+    
+```
+
+#### Model Evaluation
+```{r}
+anova(rt.mod.full.int.fct,rt.mod.less.int) 
+```
+There is a marginal but significant difference in the fit of the two models. The lesser model is the one we'll continue with, but we will still explore the effect of block. 
+
+Models with a delta AIC of greater than 10 suggest almost no support for the fuller model. For more info, see here: https://stats.stackexchange.com/questions/232465/how-to-compare-models-on-the-basis-of-aic
+
+##### -> Output Regression Table
+```{r}
+stargazer(rt.mod.less.int, rt.mod.full.int.fct,
+#type="html",
+out="td_mods_1.doc",
+intercept.bottom = FALSE,
+intercept.top = TRUE,
+ci = TRUE, 
+digits=2,
+notes = "Fitted using Gamma distribution and log link function.",
+model.names = FALSE,
+object.names = FALSE,
+column.labels = c("lesser", "fuller"),
+single.row = T,
+title="Table 1. GLM Results",
+align=TRUE, dep.var.labels=c("reaction time (s)"),
+covariate.labels = c("Intercept(Pos 1)",
+"Pos 2",
+"Pos 3", 
+"Block 2",
+"Block 3",
+"Block 4",
+"Block 5",
+"Block 6",
+"Block 7",
+"Block 8",
+"Pos 2:Block 2",
+"Pos 3:Block 2",
+"Pos 2:Block 3",
+"Pos 3:Block 3",
+"Pos 2:Block 4",
+"Pos 3:Block 4",
+"Pos 2:Block 5",
+"Pos 3:Block 5",
+"Pos 2:Block 6",
+"Pos 3:Block 6",
+"Pos 2:Block 7",
+"Pos 3:Block 7",
+"Pos 2:Block 8",
+"Pos 3:Block 8"))
+
+
+```
+
+
+### Full, Lesser | Random Slopes 
+```{r}
+rt.mod.full.int.slope <- glmer(rt_secs ~ 1 + tgt_pos*block + (tgt_pos | subject), data = rt_data, family = Gamma(link = "log"), 
+                             control = glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)))
+summary(rt.mod.full.int.slope)
+plot(residuals(rt.mod.full.int.slope))
+qqnorm(resid(rt.mod.full.int.slope))
+
+
+rt.mod.less.int.slope <- glmer(rt_secs ~ 1 + tgt_pos + (tgt_pos | subject), data = rt_data, family = Gamma(link = "log"))
+summary(rt.mod.less.int.slope)
+plot(residuals(rt.mod.less.int.slope))
+qqnorm(resid(rt.mod.less.int.slope))
+```
+
+#### Model Evaluation
+```{r}
+anova(rt.mod.less.int,rt.mod.full.int.slope,rt.mod.less.int.slope)
+```
+Again, the lesser, random intercepts model is a better description of the data, by AIC value. 
+
+A final comparison, by testing if allowing random slopes for both position and block per subject is a better reflector than only for target position. 
+
+
+##### -> Output Regression Table
+```{r}
+stargazer(rt.mod.less.int, rt.mod.less.int.slope, rt.mod.full.int.fct,
+type="html",
+out="td_mods_2.doc",
+intercept.bottom = FALSE,
+intercept.top = TRUE,
+ci = TRUE, 
+digits=2,
+notes = "Fitted using Gamma distribution and log link function.",
+model.names = FALSE,
+object.names = FALSE,
+column.labels = c("lesser", "lesser (random slopes)","fuller"),
+single.row = T,
+title="Table 1. GLM Results",
+align=TRUE, 
+dep.var.labels=c("reaction time (s)"),
+covariate.labels = c("Intercept(Pos 1)",
+"Pos 2",
+"Pos 3", 
+"Block 2",
+"Block 3",
+"Block 4",
+"Block 5",
+"Block 6",
+"Block 7",
+"Block 8",
+"Pos 2:Block 2",
+"Pos 3:Block 2",
+"Pos 2:Block 3",
+"Pos 3:Block 3",
+"Pos 2:Block 4",
+"Pos 3:Block 4",
+"Pos 2:Block 5",
+"Pos 3:Block 5",
+"Pos 2:Block 6",
+"Pos 3:Block 6",
+"Pos 2:Block 7",
+"Pos 3:Block 7",
+"Pos 2:Block 8",
+"Pos 3:Block 8"),
+add.lines = list(c("Fixed Effects", "Subject", "Position | Subject", "Subject"),
+                 c("Fixed Effects Struct.", "Rand. Int.", "Rand. Int., Slope", "Rand Int.")))
+
+
+```
+
+
+### Lesser | Random Slopes for both Factors
+```{r}
+rt.mod.less.int.slope2 <- glmer(rt_secs ~ 1 + tgt_pos + (tgt_pos | subject) + (block | subject), data = rt_data, family = Gamma(link = "log"))
+summary(rt.mod.less.int.slope2)
+plot(residuals(rt.mod.less.int.slope2))
+qqnorm(resid(rt.mod.less.int.slope2))
+
+```
+#### Model Evaluation
+```{r}
+anova(rt.mod.less.int,rt.mod.less.int.slope,rt.mod.less.int.slope2)
+```
+Yet again, go for the simplest model. 
+
+## Contrasts 
+```{r}
+(emm.pos <- emmeans(rt.mod.less.int, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response"))
+
+position_contrasts <- emm.pos$contrasts %>%
+  #confint() %>%
+  rbind() %>%
+  as.data.frame() 
+
+position_contrasts_out <- position_contrasts %>%
+  mutate("estimated marginal diff." = round(estimate,digits = 3),
+         SE = round(SE, digits =3),
+       #  "lower CI" = round(asymp.LCL, digits = 3),
+       #  "upper CI" = round(asymp.UCL, digits = 3), 
+         "z ratio" = round(z.ratio, digits = 3),
+         "p value" = "<.001") %>%
+  remove_rownames() %>%
+  add_column("s value" = round(-log2(position_contrasts$p.value),digits = 3)) %>%
+  dplyr::select(1:4,9:10)
+
+stargazer(position_contrasts_out, 
+          type = "html", 
+          out = "td_mod_cont.doc", summary = FALSE, rownames = FALSE)
+```
+
+### Fig. 1c. & S1 Contrasts: RT ~ Pos
+```{r}
+# Predicted Contrasts
+png(file = 'exp3fig1c.png', width = w, height = h, res = 300, units = "in")
+plot(emm.pos, comparisons = TRUE,
+     xlab = "estimated marginal means",
+     ylab = "ordinal position of target syllable") +
+  theme_bw()
+#dev.copy(pdf,file.path(fig_path,'exp3fig1c.pdf'), width = 6, height = 4)
+dev.off()
+
+#pwpp(emm.pos$emmeans, method = "pairwise")
+
+# Predicted Values
+png(file = 'exp3figS1.png', width = w, height = h, res = 300, units = "in")
+emmip(rt.mod.less.int, ~ tgt_pos, xlab = "Target Position", CIs = TRUE) +
+  theme_bw()
+#dev.copy(pdf,file.path(fig_path,'exp3figS1.pdf'), width = 6, height = 4)
+dev.off()
+
+```
+
+## Contrasts Con't (Pos x Block)
+```{r}
+# anova(rt.mod.full.int.fct,rt.mod.full.int.slope, rt.mod.full.int.slope2)
+# Test showing that the full model with random intercepts only is the best fitting ^... 
+
+(emm.pos.block <- emmeans(rt.mod.full.int.fct, specs = pairwise ~ tgt_pos|block, adjust = "tukey", transform = "response"))
+
+block_contrasts <- emm.pos.block$contrasts %>%
+  rbind() %>%
+  as.data.frame() 
+
+block_contrasts_out <- block_contrasts %>%
+  mutate("estimated marginal diff." = round(estimate,digits = 3),
+         SE = round(SE, digits =3),
+         "z ratio" = round(z.ratio, digits = 3),
+         "p value" = "<.001") %>%
+  remove_rownames() %>%
+  dplyr::select(1:2,8,4:5,9:10) %>%
+  add_column("s value" = round(-log2(block_contrasts$p.value),digits = 3))
+```
+
+### Fig. S2. Contrasts: RT ~ Pos x Block
+```{r}
+plot(emm.pos.block, comparisons = TRUE,
+     xlab = "estimated marginal means",
+     ylab = "ordinal position of target syllable") +
+   theme_bw() 
+dev.copy(pdf,file.path(fig_path,'exp3figS2a.pdf'), width = 6, height = 4)
+dev.off()
+
+emmip(rt.mod.full.int.fct, tgt_pos ~ block, CIs = TRUE, xlab = "Block") +
+  theme_bw() +
+  scale_color_manual(name = "Position",
+                     values=wes_palette("Royal2")[c(5,4,3)]) 
+dev.copy(pdf,file.path(fig_path,'exp3figS2b.pdf'), width = 6, height = 4)
+dev.off()
+
+emmip(rt.mod.full.int.fct, block ~ tgt_pos, CIs = TRUE, xlab = "Target Position") + 
+    theme_bw() + 
+    scale_color_manual(name="block",
+                 values=RColorBrewer::brewer.pal(8,"Paired"))
+dev.copy(pdf,file.path(fig_path,'exp3figS2c.pdf'), width = 6, height = 4)
+dev.off()
+```
+
+
+
+  ## Regress out syllable effect
+```{r}
+# across all participants, median RTs for each of the syllables
+# rm anova with syllable and position as factors
+subj.mod <- glmer(rt ~ tgt_pos*target + (1 | subject), data = rt_data, family = Gamma("log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+summary(subj.mod)
+# for each participant, subtracted the residual RT value from observed value for each syllable, co-varying out the effects of physical stimulus factors and yielding corrected RT effect
+
+# Model is rank-deficient
+
+library(broom)
+broom::glance(subj.mod)
+augment(subj.mod)
+rt_data_adj <- data.frame(subject = as.factor(augment(subj.mod)$subject),
+           tgt_pos = as.factor(augment(subj.mod)$tgt_pos),
+           rt_adj = as.numeric(augment(subj.mod)$rt - augment(subj.mod)$.resid))
+         
+rt.mod.less.int.adj <- glmer(rt_adj ~ 1 + tgt_pos + (1 | subject), data = rt_data_adj, family = Gamma(link = "log"))
+  summary(rt.mod.less.int.adj)
+  plot(residuals(rt.mod.less.int.adj))
+  qqnorm(resid(rt.mod.less.int.adj))
+  
+  car::Anova(rt.mod.less.int.adj)
+```
+
+
+
+#_
+
+# Fig. 3. Rolling Average RT
+```{r warning=FALSE, include=FALSE}
+# There are 18 targets per block. 3 blocks in each block (set of trials where all 3 positions serve as targets). 
+# We can have a moving average spanning 3 items...
+rt_data_roll <- subset(rt_data, select = c("subject","block", "trial", "target_num", "tgt_pos", "rt"))
+rt_data_rolled <- data.frame(subject = factor(),
+                             block = factor(),
+                             trial = numeric(),
+                             target_num = numeric(),
+                             tgt_pos = factor(),
+                             rt = numeric(),
+                             moving_mean = numeric(),
+                             stringsAsFactors = FALSE)
+# calculate rolling average for each subject and each block (so that averages don't include observations from unrelated groups)
+for (subj in unique(rt_data_roll$subject)) {
+  curr_subj <- rt_data_roll %>%
+    filter(subject == subj) 
+  for (blk in unique(curr_subj$block)) {
+    curr_roll <- curr_subj %>%
+    filter(block == blk) %>%
+    mutate(moving_mean = roll_mean(rt, 3, align = "right", fill = NA, na.rm = TRUE)) %>%
+    filter(!is.na(rt))
+    rt_data_rolled <- bind_rows(rt_data_rolled,curr_roll)} 
+   }
+#view(rt_data_rolled)
+
+# make the first two values in the moving mean column for each block simply the 1st and 2nd RT value
+rt_idx <- sort(c(which(rt_data_rolled$target_num==1),which(rt_data_rolled$target_num==2)))
+rt_data_rolled$moving_mean[rt_idx] <- rt_data_rolled$rt[rt_idx]
+
+# group over subjects
+rolled_over_subjs_blocks <- rt_data_rolled %>%
+  filter(!is.na(moving_mean)) %>%
+  summarySE(measurevar = "moving_mean",groupvars = c("tgt_pos","target_num"), na.rm = TRUE)
+```
+
+```{r warning=FALSE}
+ggplot(rolled_over_subjs_blocks, mapping=aes(target_num,moving_mean_mean,colour=tgt_pos)) +
+  geom_point() +
+  geom_line(aes(group=tgt_pos)) +
+  geom_ribbon(aes(x=target_num,ymin=moving_mean_mean-se,ymax=moving_mean_mean+se,fill=tgt_pos),alpha=.2) +
+  scale_x_discrete(limits=c(1:18),name="Occurrence of target syllable") + 
+  scale_y_continuous(name="Mean RT [shaded = SEM]", ) +
+  scale_color_brewer(palette="Dark2", name = "Target Position",
+                     labels = c("1st","2nd","3rd")) + 
+  scale_fill_brewer(palette="Pastel2", guide = FALSE) +
+  # scale_fill_manual(values=wes_palette("Royal2")[c(3,4,5)], guide = FALSE) +
+  # scale_color_manual(values=wes_palette("Royal2")[c(3,4,5)], 
+  #                    name = "Target Position",
+  #                    labels = c("1st","2nd","3rd")) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"), legend.position = "top") +
+  ggsave('fig3_rt_rolling.png', width = w, height = h)
+dev.copy(pdf,file.path(fig_path,'exp3fig3rolling.pdf'), width = w, height = h)
+dev.off()
+```
+Impressively, only a few exposures to the words are enough for participants' reaction times to differentiate syllables based on their position.
+
+
+## Fig. 3b. Plot Blocks as Facets/1st Block Only
+```{r}
+rolled_over_subjs <- rt_data_rolled %>%
+  filter(!is.na(moving_mean)) %>%
+  summarySE(measurevar = "moving_mean",groupvars = c("tgt_pos","target_num","block"), na.rm = TRUE)
+
+ggplot(rolled_over_subjs, mapping=aes(target_num,moving_mean_mean,colour=tgt_pos)) +
+  geom_point(size=1) +
+    geom_line(aes(group=tgt_pos)) +
+  geom_ribbon(aes(x=target_num,ymin=moving_mean_mean-se,ymax=moving_mean_mean+se,fill=tgt_pos),alpha=.2) +
+  xlab("Occurrence of target syllable") + 
+  ylab("Mean RT [shaded = SEM]") + 
+  scale_x_discrete(limits = c(1:18)) + 
+  scale_color_brewer(palette="Dark2", name = "Target Position",
+                     labels = c("1st","2nd","3rd")) + 
+  scale_fill_brewer(palette="Pastel2", guide = FALSE) +
+  # scale_fill_manual(values=wes_palette("Royal2")[c(3,4,5)], guide = FALSE) +
+  # scale_color_manual(values=wes_palette("Royal2")[c(3,4,5)], 
+  #                    name = "Target Position",
+  #                    labels = c("1st","2nd","3rd")) +
+  facet_wrap(.~ block, ncol=4) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"), legend.position = "top") +
+  ggsave('fig3b_rt_rolling.png',width=14,height=10)
+dev.copy(pdf,file.path(fig_path,'exp3fig3brolling.pdf'), width = 12, height = 10)
+dev.off()
+
+```
+
+## GLMM
+```{r}
+rt_data_rolled <- rt_data_rolled %>%
+  mutate(target_num = as.numeric(target_num), # occurence within trial
+         tgt_pos = as.factor(tgt_pos), # position
+         block = as.factor(block), 
+        # trial is not meaningful because spread across different target positions
+         subject = as.factor(subject),
+         mm_secs = moving_mean/1000)
+hist(rt_data_rolled$mm_secs)
+
+mm_rts <- rt_data_rolled$mm_secs %>% na.omit() %>% as.numeric()
+descdist(mm_rts, discrete = FALSE, boot = 1000)
+fit.norm <- fitdist(mm_rts, "norm")
+fit.gam  <- fitdist(mm_rts, "gamma")
+fit.ln <- fitdist(mm_rts, "lnorm")
+summary(fit.norm)
+summary(fit.gam)
+summary(fit.ln)
+
+par(mfrow=c(2,2))
+plot.legend <- c("norm","gamma", "lognorm")
+denscomp(list(fit.norm,fit.gam, fit.ln), legendtext = plot.legend)
+cdfcomp (list(fit.norm,fit.gam, fit.ln), legendtext = plot.legend)
+qqcomp  (list(fit.norm,fit.gam, fit.ln), legendtext = plot.legend)
+ppcomp  (list(fit.norm, fit.gam, fit.ln), legendtext = plot.legend)
+
+gofstat(list(fit.norm, fit.gam, fit.ln), fitnames = c("norm","gamma", "lognorm"))
+
+```
+
+## !-> Need to be fit.
+```{r}
+# only target position predicts
+rt_roll_mod0 <- glmer(mm_secs ~ tgt_pos + (1|subject), data = rt_data_rolled, family = Gamma(link = "log"))
+summary(rt_roll_mod0)
+plot(residuals(rt_roll_mod0))
+  # numeric: pos sig.
+  # factor: each sig.
+
+# target position and occurrence within block predicts
+rt_roll_mod1 <- glmer(mm_secs ~ tgt_pos*scale(target_num) + (1|subject), data = rt_data_rolled, family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+summary(rt_roll_mod1)
+plot(residuals(rt_roll_mod1))
+
+anova(rt_roll_mod0,rt_roll_mod1) # -> model 0
+
+# target position and block (exposure)
+rt_roll_mod3 <- glmer(mm_secs ~ tgt_pos*block + (1|subject), data = rt_data_rolled, family = Gamma(link = "log"))
+summary(rt_roll_mod3)
+  # with numerics, suggestion to rescale, pos & pos*block sig. (not int.)
+  # with factors, fails, each pos, many blocks, several ints.
+
+# target position, block (exposure), and occurrences predict
+rt_roll_mod4 <- glmer(mm_secs ~ - 1 + tgt_pos*block*target_num + (1|subject), data = rt_data_rolled, family = Gamma(link="log"))
+summary(rt_roll_mod4)
+  # numeric: failed, pos, target_num, block*target_num 
+  # factor: failed, aside from each pos, only varied 2- and 3-way ints sig. 
+  
+anova(rt_roll_mod4,rt_roll_mod3) # -> factor, model 4 BIC
+
+anova(rt_roll_mod1,rt_roll_mod3) # -> factor, model 1
+anova(rt_roll_mod1,rt_roll_mod4) # -> factor, model 1
+
+anova(rt_roll_mod0,rt_roll_mod4) # -> factor, model 0
+anova(rt_roll_mod0,rt_roll_mod3) # -> factor, model 0
+
+#plot(allEffects(rt_roll_mod1))
+# Reference for modelling using Gamma family function, also can inverse.gaussian, but this gives different results... https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4528092/
+
+
+
+
+
+
+```
+
+
+## !-> Contrasts
+```{r}
+# wrangle: if tgt_pos is numeric, glht fails and says tgt_pos of class numeric not contained as a factor in model; so have to convert to factor, rerun model and then do this?? 
+# rt_data_rolled_fct <- rt_data_rolled %>%
+#   mutate(target_num = as.factor(target_num),
+#          tgt_pos = as.factor(tgt_pos),
+#          subject = as.factor(subject),
+#          mm_secs = moving_mean/1000)
+# 
+# rt_roll_mod0_fct <- glmer(mm_secs ~ - 1 + tgt_pos + (1|subject), data = rt_data_rolled_fct, family = Gamma)
+
+tgtpos_mc <- glht(rt_roll_mod0, linfct = mcp(tgt_pos = "Tukey"))
+summary(tgtpos_mc)
+#plot(allEffects(tgtpos_mc))
+
+# mblocks_mc <- glht(rt_roll_mod1, linfct = mcp(block = "Tukey"))
+# summary(mblocks_mc)
+# 
+# emt <- emtrends(rt_roll_mod1, ~ tgt_pos, var = "block") 
+# summary(emt) # list the estimated slopes c
+# contrast(emt, interaction = "consec") 
+# #pairs(contrast(emt, interaction = "pairwise"),by=NULL)
+# 
+# # doesn't work if numeric
+# emms_mm2 <- emmeans(rt_roll_mod1, ~ tgt_pos*block)
+# contrast(emms_mm2, interaction = "pairwise")
+
+emms_mm <- emmeans(rt_roll_mod0, ~ tgt_pos)
+con_mm <- contrast((emms_mm), interaction = "pairwise") # that should be the same as glht| they are!
+con_mm_regrid <- contrast(regrid(emms_mm), interaction = "pairwise") # to obtain contrasts on response scale
+#pairs(con_mm, by = NULL)
+# results are different from glht because here its comparing pairs of contrasts. so, the difference between 1-2 vs. 1-3 is sig. 
+# so is 1-2 vs. 2-3
+# also 1-3 vs. 2-3
+
+
+
+```
+
+
+
+# _ 
+## Fig. 4. Accuracy: RT ~ Pos
+```{r}
+accuracy_data1 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos","subject"),na.rm=TRUE) 
+accuracy_data2 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos"),na.rm=TRUE) 
+
+# Boxplot
+# ggplot(accuracy_data2) + 
+#   geom_col(mapping=aes(tgt_pos, detect_mean, fill= (tgt_pos)), 
+#            position = position_dodge(0.5), width=0.5) +
+#   geom_errorbar(mapping=aes(tgt_pos, y=detect_mean, ymin=detect_mean-se, ymax=detect_mean+se,
+#            group=tgt_pos,color=tgt_pos), position=position_dodge(0.5), width = 0.3, size = 1) +
+#   scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
+#   scale_x_discrete(name = "Target Position") + 
+#   scale_color_brewer(palette="Dark2") + 
+#   scale_fill_brewer(palette="Pastel2") +
+#   guides(fill=FALSE, color = FALSE) +
+#   theme_minimal() +
+#   theme(text = element_text(family = "LM Roman 10", face="bold")) +
+#   ggsave('fig4_rt_acc.png',width=w,height=h)
+
+
+# Raincloud
+ggplot(accuracy_data1, aes(x = tgt_pos, y = detect_mean, fill = tgt_pos)) +
+  geom_point(position = position_jitter(width = .07)) +
+  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE) + 
+  geom_point(accuracy_data2, mapping = aes(tgt_pos, detect_mean), position = position_nudge(x = 0.2, y = 0)) +
+  geom_errorbar(accuracy_data2, mapping=aes(tgt_pos, y=detect_mean, ymin=detect_mean-se,
+                                            ymax=detect_mean+se),
+                position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
+  #scale_fill_manual(values=wes_palette("Royal2")[c(3,4,5)]) +
+  scale_color_brewer(palette="Dark2") + 
+  scale_fill_brewer(palette="Pastel2") +
+  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
+  scale_x_discrete(name = "Target Position") + 
+  guides(fill = FALSE, color = FALSE) + 
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggsave('fig4_rt_acc.png',width=w,height=h)
+dev.copy(pdf,file.path(fig_path,'exp3fig4acc.pdf'), width = w, height = h)
+dev.off()
+
+```
+
+### Stats
+```{r}
+rt_data %>%
+  summarise(mean = mean(detect),
+            sd = sd(detect))
+
+rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos"),na.rm=TRUE) 
+rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_word"),na.rm=TRUE) 
+rt_data %>% summarySE(measurevar = "detect", groupvars = c("target"),na.rm=TRUE) 
+
+#---- Position
+# Linear Model
+acc.mod.less <- lm(detect ~ tgt_pos, rt_data)
+summary(acc.mod.less)
+# Contrasts
+(em.acc.less <- emmeans(acc.mod.less, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response"))
+# Plot Interactions
+plot(em.acc.less, comparisons = TRUE,
+     xlab = "estimated marginal means (accuracy)",
+     ylab = "ordinal position of target syllable") +
+  theme_bw()
+
+#---- Word
+# Linear Model
+acc.mod.less2 <- lm(detect ~ tgt_word, rt_data)
+summary(acc.mod.less2)
+# Contrasts
+(em.acc.less2 <- emmeans(acc.mod.less2, specs = pairwise ~ tgt_word, adjust = "tukey", transform = "response"))
+# Plot Interactions
+plot(em.acc.less2, comparisons = TRUE,
+     xlab = "estimated marginal means (accuracy)",
+     ylab = "word of target syllable") +
+  theme_bw()
+
+
+
+
+```
+Now: Accuracy of 0.70 and sd of 0.45.
+Previously: Average accuracy is 0.73 with an SD of 0.26. Precision (true positives/true + false positives) is at 0.80 with an SD of 0.23. 
+
+### b. Accuracy per word
+```{r}
+  # there's an unequal number of observations in each cell for the following reasons: 
+  # 1. blocks were made to have one target from each position, but not for those targets to be equally distributed across words, so some blocks, e.g. subject 39, meta block 8, tgt word 4 has 35 observations because two of the targets in that block came from the same word. we didn't think to control for this, but i also can't see why it would be critical. 
+  # 2. not all blocks x tgt words have the full n of obs (18, 36, 54) probably because observations were removed during the RT outlier removal phase. 
+
+accuracy_data4 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_word"),na.rm=TRUE)
+accuracy_data5 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_word","subject"),na.rm=TRUE)
+
+
+ggplot(accuracy_data5, aes(x = tgt_word, y = detect_mean, fill = tgt_word)) +
+  geom_point(position = position_jitter(width = .07)) +
+  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE) + 
+  geom_point(accuracy_data4, mapping = aes(tgt_word, detect_mean), position = position_nudge(x = 0.2, y = 0)) +
+  geom_errorbar(accuracy_data4, mapping=aes(tgt_word, y=detect_mean, ymin=detect_mean-se,
+                                            ymax=detect_mean+se),
+                position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
+  scale_fill_manual(values=wes_palette("Zissou1")[c(1,3,4,5)]) +
+  #scale_color_brewer(palette="Dark2") + 
+  #scale_fill_brewer(palette="Pastel2") +
+  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
+  scale_x_discrete(name = "Pseudoword", labels = c("nugadi","rokise","mipola","zabetu")) + 
+  guides(fill = FALSE, color = FALSE) + 
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggsave('fig4b_rt_acc.png',width=w,height=h)
+dev.copy(pdf,file.path(fig_path,'exp3fig4bacc.pdf'), width = w, height = h)
+dev.off()
+
+
+# ggplot(tgt_acc_word_sum1, mapping=aes(y=accuracy_mean, x=tgt_word)) + 
+#   geom_point(aes(color=subject)) + 
+#   geom_boxplot(aes(group=as.factor(tgt_word)), alpha = .3, width = .3) + 
+#   xlab("Target Word") + 
+#   ylab("Mean detection accuracy") + 
+#   theme_minimal() +
+#   theme(text = element_text(family = "LM Roman 10", face="bold"), legend.position="none") +
+#   ggtitle("B.") +
+#   ggsave(file.path(fig_path, '/targetdetection_accuracy_word.png'), width = w, height = h)
+
+```
+### c Accuracy per Syllable
+```{r}
+
+accuracy_data6 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("target","subject", "tgt_pos"),na.rm=TRUE) %>%
+  mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+accuracy_data7 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("target"),na.rm=TRUE) %>%
+  mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+
+
+
+ggplot(accuracy_data6, aes(x = target, y = detect_mean)) +
+  geom_point(position = position_jitter(width = .07), aes(color = tgt_pos)) +
+  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE,
+                   fill = "gray") + 
+  geom_point(accuracy_data7, mapping = aes(target, detect_mean), position = position_nudge(x = 0.2, y = 0)) +
+  geom_errorbar(accuracy_data7, mapping=aes(target, y=detect_mean, ymin=detect_mean-se,
+                                            ymax=detect_mean+se),
+                position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
+  scale_color_brewer(palette="Dark2") + 
+  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
+  scale_x_discrete(name = "Target Syllables") + 
+  guides(fill = FALSE) + labs(color = "Ordinal Position") +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggsave('fig4c_rt_acc.png',width=9,height=6)
+dev.copy(pdf,file.path(fig_path,'exp3fig4cacc.pdf'),width=9,height=6)
+dev.off()
+
+```
+
+
+# --------------- Word Recognition
+
+### Summarize Data
+```{r}
+# wordrec_data_sum1 <- wordrec_data %>%
+#   group_by(subject) %>%
+#   summarySE(measurevar = "prop_word_chosen",na.rm=TRUE)
+
+wordrec_data_sum1 <- wordrec_data_orig %>%
+  group_by(subject) %>%
+  summarySE(measurevar = "prop_word_chosen",na.rm=TRUE)
+
+```
+
+### Fig. 5. Plot Data
+```{r}
+ggplot(wordrec_data_orig, aes(1,prop_word_chosen)) +
+  # subjects
+  geom_dotplot(binaxis = 'y', stackdir = 'center', dotsize = .5) +
+  # mean/sd
+  geom_point(data = wordrec_data_sum1, 
+            mapping = aes(x = 1, y = prop_word_chosen_mean), position = position_nudge(.2), 
+            colour = "BLACK", size = 1) +
+  geom_errorbar(data = wordrec_data_sum1, 
+            mapping = aes(x = 1, y = prop_word_chosen_mean, ymin = prop_word_chosen_mean-se, 
+            ymax = prop_word_chosen_mean+se), position = position_nudge(.2), 
+            colour = "BLACK", width = 0.07, size = 1) +
+  # baseline
+  geom_hline(aes(yintercept = 0.5), colour = "red", linetype = "dashed",show.legend = FALSE) +
+  # axes
+  scale_x_discrete(name='',breaks=waiver(),limits=c(0,1)) + # scale x 
+  scale_y_continuous(name='P(word chosen over partword)',limits=c(0,1)) + # scale y
+  # theme
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
+  theme(legend.position="none") + 
+  theme(axis.ticks.x = element_blank(), 
+        axis.text.x = element_blank(),legend.position="none") +
+  ggsave('exp3_fig5_wordrec.png', width = w, height = h)
+dev.copy(pdf,file.path(fig_path,'exp3fig5_wr.pdf'), width = w, height = h)
+dev.off()
+```
+
+#### T-Tests
+```{r}
+# Visualize Data
+hist(wordrec_data$prop_word_chosen)
+shapiro.test(wordrec_data$prop_word_chosen) # Non-significant difference = normality. Yep, normal.
+
+# ttest
+wordrec_ttest <- t.test(wordrec_data_orig$prop_word_chosen, mu = .5,alternative = "greater")
+sd(wordrec_data_orig$prop_word_chosen)
+
+# cohen's d - effect size 
+wr_d <- cohensD(wordrec_data_orig$prop_word_chosen,mu = .5)
+```
+
+#### Post-hoc power analysis
+```{r}
+# power = 1-beta (type II error -- false reject)
+# at p = 0.05
+wr_p_05 <- pwr.t.test(d = wr_d, n = length(wordrec_data_orig$subject), sig.level = 0.05, power = NULL,
+           alternative = "greater",type = "one.sample")
+# at p = .01
+wr_p_01 <- pwr.t.test(d = wr_d, n = length(wordrec_data_orig$subject), sig.level = 0.01, power = NULL,
+                      alternative = "greater",type = "one.sample")
+
+wr_p_50 <- pwr.t.test(d = wr_d, n = 60, sig.level = 0.05, power = NULL,
+           alternative = "greater",type = "one.sample")
+wr_p_15 <- pwr.t.test(d = wr_d, n = 15, sig.level = 0.05, power = NULL,
+           alternative = "greater",type = "one.sample")
+```
+The mean word discrimination was significant (M = 0.62, SD = 0.19; t(29) = 3.38, p = 0.001, CI = 0.56; Cohen's d = 0.62) compared to a baseline mean of 0.5. 
+
+We performed a post-hoc power analysis to further investigate the strength of the effect. At a significance level of 0.05, with a d of 0.62, and N of 30, power was 0.95. The same analysis at a stricter significance level of 0.01 yielded a power of 0.81. An analysis with alpha = 0.05, the same Cohen's d, and double the number of participants (N = 60), power is projected to be 0.99. With one-half the participants, (N = 15), power falls to 0.73. 
+
+
+### Fig. 5b. Wordrec by Word
+```{r}
+wordrec_data_wrd <- wordrec_data_orig %>%
+  gather(key = "word",value = "n_chosen", mipola,nugadi,rokise,zabetu) %>%
+  mutate(word = fct_relevel(word,"nugadi","rokise","mipola","zabetu"))
+
+  
+wordrec_data_sum2 <- wordrec_data_wrd %>%
+  summarySE(measurevar = "n_chosen", groupvars = "word",na.rm=TRUE) %>%
+  mutate(word = fct_relevel(word,"nugadi","rokise","mipola","zabetu"))
+
+
+ggplot(wordrec_data_wrd, mapping = aes(x=word,y=n_chosen, fill = word)) +
+  geom_point(position = position_jitter(width = .07)) +
+  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1.2, trim = FALSE) + 
+  geom_point(wordrec_data_sum2, mapping = aes(x=word, y=n_chosen_mean),
+              position = position_nudge(x = 0.2, y = 0)) +
+  geom_errorbar(wordrec_data_sum2, mapping = aes(x=word,y=n_chosen_mean,ymin = n_chosen_mean-se, 
+                                       ymax = n_chosen_mean+se, group = 1),
+                                position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
+  
+  geom_hline(aes(yintercept = 2), colour = "red", linetype = "dashed",show.legend = FALSE) +
+
+  # axes
+  scale_x_discrete(name="Pseudoword", labels = ) +
+  scale_y_continuous(name="N(word chosen over partword)",limits=c(0,4.5)) + 
+  # theme
+  scale_fill_manual(values=wes_palette("Zissou1")[c(1,3,4,5)]) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
+  theme(legend.position="none") +
+  ggsave('exp3_fig5b_wr_word.png', width = w, height = h)
+dev.copy(pdf,file.path(fig_path,'exp3fig5b_wr.pdf'), width = w, height = h)
+dev.off()
+```
+
+```{r}
+wordrec_data_sum2
+
+p.s <- c(t.test(wordrec_data_orig$mipola, mu = 2)$p.value,
+t.test(wordrec_data_orig$nugadi, mu = 2)$p.value,
+t.test(wordrec_data_orig$rokise, mu = 2)$p.value,
+t.test(wordrec_data_orig$zabetu, mu = 2)$p.value) 
+p.s.B <- p.adjust(p.s,method = "bonferroni")
+
+```
+
+
+###### Analysis 
+```{r}
+wordrec_data_tbl <- data.frame(word=character(),
+                 mean = double(),
+                 sd = double(),
+                 ci_lo = double(),
+                 ci_hi = double(),
+                 t = double(),
+                 df = double(), 
+                 p_val = double(),
+                 stringsAsFactors=FALSE) 
+
+
+## analysis: t-test of each set of responses (to each word) against baseline mean of 2. 
+word_list <- (unique(wordrec_data_wrd$word))
+for (curr_word in word_list) {
+  curr_word_data <- wordrec_data_wrd %>%
+                    filter(word == curr_word)
+  curr_t <- t.test(curr_word_data$n_chosen, mu = 2)
+  wordrec_data_tbl[nrow(wordrec_data_tbl)+1,] <- c(curr_word, 
+                                                   curr_t$estimate, 
+                                                   sd(curr_word_data$prop_word_chosen),  
+                                                   curr_t$conf.int[1], 
+                                                   curr_t$conf.int[2],
+                                                   curr_t$statistic, 
+                                                   curr_t$parameter,
+                                                   curr_t$p.value)
+  }
+wordrec_data_tbl[,2:ncol(wordrec_data_tbl)] <- sapply(wordrec_data_tbl[,2:ncol(wordrec_data_tbl)], as.numeric)
+print(wordrec_data_tbl, digits = 2)
+
+wrd.table <- as.data.frame(wordrec_data_tbl)
+wrd.table <- wrd.table %>% 
+  mutate_if(is.numeric, round, digits = 3)
+   wrd.table %>%
+    kable() %>%
+     kable_styling(bootstrap_options = c("striped", "hover")) %>%
+     save_kable(file = 'wordrec_individ.png', self_contained = T) #width = w, height = h)
+
+
+
+```
+On average, participants were able to discriminate 3 out of 4 words from partwords above chance level (2/4).
+
+
+# ----------------  Corrlations
+
+
+## Corr Median Delta with Wordrec
+```{r}
+# Generate Deltas for Experiment 3 Data... Delta MEDIANS
+rt_data_sum_corr <- rt_data %>% 
+    group_by(subject) %>%
+    mutate(rt_sc.s = scale(rt)) %>% # scale for each subject
+    summarySE(measurevar="rt_sc.s", groupvars=c("subject","tgt_pos"), na.rm=TRUE)
+
+options(scipen=999)
+
+exp_3_data_delta <- rt_data_sum_corr %>% 
+  arrange(subject) %>%
+  group_by(subject) %>%
+  mutate(delta = rt_sc.s_median - lead(rt_sc.s_median,default=first(rt_sc.s_median))) %>%
+  #mutate(delta = rt_median - lead(rt_median,default=first(rt_median))) %>%
+  mutate(delta = round(delta,digits=5))
+
+#This works for 1-2 and 2-3, but for 3-1 it pulls the "1" not from the same group, but from the next item in the array.
+# Add a column where each rt_median is subtracted by value in n+2, and then shift tha column down so this "1-3" item sits at the tgt_pos 3 row...
+exp_3_data_delta <- exp_3_data_delta %>%
+    arrange(subject) %>%
+    group_by(subject) %>%
+    mutate(delta1.3 = rt_sc.s_median - lead(rt_sc.s_median,n=2)) %>%
+    #mutate(delta1.3 = rt_median - lead(rt_median,n=2)) %>%
+    mutate(delta1.3 = data.table::shift(delta1.3,n=2))
+# take those values in tgt_pos 3 rows...
+vals.1.3 <- exp_3_data_delta$delta1.3[which(exp_3_data_delta$tgt_pos==3)]
+# add them to the delta col... 
+exp_3_data_delta$delta[which(exp_3_data_delta$tgt_pos==3)] <- vals.1.3
+# and remove the temp col
+exp_3_data_delta <- exp_3_data_delta %>% dplyr::select(-delta1.3)
+
+exp_3_data_delta <- exp_3_data_delta %>%
+  select(subject:N,delta,rt_sc.s_mean:ci) %>%
+  #select(subject:N,delta,rt_mean:ci) %>%
+  dplyr::rename(., delta_rt = tgt_pos) %>%
+  mutate(
+    delta_rt = case_when(delta_rt==1 ~ "D1-2",
+                         delta_rt==2 ~ "D2-3",
+                         delta_rt==3 ~ "D1-3"))
+exp_3_data_delta$delta_rt <- factor(exp_3_data_delta$delta_rt, levels = c("D1-2", "D2-3", "D1-3"))
+```
+Select only word recognition data from participants in the set: 
+```{r}
+wordrec_data_corr <- wordrec_data_orig[(wordrec_data_orig$subject) %in% unique(exp_3_data_delta$subject),] 
+exp_3_data_delta <- exp_3_data_delta[(exp_3_data_delta$subject) %in% unique(wordrec_data_corr$subject),] 
+length(unique(wordrec_data_corr$subject))
+```
+
+Correlate
+```{r warning=FALSE}
+corr1.2 <- merge(exp_3_data_delta %>% filter(delta_rt == "D1-2") %>%  dplyr::select(delta), wordrec_data_corr %>% dplyr::select(subject, prop_word_chosen))
+
+corr2.3 <- merge(exp_3_data_delta %>% filter(delta_rt == "D2-3") %>%  dplyr::select(delta),wordrec_data_corr %>% dplyr::select(subject, prop_word_chosen))
+
+corr1.3 <- merge(exp_3_data_delta %>% filter(delta_rt == "D1-3") %>%  dplyr::select(delta),wordrec_data_corr %>% dplyr::select(subject, prop_word_chosen))
+```
+
+```{r}
+corrtest.1.2 <- cor.test(corr1.2$delta,corr1.2$prop_word_chosen, method = "pearson")
+corrtest.2.3 <- cor.test(corr2.3$delta,corr2.3$prop_word_chosen, method = "pearson")
+corrtest.1.3 <- cor.test(corr1.3$delta,corr1.3$prop_word_chosen, method = "pearson")
+
+```
+
+### Fig. 6. Delta Medians v. Wordrec
+```{r}
+plot.corr <- data.frame(subject = corr1.2$subject, 
+                        delta1.2 = corr1.2$delta,
+                        delta2.3 = corr2.3$delta,
+                        delta1.3 = corr1.3$delta,
+                        prop.word = corr1.2$prop_word_chosen) %>%
+            gather(key = "d.pos", value = "d.med", delta1.2, delta2.3, delta1.3) %>%
+            mutate(d.pos = factor(d.pos, levels = c("delta1.2", "delta2.3","delta1.3")))
+
+
+ggplot(data = plot.corr, aes(d.med, prop.word, color = d.pos)) + 
+  geom_point(size = 2, alpha = 0.8) +
+  geom_smooth(method = lm, se = FALSE, size = 1.1) +
+  scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
+                     name = NULL, labels = c("1st - 2nd", "2nd - 3rd", "1st - 3rd")) +
+  xlab("proportional change in median RT") + ylab("P(word chosen over partword)") +
+annotate(geom = "text", x = 1.5, y = 0.5, label = paste0("\u03C1 = ",round(corrtest.1.2$estimate, digits = 2),", p = ",round(corrtest.1.2$p.value, digits = 2)), color = "#D44739") + 
+annotate(geom = "text", x = 1.5, y = 0.45, label = paste0("\u03C1 = ",round(corrtest.2.3$estimate, digits = 2),", p = ",round(corrtest.2.3$p.value, digits = 2)), color = "#FAC869") +   
+annotate(geom = "text", x = 1.49, y = 0.4, label = paste0("\u03C1 = ",round(corrtest.1.3$estimate, digits = 2),", p = ",round(corrtest.1.3$p.value, digits = 2)), color = "#3C5E4D") +   
+  geom_vline(xintercept = 0, color = "gray", linetype="dashed") + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"), 
+        legend.title = element_text(""),  legend.position = "top") +
+  ggsave('fig6_corr_sc.png', width = w, height = h)  
+```
+
+
+## Corr Mean Delta with Wordrec
+
+```{r}
+# Generate Deltas for Experiment 3 Data... Delta MEDIANS
+rt_data_sum_corr <- rt_data %>% 
+    group_by(subject) %>%
+    mutate(rt_sc.s = scale(rt)) %>% # scale for each subject
+    summarySE(measurevar="rt_sc.s", groupvars=c("subject","tgt_pos"), na.rm=TRUE)
+
+options(scipen=999)
+
+exp_3_data_delta.mu <- rt_data_sum_corr %>% 
+  arrange(subject) %>%
+  group_by(subject) %>%
+  mutate(delta = rt_sc.s_mean - lead(rt_sc.s_mean,default=first(rt_sc.s_mean))) %>%
+  #mutate(delta = rt_median - lead(rt_median,default=first(rt_median))) %>%
+  mutate(delta = round(delta,digits=5))
+
+#This works for 1-2 and 2-3, but for 3-1 it pulls the "1" not from the same group, but from the next item in the array.
+# Add a column where each rt_median is subtracted by value in n+2, and then shift tha column down so this "1-3" item sits at the tgt_pos 3 row...
+exp_3_data_delta.mu <- exp_3_data_delta.mu %>%
+    arrange(subject) %>%
+    group_by(subject) %>%
+    mutate(delta1.3 = rt_sc.s_mean - lead(rt_sc.s_mean,n=2)) %>%
+    #mutate(delta1.3 = rt_median - lead(rt_median,n=2)) %>%
+    mutate(delta1.3 = data.table::shift(delta1.3,n=2))
+# take those values in tgt_pos 3 rows...
+vals.1.3 <- exp_3_data_delta.mu$delta1.3[which(exp_3_data_delta.mu$tgt_pos==3)]
+# add them to the delta col... 
+exp_3_data_delta.mu$delta[which(exp_3_data_delta.mu$tgt_pos==3)] <- vals.1.3
+# and remove the temp col
+exp_3_data_delta.mu <- exp_3_data_delta.mu %>% dplyr::select(-delta1.3)
+
+exp_3_data_delta.mu <- exp_3_data_delta.mu %>%
+  select(subject:N,delta,rt_sc.s_mean:ci) %>%
+  #select(subject:N,delta,rt_mean:ci) %>%
+  dplyr::rename(., delta_rt = tgt_pos) %>%
+  mutate(
+    delta_rt = case_when(delta_rt==1 ~ "D1-2",
+                         delta_rt==2 ~ "D2-3",
+                         delta_rt==3 ~ "D1-3"))
+exp_3_data_delta.mu$delta_rt <- factor(exp_3_data_delta.mu$delta_rt, levels = c("D1-2", "D2-3", "D1-3"))
+```
+Select only word recognition data from participants in the set: 
+```{r}
+wordrec_data_corr <- wordrec_data_orig[(wordrec_data_orig$subject) %in% unique(exp_3_data_delta.mu$subject),] 
+exp_3_data_delta.mu <- exp_3_data_delta.mu[(exp_3_data_delta.mu$subject) %in% unique(wordrec_data_corr$subject),] 
+```
+
+Correlate
+```{r warning=FALSE}
+corr1.2.mu <- merge(exp_3_data_delta.mu %>% filter(delta_rt == "D1-2") %>%  dplyr::select(delta), wordrec_data_corr %>% dplyr::select(subject, prop_word_chosen))
+
+corr2.3.mu <- merge(exp_3_data_delta.mu %>% filter(delta_rt == "D2-3") %>%  dplyr::select(delta),wordrec_data_corr %>% dplyr::select(subject, prop_word_chosen))
+
+corr1.3.mu <- merge(exp_3_data_delta.mu %>% filter(delta_rt == "D1-3") %>%  dplyr::select(delta),wordrec_data_corr %>% dplyr::select(subject, prop_word_chosen))
+```
+
+```{r}
+corrtest.1.2.mu <- cor.test(corr1.2.mu$delta,corr1.2.mu$prop_word_chosen, method = "pearson")
+corrtest.2.3.mu <- cor.test(corr2.3.mu$delta,corr2.3.mu$prop_word_chosen, method = "pearson")
+corrtest.1.3.mu <- cor.test(corr1.3.mu$delta,corr1.3.mu$prop_word_chosen, method = "pearson")
+
+```
+
+### Fig. 6. Delta Means v. Wordrec
+```{r}
+plot.corr.mu <- data.frame(subject = corr1.2.mu$subject, 
+                        delta1.2 = corr1.2.mu$delta,
+                        delta2.3 = corr2.3.mu$delta,
+                        delta1.3 = corr1.3.mu$delta,
+                        prop.word = corr1.2.mu$prop_word_chosen) %>%
+            gather(key = "d.pos", value = "d.mu", delta1.2, delta2.3, delta1.3) %>%
+            mutate(d.pos = factor(d.pos, levels = c("delta1.2", "delta2.3","delta1.3")))
+
+
+ggplot(data = plot.corr.mu, aes(d.mu, prop.word, color = d.pos)) + 
+  geom_point(size = 2, alpha = 0.8) +
+  geom_smooth(method = lm, se = FALSE, size = 1.1) +
+  scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
+                     name = NULL, labels = c("1st - 2nd", "2nd - 3rd", "1st - 3rd")) +
+  xlab("proportional change in mean RT") + ylab("P(word chosen over partword)") +
+annotate(geom = "text", x = 1.25, y = 0.5, label = paste0("\u03C1 = ",round(corrtest.1.2.mu$estimate, digits = 2),", p = ",round(corrtest.1.2.mu$p.value, digits = 2)), color = "#D44739") + 
+annotate(geom = "text", x = 1.25, y = 0.45, label = paste0("\u03C1 = ",round(corrtest.2.3.mu$estimate, digits = 2),", p = ",round(corrtest.2.3.mu$p.value, digits = 2)), color = "#FAC869") +   
+annotate(geom = "text", x = 1.25, y = 0.4, label = paste0("\u03C1 = ",round(corrtest.1.3.mu$estimate, digits = 2),", p = ",round(corrtest.1.3.mu$p.value, digits = 2)), color = "#3C5E4D") +   
+  geom_vline(xintercept = 0, color = "gray", linetype="dashed") + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"), 
+        legend.title = element_text(""),  legend.position = "top") +
+  ggsave('fig6_corr_sc_mu.png', width = w, height = h)  
+```
+
+
+
+
+
+
+
+
+
+#----------------------------
+ Corr. Delta / Wordrec per Word
+```{r warning=FALSE}
+# wrangle
+rt_data_sum_corr2 <- rt_data %>% # subject x position x word
+  summarySE(measurevar = "rt", groupvars = c("subjID","subject","tgt_pos","tgt_word"),na.rm=TRUE) 
+
+rt_data_sum_corr3 <- rt_data %>%
+  summarySE(measurevar = "rt", groupvars = c("subjID","subject","tgt_pos","tgt_word","block"),na.rm = TRUE)
+
+# calculate delta_means for each participant: 
+    # mean_pos3-mean_pos1 / mean_pos1
+  delta_means2 <-  data.frame(subj_id=character(),
+                            subject=numeric(),
+                            word=numeric(),
+                            delta_mean=numeric(),
+                             stringsAsFactors=FALSE)
+
+    for (subj in unique(rt_data_sum_corr2$subjID)) {
+      subj_subset <- rt_data_sum_corr2[which(rt_data_sum_corr2$subjID == subj),]  
+      for (wrd in unique(subj_subset$tgt_word)) {
+        subj_subsubset <- subj_subset %>% filter(tgt_word == wrd)
+        
+        subj_delta <- (subj_subsubset$rt_mean[3]-subj_subsubset$rt_mean[1])/subj_subsubset$rt_mean[1]
+        
+        delta_means2[nrow(delta_means2) + 1,] = list(subj, subj_subset$subject[1], wrd, subj_delta)
+      }
+    }
+
+# subject h0207 had no hits on 1st pos. tgts for word 2. try with NA and with 0. 
+  # -- no outstanding notes for this subject, likely just missed it = "ro"
+
+  # subject b0207 missing data for 1st pos. tgts for word 2. 
+                        # and for 2nd pos. tgts for word 3. this should be NA.
+  # -- this is the subj for whom we lost 1/2 the data set. 
+delta_means2$delta_mean[is.nan(delta_means2$delta_mean)] <- 0
+
+# ensure same subjects
+wordrec_data_corr2 <- wordrec_data[wordrec_data$subj_id %in% unique(rt_data_sum_corr2$subjID),] # correct! 
+
+# word 1 = nugadi
+# word 2 = rokise
+# word 3 = mipola
+# word 4 = zabetu
+
+wordrec_byword <- wordrec_data_corr2 %>%
+  dplyr::select(subject, subj_id, nugadi, rokise, mipola, zabetu)
+wordrec_byword[,3:6]<- wordrec_byword[,3:6]/4
+wordrec_byword <- gather(wordrec_byword,key = tgt_word, value = prop_word_chosen, nugadi, rokise, mipola, zabetu)
+
+
+wordrec_byword$tgt_word[wordrec_byword$tgt_word=="nugadi"] <- 1
+  wordrec_byword$tgt_word[wordrec_byword$tgt_word=="rokise"] <- 2
+    wordrec_byword$tgt_word[wordrec_byword$tgt_word=="mipola"] <- 3
+      wordrec_byword$tgt_word[wordrec_byword$tgt_word=="zabetu"] <- 4
+
+wordrec_byword <- wordrec_byword[order(wordrec_byword$tgt_word),]
+wordrec_byword <- wordrec_byword[order(wordrec_byword$subject),]
+delta_means2 <- delta_means2[order(delta_means2$word),]
+delta_means2 <- delta_means2[order(delta_means2$subject),]
+
+
+# correlate
+corr_mat2 <- cbind(delta_means2,wordrec_byword) 
+colnames(corr_mat2) <- c("subj_id", "subject", "word", "delta_mean", "subject2", "subj_id2", "tgt_word", "prop_word_chosen")
+corr_mat2 <- corr_mat2 %>%
+  dplyr::select(subj_id,tgt_word,delta_mean,prop_word_chosen)
+
+corr_mat2 <- corr_mat2 %>%
+  mutate(tgt_word = as.factor(tgt_word),
+         subj_id = as.factor(subj_id))
+
+SL_cortest2 <- cor.test(corr_mat2$delta_mean,corr_mat2$prop_word_chosen, method = "pearson")
+
+# paired samples
+SL_d2 <- cohensD(x = corr_mat2$delta_mean, y = corr_mat2$prop_word_chosen, method = "paired")
+```
+
+Fig. A. Plot
+```{r warning=FALSE}
+# Plot
+ggscatter(corr_mat2, x = "delta_mean", y = "prop_word_chosen", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "% change RT (3rd Pos vs. 1st Pos)", ylab = "Prop. correct word recognition") + 
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
+  ggtitle('') +
+  ggsave(file.path(fig_path,'/SL_corr-individ.png'), width = w, height = h)
+```
+
+Fig. B. Grouped across performance levels
+```{r warning=FALSE}
+ggplot() + 
+  geom_point(corr_mat2, mapping = aes(x = prop_word_chosen, y = delta_mean, color = tgt_word),
+             size = 1.5) + 
+  geom_boxplot(corr_mat2, mapping = aes(x = prop_word_chosen, y = delta_mean, group = prop_word_chosen), alpha=0.4, width = .08) +
+  scale_x_discrete(name="Prop. words correct (out of 4)", 
+                    limits=c(0,.25,.5,.75,1)) +
+  scale_y_continuous(name="% change RT (3rd Pos vs. 1st Pos)") +
+  scale_color_manual(values = word_pal, labels = c("nugadi","rokise","mipola","zabetu")) +
+  labs(color="Target Word") + 
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
+  ggtitle('') +
+  ggsave(file.path(fig_path,'/corr_sl_individ.png'), width = w, height = h)
+```
+ Fig. C. Plot Individual delta means/word corrects
+```{r warning=FALSE}
+
+plot_corr <- corr_mat2 # %>%
+            # filter(tgt_word==1)
+
+word_names <- c(`1` = "nugadi",
+                `2` = "rokise",
+                `3` = "mipola",
+                `4` = "zabetu")
+
+w = 10
+h = 7
+ggplot(plot_corr,aes(x=prop_word_chosen,y=delta_mean,color=tgt_word)) +
+  geom_jitter(size=2,width=.01) +
+  geom_smooth(method=loess,se=FALSE,fullrange=TRUE) +
+  scale_x_discrete(name="Prop. words correct (out of 4)", 
+                    limits=c(0,.25,.5,.75,1)) +
+  scale_y_continuous(name="% change RT (3rd Pos vs. 1st Pos)") +
+  facet_grid(.~ tgt_word, labeller = as_labeller(word_names)) +
+  scale_color_manual(values = word_pal, guide = FALSE) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
+  ggtitle('') +
+  ggsave(file.path(fig_path,'/corr_sl_by_word.png'), width = w, height = h)
+
+
+
+
+```
+
+ GLM
+```{r}
+# factorize? 
+corr_mat2 <- corr_mat2 %>%
+  mutate(prop_word_chosen_fct = as.factor(prop_word_chosen))
+
+shapiro.test(corr_mat2$delta_mean)
+# delta means formally dist. 
+# logistic regression: categorical variable y = 
+
+model.1 <- glmer(prop_word_chosen ~ - 1 + delta_mean + (1 | subj_id) , data = corr_mat2, family = binomial)
+summary(model.1)
+
+model.2 <- glmer(prop_word_chosen_fct ~ - 1 + delta_mean*tgt_word + (1 | subj_id) , data = corr_mat2, family = binomial)
+summary(model.2)
+
+anova(model.1, model.2) # --> wow, model 2! 
+
+allEffects(model.2)
+plot(allEffects(model.2))
+
+# model.1 <- glmer(delta_mean ~ - 1 + prop_word_chosen + (1 | subj_id) , data = corr_mat2, family = gaussian)
+# summary(model.1)
+# 
+# model.2 <- glmer(delta_mean ~ - 1 + prop_word_chosen*tgt_word + (1 | subj_id) , data = corr_mat2, family = gaussian)
+# summary(model.2)
+# 
+# anova(model.1, model.2) 
+
+em_sl_corr <- emmeans(model.2, ~ tgt_word | delta_mean)
+
+pairs(em_sl_corr, simple = "each")
+
+slcorr_mc <- contrast((em_sl_corr), interaction = "pairwise") 
+slcorr_mc_regrid <- contrast(regrid(em_sl_corr), interaction = "pairwise")
+
+# save to kabel
+ slcorr.table <- data.frame(Estimate = coef(summary(slcorr_mc)),
+                             "Std Error" = summary(slcorr_mc)$test$sigma,
+                             "t value" = summary(slcorr_mc)$test$tstat,
+                             P = summary(slcorr_mc)$test$pvalues)
+ 
+  #row.names(tgt.table) <- c("Tgt_Pos1","Tgt_Pos2","Tgt_Pos3")
+  #tgt.table$P<- c("<.001","<.001","<.001")
+  tgt.table %>%
+    kable() %>%
+     kable_styling(bootstrap_options = c("striped", "hover")) %>%
+     save_kable(file = 'sl_corr_contrasts.png', self_contained = T) #width = w, height = h)
+
+
+```
+
+
+
+TD Accuracy vs. Wordrec 
+```{r}
+
+wrd_perf_df <- as.data.frame(wordrec_byword$prop_word_chosen)
+acc_word_corr <- cbind(tgt_acc_word_sum1,wrd_perf_df)
+names(acc_word_corr)[9] <- "prop_word_chosen"
+
+ggscatter(acc_word_corr, x = "prop_word_chosen", y = "accuracy_mean", 
+          add = "reg.line", conf.int = TRUE, 
+          cor.coef = TRUE, cor.method = "pearson",
+          xlab = "Prop. words correct", ylab = "Mean Detection Performance") + 
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
+  ggsave(file.path(fig_path,'/tgtdetectaccuracy_prop_word.png'), width = w, height = h)
+
+```
+
+
+Filter Best-Learned Words 
+```{r}
+# # word 1 = nugadi
+# # word 2 = rokise
+# # word 3 = mipola
+# # word 4 = zabetu
+# 
+# wordrec_data_learning <- wordrec_data[,c(2,6:9)]
+# wordrec_data_learning[wordrec_data_learning<3] <- NA
+# wordrec_data_learned <- cbind.data.frame(wordrec_data$subject, wordrec_data_learning) 
+#   colnames(wordrec_data_learned)[1] <- "subject" 
+#   wordrec_data_learned <- wordrec_data_learned %>%
+#     group_by(subject) %>%
+#     dplyr::summarise(n_learned = sum(!is.na(c(mipola,nugadi,rokise,zabetu))),
+#                      # calulate proportion correct based only on the ones they learned
+#                      prop_learned = sum(mipola,nugadi,rokise,zabetu,na.rm = TRUE)/(n_learned*4)) 
+#   wordrec_data_learned <- cbind.data.frame(wordrec_data_learned[1],wordrec_data_learning,wordrec_data_learned[,2:3])
+# 
+# row_count = 1
+# for (subj in wordrec_data_learned$subj_id) {
+#   which_learned <- vector()
+#   temp <- wordrec_data_learned %>%
+#     filter(subj_id == subj) 
+#     if (!is.na(temp$mipola)) {
+#       which_learned <- cbind(which_learned,3) 
+#     } 
+#     if (!is.na(temp$nugadi)) {
+#       which_learned <- cbind(which_learned,1) 
+#     }
+#     if (!is.na(temp$rokise)) {
+#       which_learned <- cbind(which_learned,2)  
+#     }
+#     if (!is.na(temp$zabetu)) {
+#       which_learned <- cbind(which_learned,4) }
+#   temp$learned <- list(as.list(which_learned))
+#   
+#   if (row_count == 1) {
+#     wordrec_data_learnt <- temp
+#   } else {
+#     wordrec_data_learnt <- rbind(wordrec_data_learnt,temp)
+#   }
+#   row_count = row_count + 1
+# }
+# # wordrec_data_learned <- wordrec_data %>%
+# #   filter_at(vars(mipola,nugadi,rokise,zabetu), any_vars(. > 2)) 
+# # 
+# # # number of participants that learned at least one word above chance
+# # N_learned_words <- length(unique(wordrec_data_learned$subject))
+
+```
+
+```{r}
+# # For each subject, filter out their data based on the list of numbers in the $learned column, 
+# # Remove subjects who have NULL in that column
+# subjects_none_learned <- wordrec_data_learnt$subj_id[which(wordrec_data_learnt$n_learned==0)]
+# # all the others
+# wordrec_data_learnt2 <- wordrec_data_learnt[which(wordrec_data_learnt$n_learned>0),]
+# 
+#   # how to check to see if an empty list is empty... 
+#   # length(unlist(wordrec_data_learnt$learned[19])) # because in a df, an empty list still gives a length of 1, but if you unlist the data, it will give a length of 0 
+# 
+# # filter rt_data based on participants who had at least 1 word above chance
+# rt_data_learned <- rt_data
+# for (subj in subjects_none_learned) {
+#   rt_data_learned <- rt_data_learned[!(rt_data_learned$subjID==subj),] }
+# 
+# # filter the rest based on the words they learned
+# row_count = 1
+# for (subj in unique(rt_data_learned$subjID)) {
+#   # find the words that this participant got right
+#   words_to_keep <- wordrec_data_learnt2 %>%
+#     filter(subj_id == subj) 
+#   words_to_keep <- unlist(words_to_keep$learned)
+#   # filter the rt_data by that word
+#   temp <- rt_data_learned %>%
+#     filter(subjID == subj) %>%
+#     filter(tgt_word %in% words_to_keep)
+#   # build new 
+#   if (row_count == 1) {
+#     rt_data_learnt <- temp
+#   } else {
+#     rt_data_learnt <- rbind(rt_data_learnt,temp)
+#   }
+#   row_count = row_count + 1
+# }
+
+```
+
+Corr Learned Words Delta Means
+```{r}
+# rt_data_learnt
+# wordrec_data_learnt2
+# 
+# # wrangle -- need to reduce RTs down to means for each position
+# rt_data_learnt_sum_corr <- rt_data_learnt %>% # subject x position
+#   summarySE(measurevar = "rt", groupvars = c("subjID","subject","tgt_pos"),na.rm=TRUE) 
+# 
+# # calculate delta_means for each participant: 
+#     # mean_pos3-mean_pos1 / mean_pos1
+#   delta_means_learnt <-  data.frame(subj_id=character(), subject=numeric(), delta_mean=numeric(),
+#                            stringsAsFactors=FALSE)
+#   for (subj in unique(rt_data_learnt_sum_corr$subjID)) {
+#     subj_subset <- rt_data_learnt_sum_corr[which(rt_data_learnt_sum_corr$subjID == subj),]  
+#     subj_delta <- (subj_subset$rt_mean[3]-subj_subset$rt_mean[1])/subj_subset$rt_mean[1]
+#     delta_means_learnt[nrow(delta_means_learnt) + 1,] = list(subj, subj_subset$subject[1], subj_delta)
+#   }
+#   
+# # ensure same subjects
+# wordrec_data_learnt2_corr <- wordrec_data_learnt2[wordrec_data_learnt2$subj_id %in% unique(rt_data_learnt_sum_corr$subjID),] # correct! 
+#     
+# # correlate
+# corr_mat_learnt <- cbind(delta_means_learnt, wordrec_data_learnt2_corr$prop_learned)
+# colnames(corr_mat_learnt) <- c("subj_id", "subject",  "delta_mean", "prop_learned")
+# 
+# SL_cortest_learnt <- cor.test(corr_mat_learnt$delta_mean,
+#                                corr_mat_learnt$prop_learned, method = "pearson")
+# 
+# # paired samples
+# SL_d_learnt <- cohensD(x = corr_mat_learnt$delta_mean, 
+#                         y = corr_mat_learnt$prop_learned, method = "paired")
+# 
+# # Plot
+# ggscatter(corr_mat_learnt, x = "delta_mean", y = "prop_learned", 
+#           add = "reg.line", conf.int = TRUE, 
+#           cor.coef = TRUE, cor.method = "pearson",
+#           xlab = "% change RT (3rd Pos vs. 1st Pos)", ylab = "Prop. correct word recognition") + 
+#   #annotate("text", x = 0.29, y = 0.63, label = paste("N =",toString(N))) +
+#   ggtitle('Online & Offline SL Performance for words learned (3 or 4 / 4)') +
+#   ggsave(file.path(fig_path,'/SL_corr_learnedbest.png'), width = w, height = h)
+# 
+# # Analyze  
+# fit <- lm(prop_learned ~ delta_mean, data = corr_mat_learnt)
+#   summary(fit)
+#   plot(fit)
+
+
+```
+

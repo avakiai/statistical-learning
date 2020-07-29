@@ -1,0 +1,174 @@
+Scenario - auditory_threshold_test
+Logfile written - 03/09/2020 10:16:18
+
+Subject	Trial	Event Type	Code	Time	TTime	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur	Stim Type	Pair Index
+
+b0704	1	Response	1	271908	271742	3
+b0704	3	Sound	250 Hz_Both_0.6	282396	32	2			0		other	0
+b0704	4	Sound	250 Hz_Both_0.55	292557	30	2			0		other	0
+b0704	5	Sound	250 Hz_Both_0.5	302711	31	2			0		other	0
+b0704	6	Sound	250 Hz_Both_0.45	312867	32	1			0		other	0
+b0704	7	Sound	250 Hz_Both_0.4	323021	31	2			0		other	0
+b0704	8	Sound	250 Hz_Both_0.35	333185	35	2			0		other	0
+b0704	9	Sound	250 Hz_Both_0.3	343332	32	1			0		other	0
+b0704	9	Response	1	349182	5882	7
+b0704	10	Sound	250 Hz-Both-0.25	353661	32	2			0		other	0
+b0704	11	Sound	250 Hz_Both_0.25	363981	31	2			0		other	0
+b0704	12	Sound	250 Hz_Both_0.3	374135	32	2			0		other	0
+b0704	13	Sound	250 Hz_Both_0.35	384294	31	2			0		other	0
+b0704	14	Sound	250 Hz_Both_0.4	394446	31	1			0		other	0
+b0704	14	Response	1	397658	3243	10
+b0704	15	Sound	250 Hz-Both-0.45	404772	32	1			0		other	0
+b0704	16	Sound	250 Hz_Both_0.45	415097	31	1			0		other	0
+b0704	17	Sound	250 Hz_Both_0.43	425250	30	2			0		other	0
+b0704	18	Sound	250 Hz_Both_0.41	435408	31	2			0		other	0
+b0704	19	Sound	250 Hz_Both_0.39	445564	31	2			0		other	0
+b0704	20	Sound	250 Hz_Both_0.37	455714	31	2			0		other	0
+b0704	21	Sound	250 Hz_Both_0.35	465874	31	2			0		other	0
+b0704	22	Sound	250 Hz_Both_0.33	476027	32	2			0		other	0
+b0704	22	Response	1	478383	2388	3
+b0704	23	Sound	250 Hz-Both-0.31	486355	31	2			0		other	0
+b0704	24	Sound	250 Hz_Both_0.31	496677	31	1			0		other	0
+b0704	25	Sound	250 Hz_Both_0.33	506834	31	2			0		other	0
+b0704	26	Sound	250 Hz_Both_0.35	516990	32	1			0		other	0
+b0704	27	Sound	250 Hz_Both_0.37	527140	31	2			0		other	0
+b0704	28	Sound	250 Hz_Both_0.39	537298	32	1			0		other	0
+b0704	28	Response	1	541103	3837	2
+b0704	29	Sound	250 Hz-Both-0.41	547621	33	1			0		other	0
+b0704	30	Sound	250 Hz_Both_0.41	557942	31	2			0		other	0
+b0704	31	Sound	250 Hz_Both_0.39	568097	32	2			0		other	0
+b0704	32	Sound	250 Hz_Both_0.37	578258	31	2			0		other	0
+b0704	33	Sound	250 Hz_Both_0.35	588410	32	2			0		other	0
+b0704	34	Sound	250 Hz_Both_0.33	598568	31	2			0		other	0
+b0704	35	Sound	250 Hz_Both_0.31	608728	31	2			0		other	0
+b0704	35	Response	1	610537	1840	6
+b0704	36	Sound	250 Hz-Both-0.29	619046	32	2			0		other	0
+b0704	37	Sound	250 Hz_Both_0.29	629373	31	2			0		other	0
+b0704	38	Sound	250 Hz_Both_0.31	639526	32	1			0		other	0
+b0704	39	Sound	250 Hz_Both_0.33	649679	31	2			0		other	0
+b0704	40	Sound	250 Hz_Both_0.35	659838	32	1			0		other	0
+b0704	40	Response	1	665973	6167	9
+b0704	42	Sound	500 Hz_Both_0.6	680483	32	2			0		other	0
+b0704	43	Sound	500 Hz_Both_0.55	690639	32	1			0		other	0
+b0704	44	Sound	500 Hz_Both_0.5	700792	31	2			0		other	0
+b0704	45	Sound	500 Hz_Both_0.45	710952	31	1			0		other	0
+b0704	46	Sound	500 Hz_Both_0.4	721104	32	2			0		other	0
+b0704	47	Sound	500 Hz_Both_0.35	731265	31	1			0		other	0
+b0704	48	Sound	500 Hz_Both_0.3	741419	31	2			0		other	0
+b0704	49	Sound	500 Hz_Both_0.25	751577	32	1			0		other	0
+b0704	50	Sound	500 Hz_Both_0.2	761731	33	1			0		other	0
+b0704	51	Sound	500 Hz_Both_0.15	771886	31	1			0		other	0
+b0704	51	Response	1	774856	3001	4
+b0704	52	Sound	500 Hz-Both-0.1	782214	32	1			0		other	0
+b0704	53	Sound	500 Hz_Both_0.1	792530	32	2			0		other	0
+b0704	54	Sound	500 Hz_Both_0.15	802686	31	2			0		other	0
+b0704	55	Sound	500 Hz_Both_0.2	812843	31	2			0		other	0
+b0704	55	Response	1	821176	8364	3
+b0704	56	Sound	500 Hz-Both-0.25	823166	31	2			0		other	0
+b0704	57	Sound	500 Hz_Both_0.25	833488	32	2			0		other	0
+b0704	58	Sound	500 Hz_Both_0.23	843649	32	1			0		other	0
+b0704	59	Sound	500 Hz_Both_0.21	853802	31	2			0		other	0
+b0704	60	Sound	500 Hz_Both_0.19	863954	31	2			0		other	0
+b0704	61	Sound	500 Hz_Both_0.17	874113	32	2			0		other	0
+b0704	62	Sound	500 Hz_Both_0.15	884273	31	2			0		other	0
+b0704	62	Response	1	893328	9086	10
+b0704	63	Sound	500 Hz-Both-0.13	894591	32	1			0		other	0
+b0704	64	Sound	500 Hz_Both_0.13	904918	31	2			0		other	0
+b0704	65	Sound	500 Hz_Both_0.15	915075	32	1			0		other	0
+b0704	66	Sound	500 Hz_Both_0.17	925225	31	2			0		other	0
+b0704	67	Sound	500 Hz_Both_0.19	935384	31	2			0		other	0
+b0704	68	Sound	500 Hz_Both_0.21	945541	32	1			0		other	0
+b0704	68	Response	1	949093	3584	4
+b0704	69	Sound	500 Hz-Both-0.23	955859	32	1			0		other	0
+b0704	70	Sound	500 Hz_Both_0.23	966181	31	2			0		other	0
+b0704	71	Sound	500 Hz_Both_0.21	976346	36	2			0		other	0
+b0704	72	Sound	500 Hz_Both_0.19	986501	32	1			0		other	0
+b0704	73	Sound	500 Hz_Both_0.17	996652	31	2			0		other	0
+b0704	74	Sound	500 Hz_Both_0.15	1006811	32	2			0		other	0
+b0704	74	Response	1	1009328	2549	8
+b0704	75	Sound	500 Hz-Both-0.13	1017132	32	2			0		other	0
+b0704	76	Sound	500 Hz_Both_0.13	1027288	31	1			0		other	0
+b0704	77	Sound	500 Hz_Both_0.15	1037443	32	2			0		other	0
+b0704	78	Sound	500 Hz_Both_0.17	1047597	31	1			0		other	0
+b0704	79	Sound	500 Hz_Both_0.19	1057754	31	2			0		other	0
+b0704	79	Response	1	1065406	7683	8
+
+
+Event Type	Code	Type	Response	RT	RT Uncertainty	Time	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur
+
+Sound	250 Hz_Both_0.6	other				282396	2			0
+Sound	250 Hz_Both_0.55	other				292557	2			0
+Sound	250 Hz_Both_0.5	other				302711	2			0
+Sound	250 Hz_Both_0.45	other				312867	1			0
+Sound	250 Hz_Both_0.4	other				323021	2			0
+Sound	250 Hz_Both_0.35	other				333185	2			0
+Sound	250 Hz_Both_0.3	other				343332	1			0
+Sound	250 Hz-Both-0.25	other				353661	2			0
+Sound	250 Hz_Both_0.25	other				363981	2			0
+Sound	250 Hz_Both_0.3	other				374135	2			0
+Sound	250 Hz_Both_0.35	other				384294	2			0
+Sound	250 Hz_Both_0.4	other				394446	1			0
+Sound	250 Hz-Both-0.45	other				404772	1			0
+Sound	250 Hz_Both_0.45	other				415097	1			0
+Sound	250 Hz_Both_0.43	other				425250	2			0
+Sound	250 Hz_Both_0.41	other				435408	2			0
+Sound	250 Hz_Both_0.39	other				445564	2			0
+Sound	250 Hz_Both_0.37	other				455714	2			0
+Sound	250 Hz_Both_0.35	other				465874	2			0
+Sound	250 Hz_Both_0.33	other				476027	2			0
+Sound	250 Hz-Both-0.31	other				486355	2			0
+Sound	250 Hz_Both_0.31	other				496677	1			0
+Sound	250 Hz_Both_0.33	other				506834	2			0
+Sound	250 Hz_Both_0.35	other				516990	1			0
+Sound	250 Hz_Both_0.37	other				527140	2			0
+Sound	250 Hz_Both_0.39	other				537298	1			0
+Sound	250 Hz-Both-0.41	other				547621	1			0
+Sound	250 Hz_Both_0.41	other				557942	2			0
+Sound	250 Hz_Both_0.39	other				568097	2			0
+Sound	250 Hz_Both_0.37	other				578258	2			0
+Sound	250 Hz_Both_0.35	other				588410	2			0
+Sound	250 Hz_Both_0.33	other				598568	2			0
+Sound	250 Hz_Both_0.31	other				608728	2			0
+Sound	250 Hz-Both-0.29	other				619046	2			0
+Sound	250 Hz_Both_0.29	other				629373	2			0
+Sound	250 Hz_Both_0.31	other				639526	1			0
+Sound	250 Hz_Both_0.33	other				649679	2			0
+Sound	250 Hz_Both_0.35	other				659838	1			0
+Sound	500 Hz_Both_0.6	other				680483	2			0
+Sound	500 Hz_Both_0.55	other				690639	1			0
+Sound	500 Hz_Both_0.5	other				700792	2			0
+Sound	500 Hz_Both_0.45	other				710952	1			0
+Sound	500 Hz_Both_0.4	other				721104	2			0
+Sound	500 Hz_Both_0.35	other				731265	1			0
+Sound	500 Hz_Both_0.3	other				741419	2			0
+Sound	500 Hz_Both_0.25	other				751577	1			0
+Sound	500 Hz_Both_0.2	other				761731	1			0
+Sound	500 Hz_Both_0.15	other				771886	1			0
+Sound	500 Hz-Both-0.1	other				782214	1			0
+Sound	500 Hz_Both_0.1	other				792530	2			0
+Sound	500 Hz_Both_0.15	other				802686	2			0
+Sound	500 Hz_Both_0.2	other				812843	2			0
+Sound	500 Hz-Both-0.25	other				823166	2			0
+Sound	500 Hz_Both_0.25	other				833488	2			0
+Sound	500 Hz_Both_0.23	other				843649	1			0
+Sound	500 Hz_Both_0.21	other				853802	2			0
+Sound	500 Hz_Both_0.19	other				863954	2			0
+Sound	500 Hz_Both_0.17	other				874113	2			0
+Sound	500 Hz_Both_0.15	other				884273	2			0
+Sound	500 Hz-Both-0.13	other				894591	1			0
+Sound	500 Hz_Both_0.13	other				904918	2			0
+Sound	500 Hz_Both_0.15	other				915075	1			0
+Sound	500 Hz_Both_0.17	other				925225	2			0
+Sound	500 Hz_Both_0.19	other				935384	2			0
+Sound	500 Hz_Both_0.21	other				945541	1			0
+Sound	500 Hz-Both-0.23	other				955859	1			0
+Sound	500 Hz_Both_0.23	other				966181	2			0
+Sound	500 Hz_Both_0.21	other				976346	2			0
+Sound	500 Hz_Both_0.19	other				986501	1			0
+Sound	500 Hz_Both_0.17	other				996652	2			0
+Sound	500 Hz_Both_0.15	other				1006811	2			0
+Sound	500 Hz-Both-0.13	other				1017132	2			0
+Sound	500 Hz_Both_0.13	other				1027288	1			0
+Sound	500 Hz_Both_0.15	other				1037443	2			0
+Sound	500 Hz_Both_0.17	other				1047597	1			0
+Sound	500 Hz_Both_0.19	other				1057754	2			0

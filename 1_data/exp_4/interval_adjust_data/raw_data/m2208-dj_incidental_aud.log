@@ -1,0 +1,323 @@
+Scenario - DJ_incidental
+Logfile written - 03/13/2020 09:48:34
+
+Subject	Trial	Event Type	Code	Time	TTime	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur	Stim Type	Pair Index
+
+m2208	1	Picture	Instructions. Volume set to 0.79* system volume.	166	0	1	482331	2	0	next	other	0
+m2208	1	Response	1	482198	482032	1
+m2208	2	Sound	Trial #1 incidental_rand_seq_A_10.txt	492497	10000	1			10000		other	0
+m2208	2	Response	1	501238	18741	1
+m2208	2	Sound	Target: po	517497	35000	1			35000		other	0
+m2208	3	Picture	fixation	519958	0	1	408192	2	0	next	other	0
+m2208	4	Sound	ga * 0.31	520311	350	1			350		other	0
+m2208	5	Sound	di * 0.22	523040	350	1			350		other	0
+m2208	5	Response	1	523477	787	1
+m2208	6	Sound	ro * 0.16	525740	350	1			350		other	0
+m2208	7	Sound	mi * 0.08	528440	350	1			350		other	0
+m2208	8	Sound	be * 0.03	531141	350	1			350		other	0
+m2208	9	Sound	se	533940	350	1			350		other	0
+m2208	10	Sound	ki	536640	350	1			350		other	0
+m2208	11	Sound	la	539342	350	1			350		other	0
+m2208	12	Sound	tu	542040	350	1			350		other	0
+m2208	13	Sound	za	544741	350	1			350		other	0
+m2208	14	Sound	po	547441	350	1			350		miss	0
+m2208	15	Sound	nu	550141	350	1			350		miss	0
+m2208	16	Sound	za	552841	350	1			350		miss	0
+m2208	17	Sound	nu	555541	350	1			350		miss	0
+m2208	18	Sound	mi	558241	350	1			350		miss	0
+m2208	19	Sound	di	560941	350	1			350		miss	0
+m2208	20	Sound	ro	563643	350	1			350		miss	0
+m2208	21	Sound	po	566341	350	1			350		hit	26
+m2208	21	Response	1	566916	925	1
+m2208	22	Sound	be	569043	350	1			350		miss	0
+m2208	23	Sound	ga	571843	350	1			350		miss	0
+m2208	24	Sound	se	574542	350	1			350		miss	0
+m2208	25	Sound	tu	577242	350	1			350		miss	0
+m2208	26	Sound	ki	579942	350	1			350		miss	0
+m2208	27	Sound	la	582642	350	1			350		miss	0
+m2208	28	Sound	di	585342	350	1			350		miss	0
+m2208	29	Sound	ga	588042	350	1			350		miss	0
+m2208	30	Sound	za	590743	350	1			350		hit	36
+m2208	30	Response	1	591636	1243	1
+m2208	31	Sound	be	593443	350	1			350		miss	0
+m2208	32	Sound	po	596243	350	2			350		miss	0
+m2208	33	Sound	nu	598943	350	1			350		miss	0
+m2208	34	Sound	mi	601643	350	1			350		miss	0
+m2208	35	Sound	se	604343	350	1			350		miss	0
+m2208	36	Sound	tu	607043	350	1			350		miss	0
+m2208	37	Sound	ki	609743	350	1			350		miss	0
+m2208	38	Sound	la	612444	350	1			350		miss	0
+m2208	39	Sound	ro	615144	350	1			350		miss	0
+m2208	40	Sound	za	617844	350	1			350		miss	0
+m2208	41	Sound	tu	620544	350	1			350		miss	0
+m2208	42	Sound	ki	623244	350	1			350		miss	0
+m2208	43	Sound	mi	625944	350	1			350		miss	0
+m2208	44	Sound	ro	628644	350	1			350		miss	0
+m2208	45	Sound	be	631344	350	1			350		miss	0
+m2208	46	Sound	po	634144	350	1			350		miss	0
+m2208	47	Sound	ga	636844	350	1			350		miss	0
+m2208	48	Sound	nu	639546	350	1			350		miss	0
+m2208	49	Sound	di	642245	350	1			350		miss	0
+m2208	50	Sound	la	644944	350	1			350		miss	0
+m2208	51	Sound	se	647645	350	1			350		miss	0
+m2208	52	Sound	nu	650345	350	1			350		miss	0
+m2208	53	Sound	di	653045	350	1			350		miss	0
+m2208	54	Sound	za	655745	350	1			350		miss	0
+m2208	55	Sound	mi	658446	350	1			350		miss	0
+m2208	56	Sound	po	661146	350	1			350		miss	0
+m2208	57	Sound	la	663846	350	1			350		miss	0
+m2208	58	Sound	tu	666546	350	1			350		miss	0
+m2208	59	Sound	se	669246	350	1			350		miss	0
+m2208	60	Sound	be	671946	350	1			350		miss	0
+m2208	61	Sound	ro	674746	350	1			350		miss	0
+m2208	62	Sound	ki	677446	350	1			350		miss	0
+m2208	63	Sound	ga	680146	350	1			350		miss	0
+m2208	64	Sound	tu	682847	350	1			350		miss	0
+m2208	65	Sound	ki	685546	350	1			350		miss	0
+m2208	66	Sound	ga	688247	350	1			350		miss	0
+m2208	67	Sound	nu	690947	350	1			350		miss	0
+m2208	68	Sound	mi	693647	350	1			350		miss	0
+m2208	69	Sound	ro	696347	350	1			350		miss	0
+m2208	70	Sound	la	699047	350	1			350		miss	0
+m2208	71	Sound	di	701748	350	1			350		miss	0
+m2208	72	Sound	po	704448	350	1			350		miss	0
+m2208	73	Sound	be	707148	350	1			350		miss	0
+m2208	74	Sound	se	709948	350	1			350		miss	0
+m2208	75	Sound	za	712648	350	1			350		miss	0
+m2208	76	Sound	la	715348	350	1			350		miss	0
+m2208	77	Sound	po	718048	350	1			350		miss	0
+m2208	78	Sound	za	720748	350	1			350		miss	0
+m2208	79	Sound	nu	723448	350	1			350		miss	0
+m2208	80	Sound	tu	726149	350	1			350		miss	0
+m2208	81	Sound	be	728849	350	1			350		miss	0
+m2208	82	Sound	di	731649	350	1			350		miss	0
+m2208	83	Sound	ga	734349	350	1			350		miss	0
+m2208	84	Sound	ro	737049	350	1			350		miss	0
+m2208	85	Sound	mi	739749	350	1			350		miss	0
+m2208	86	Sound	ki	742449	350	1			350		miss	0
+m2208	87	Sound	se	745149	350	1			350		miss	0
+m2208	88	Sound	la	747849	350	1			350		miss	0
+m2208	89	Sound	po	750549	350	1			350		miss	0
+m2208	90	Sound	se	753250	350	1			350		miss	0
+m2208	91	Sound	be	755950	350	1			350		miss	0
+m2208	92	Sound	ki	758750	350	1			350		miss	0
+m2208	93	Sound	za	761450	350	1			350		miss	0
+m2208	94	Sound	tu	764150	350	1			350		miss	0
+m2208	95	Sound	nu	766850	350	1			350		miss	0
+m2208	96	Sound	mi	769550	350	1			350		miss	0
+m2208	97	Sound	ga	772250	350	1			350		miss	0
+m2208	98	Sound	di	774951	350	1			350		miss	0
+m2208	99	Sound	ro	777651	350	1			350		miss	0
+m2208	100	Sound	po	780351	350	1			350		miss	0
+m2208	101	Sound	mi	783051	350	1			350		miss	0
+m2208	102	Sound	di	785751	350	1			350		miss	0
+m2208	103	Sound	za	788451	350	1			350		miss	0
+m2208	104	Sound	tu	791151	350	1			350		miss	0
+m2208	105	Sound	nu	793851	350	1			350		miss	0
+m2208	106	Sound	ki	796551	350	1			350		miss	0
+m2208	107	Sound	ro	799252	350	1			350		miss	0
+m2208	108	Sound	be	801952	350	1			350		miss	0
+m2208	109	Sound	se	804752	350	1			350		miss	0
+m2208	110	Sound	ga	807452	350	1			350		miss	0
+m2208	111	Sound	la	810152	350	1			350		miss	0
+m2208	112	Sound	tu	812852	350	1			350		miss	0
+m2208	113	Sound	di	815552	350	1			350		miss	0
+m2208	114	Sound	nu	818252	350	1			350		miss	0
+m2208	115	Sound	ga	820952	350	1			350		miss	0
+m2208	116	Sound	po	823653	350	1			350		miss	0
+m2208	117	Sound	mi	826353	350	1			350		miss	0
+m2208	118	Sound	la	829053	350	1			350		miss	0
+m2208	119	Sound	ki	831753	350	1			350		miss	0
+m2208	120	Sound	za	834453	350	1			350		miss	0
+m2208	121	Sound	ro	837153	350	1			350		miss	0
+m2208	122	Sound	se	839853	350	1			350		miss	0
+m2208	123	Sound	be	842554	350	1			350		miss	0
+m2208	124	Sound	se	845354	350	1			350		miss	0
+m2208	125	Sound	po	848054	350	1			350		miss	0
+m2208	126	Sound	be	850754	350	1			350		miss	0
+m2208	127	Sound	mi	853554	350	1			350		miss	0
+m2208	128	Sound	la	856254	350	1			350		miss	0
+m2208	129	Sound	di	858954	350	1			350		miss	0
+m2208	130	Sound	nu	861654	350	1			350		miss	0
+m2208	131	Sound	tu	864355	350	1			350		miss	0
+m2208	132	Sound	ki	867055	350	1			350		miss	0
+m2208	133	Sound	ga	869754	350	1			350		miss	0
+m2208	134	Sound	za	872455	350	1			350		miss	0
+m2208	135	Sound	ro	875155	350	1			350		miss	0
+m2208	136	Sound	la	877855	350	1			350		miss	0
+m2208	137	Sound	be	880555	350	1			350		miss	0
+m2208	138	Sound	za	883355	350	1			350		miss	0
+m2208	139	Sound	po	886055	350	1			350		miss	0
+m2208	140	Sound	tu	888756	350	1			350		miss	0
+m2208	141	Sound	ga	891455	350	1			350		miss	0
+m2208	142	Sound	se	894156	350	1			350		miss	0
+m2208	143	Sound	ki	896856	350	1			350		miss	0
+m2208	144	Sound	mi	899556	350	1			350		miss	0
+m2208	145	Sound	ro	902256	350	1			350		miss	0
+m2208	146	Sound	nu	904956	350	1			350		miss	0
+m2208	147	Sound	di	907656	350	1			350		miss	0
+m2208	148	Sound	po	910356	350	1			350		miss	0
+m2208	149	Sound	la	913056	350	1			350		miss	0
+m2208	150	Sound	se	915757	350	1			350		miss	0
+m2208	151	Sound	nu	918457	350	1			350		miss	0
+m2208	152	Sound	mi	921157	350	1			350		miss	0
+m2208	153	Sound	be	923857	350	1			350		miss	0
+m2208	153	Quit		924430	923
+
+
+Event Type	Code	Type	Response	RT	RT Uncertainty	Time	Uncertainty	Duration	Uncertainty	ReqTime	ReqDur
+
+Picture	Instructions. Volume set to 0.79* system volume.	other				166	1	482331	2	0	next
+Sound	Trial #1 incidental_rand_seq_A_10.txt	other				492497	1			10000
+Sound	Target: po	other				517497	1			35000
+Picture	fixation	other				519958	1	408192	2	0	next
+Sound	ga * 0.31	other				520311	1			350
+Sound	di * 0.22	other				523040	1			350
+Sound	ro * 0.16	other				525740	1			350
+Sound	mi * 0.08	other				528440	1			350
+Sound	be * 0.03	other				531141	1			350
+Sound	se	other				533940	1			350
+Sound	ki	other				536640	1			350
+Sound	la	other				539342	1			350
+Sound	tu	other				542040	1			350
+Sound	za	other				544741	1			350
+Sound	po	miss				547441	1			350
+Sound	nu	miss				550141	1			350
+Sound	za	miss				552841	1			350
+Sound	nu	miss				555541	1			350
+Sound	mi	miss				558241	1			350
+Sound	di	miss				560941	1			350
+Sound	ro	miss				563643	1			350
+Sound	po	hit	1	575	2	566341	1			350
+Sound	be	miss				569043	1			350
+Sound	ga	miss				571843	1			350
+Sound	se	miss				574542	1			350
+Sound	tu	miss				577242	1			350
+Sound	ki	miss				579942	1			350
+Sound	la	miss				582642	1			350
+Sound	di	miss				585342	1			350
+Sound	ga	miss				588042	1			350
+Sound	za	hit	1	893	2	590743	1			350
+Sound	be	miss				593443	1			350
+Sound	po	miss				596243	2			350
+Sound	nu	miss				598943	1			350
+Sound	mi	miss				601643	1			350
+Sound	se	miss				604343	1			350
+Sound	tu	miss				607043	1			350
+Sound	ki	miss				609743	1			350
+Sound	la	miss				612444	1			350
+Sound	ro	miss				615144	1			350
+Sound	za	miss				617844	1			350
+Sound	tu	miss				620544	1			350
+Sound	ki	miss				623244	1			350
+Sound	mi	miss				625944	1			350
+Sound	ro	miss				628644	1			350
+Sound	be	miss				631344	1			350
+Sound	po	miss				634144	1			350
+Sound	ga	miss				636844	1			350
+Sound	nu	miss				639546	1			350
+Sound	di	miss				642245	1			350
+Sound	la	miss				644944	1			350
+Sound	se	miss				647645	1			350
+Sound	nu	miss				650345	1			350
+Sound	di	miss				653045	1			350
+Sound	za	miss				655745	1			350
+Sound	mi	miss				658446	1			350
+Sound	po	miss				661146	1			350
+Sound	la	miss				663846	1			350
+Sound	tu	miss				666546	1			350
+Sound	se	miss				669246	1			350
+Sound	be	miss				671946	1			350
+Sound	ro	miss				674746	1			350
+Sound	ki	miss				677446	1			350
+Sound	ga	miss				680146	1			350
+Sound	tu	miss				682847	1			350
+Sound	ki	miss				685546	1			350
+Sound	ga	miss				688247	1			350
+Sound	nu	miss				690947	1			350
+Sound	mi	miss				693647	1			350
+Sound	ro	miss				696347	1			350
+Sound	la	miss				699047	1			350
+Sound	di	miss				701748	1			350
+Sound	po	miss				704448	1			350
+Sound	be	miss				707148	1			350
+Sound	se	miss				709948	1			350
+Sound	za	miss				712648	1			350
+Sound	la	miss				715348	1			350
+Sound	po	miss				718048	1			350
+Sound	za	miss				720748	1			350
+Sound	nu	miss				723448	1			350
+Sound	tu	miss				726149	1			350
+Sound	be	miss				728849	1			350
+Sound	di	miss				731649	1			350
+Sound	ga	miss				734349	1			350
+Sound	ro	miss				737049	1			350
+Sound	mi	miss				739749	1			350
+Sound	ki	miss				742449	1			350
+Sound	se	miss				745149	1			350
+Sound	la	miss				747849	1			350
+Sound	po	miss				750549	1			350
+Sound	se	miss				753250	1			350
+Sound	be	miss				755950	1			350
+Sound	ki	miss				758750	1			350
+Sound	za	miss				761450	1			350
+Sound	tu	miss				764150	1			350
+Sound	nu	miss				766850	1			350
+Sound	mi	miss				769550	1			350
+Sound	ga	miss				772250	1			350
+Sound	di	miss				774951	1			350
+Sound	ro	miss				777651	1			350
+Sound	po	miss				780351	1			350
+Sound	mi	miss				783051	1			350
+Sound	di	miss				785751	1			350
+Sound	za	miss				788451	1			350
+Sound	tu	miss				791151	1			350
+Sound	nu	miss				793851	1			350
+Sound	ki	miss				796551	1			350
+Sound	ro	miss				799252	1			350
+Sound	be	miss				801952	1			350
+Sound	se	miss				804752	1			350
+Sound	ga	miss				807452	1			350
+Sound	la	miss				810152	1			350
+Sound	tu	miss				812852	1			350
+Sound	di	miss				815552	1			350
+Sound	nu	miss				818252	1			350
+Sound	ga	miss				820952	1			350
+Sound	po	miss				823653	1			350
+Sound	mi	miss				826353	1			350
+Sound	la	miss				829053	1			350
+Sound	ki	miss				831753	1			350
+Sound	za	miss				834453	1			350
+Sound	ro	miss				837153	1			350
+Sound	se	miss				839853	1			350
+Sound	be	miss				842554	1			350
+Sound	se	miss				845354	1			350
+Sound	po	miss				848054	1			350
+Sound	be	miss				850754	1			350
+Sound	mi	miss				853554	1			350
+Sound	la	miss				856254	1			350
+Sound	di	miss				858954	1			350
+Sound	nu	miss				861654	1			350
+Sound	tu	miss				864355	1			350
+Sound	ki	miss				867055	1			350
+Sound	ga	miss				869754	1			350
+Sound	za	miss				872455	1			350
+Sound	ro	miss				875155	1			350
+Sound	la	miss				877855	1			350
+Sound	be	miss				880555	1			350
+Sound	za	miss				883355	1			350
+Sound	po	miss				886055	1			350
+Sound	tu	miss				888756	1			350
+Sound	ga	miss				891455	1			350
+Sound	se	miss				894156	1			350
+Sound	ki	miss				896856	1			350
+Sound	mi	miss				899556	1			350
+Sound	ro	miss				902256	1			350
+Sound	nu	miss				904956	1			350
+Sound	di	miss				907656	1			350
+Sound	po	miss				910356	1			350
+Sound	la	miss				913056	1			350
+Sound	se	miss				915757	1			350
+Sound	nu	miss				918457	1			350
+Sound	mi	miss				921157	1			350
+Sound	be	miss				923857	1			350

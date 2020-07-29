@@ -1,0 +1,7 @@
+s1311
+No wordrec data for this participant. 
+Posttest was run twice. 
+(Hanna had run it.)  
+As a consequence, pretest.txt file was overwritten.
+
+

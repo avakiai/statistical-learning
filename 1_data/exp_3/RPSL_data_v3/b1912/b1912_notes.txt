@@ -1,0 +1,7 @@
+b1912
+Tested: 18.9.19
+First participant. 
+Error Notes: 
+There is an error that means this should be used with caution. 
+Pre/Post (Tempo) Task pairs 14-syllable sequences of 3-syllable words or random syllables. When we made the word sequences, they ought to have the form: [leading syllable, a 3rd pos syllable], [4 words, random order], [trailing syllable, 1st pos syllable].
+There was a coding mistake that meant that the word sequences numbered 1-9 for this participant actually had the form: [leading syllable, a 1st pos syllable], [4 words, random order], [trailing syllable, 3rd pos syllable]. So not only was the on/offset a cue, but also they heard some repetitions of syllables. 

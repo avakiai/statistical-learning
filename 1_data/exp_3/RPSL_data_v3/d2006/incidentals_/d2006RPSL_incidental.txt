@@ -1,0 +1,19 @@
+#Experiment: RPSL_incidental
+#Section: incidental
+#Session: W (W = Word, R = Random)
+#Language: A
+#DateTime: 10/03/2019 13:39:55
+#Subject: d2006
+#Sex: Sex
+#Age: Age
+
+
+Block	Sequence	Target Syllable	Total Detections
+1	1	cue_linfade_exp_seq_A_04.wav	po	2	20
+1	2	cue_linfade_exp_seq_A_08.wav	se	3	39
+1	3	cue_linfade_exp_seq_A_20.wav	mi	1	58
+2	4	cue_linfade_exp_seq_A_03.wav	be	2	77
+2	5	cue_linfade_exp_seq_A_17.wav	tu	3	96
+2	6	cue_linfade_exp_seq_A_21.wav	za	1	115
+3	7	cue_linfade_exp_seq_A_12.wav	di	3	137
+3	8	cue_linfade_exp_seq_A_02.wav	ki	2	156

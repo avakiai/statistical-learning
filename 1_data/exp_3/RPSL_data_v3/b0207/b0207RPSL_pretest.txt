@@ -1,0 +1,58 @@
+#Experiment: RPSL_pretest
+#Section: pretest
+#DateTime: 09/26/2019 13:06:25
+#Subject: b0207
+#Sex: M
+#Age: Age
+#Handedness: R
+
+
+Block	Trial	Order	Seq1	Seq2	ITI	ISI	Resp	RT
+1	1	2	tempo_seq_rand_13.wav	tempo_seq_A_06.wav	1200	400	2	627.740999999995
+1	2	2	tempo_seq_rand_20.wav	tempo_seq_A_20.wav	1200	400	2	647.199000000001
+1	3	2	tempo_seq_rand_33.wav	tempo_seq_A_09.wav	1200	400	3	366.561999999991
+1	4	1	tempo_seq_A_15.wav	tempo_seq_rand_35.wav	1200	400	3	290.043000000005
+1	5	2	tempo_seq_rand_47.wav	tempo_seq_A_18.wav	1200	400	2	161.440999999992
+1	6	1	tempo_seq_A_24.wav	tempo_seq_rand_28.wav	1200	400	2	356.910000000003
+1	7	2	tempo_seq_rand_29.wav	tempo_seq_A_12.wav	1200	400	3	288.301999999996
+1	8	1	tempo_seq_A_12.wav	tempo_seq_rand_36.wav	1200	400	2	215.731
+1	9	1	tempo_seq_A_04.wav	tempo_seq_rand_25.wav	1200	400	3	1043.20999999999
+1	10	2	tempo_seq_rand_05.wav	tempo_seq_A_16.wav	1200	400	2	270.592999999993
+1	11	1	tempo_seq_A_07.wav	tempo_seq_rand_39.wav	1200	400	2	310.035000000003
+1	12	1	tempo_seq_A_20.wav	tempo_seq_rand_30.wav	1200	400	2	317.5
+2	13	1	tempo_seq_A_23.wav	tempo_seq_rand_40.wav	1200	400	2	364.339999999997
+2	14	2	tempo_seq_rand_17.wav	tempo_seq_A_01.wav	1200	400	3	415.742999999988
+2	15	1	tempo_seq_A_13.wav	tempo_seq_rand_09.wav	1200	400	3	363.217000000004
+2	16	2	tempo_seq_rand_23.wav	tempo_seq_A_19.wav	1200	400	3	326.61500000002
+2	17	2	tempo_seq_rand_12.wav	tempo_seq_A_21.wav	1200	400	3	246.024999999994
+2	18	2	tempo_seq_rand_26.wav	tempo_seq_A_15.wav	1200	400	2	261.470000000001
+2	19	1	tempo_seq_A_02.wav	tempo_seq_rand_44.wav	1200	400	3	236.921999999991
+2	20	1	tempo_seq_A_01.wav	tempo_seq_rand_16.wav	1200	400	3	224.349000000017
+2	21	2	tempo_seq_rand_02.wav	tempo_seq_A_13.wav	1200	400	3	315.848000000027
+2	22	1	tempo_seq_A_11.wav	tempo_seq_rand_32.wav	1200	400	2	1227.25
+2	23	2	tempo_seq_rand_48.wav	tempo_seq_A_11.wav	1200	400	2	422.637999999977
+2	24	1	tempo_seq_A_22.wav	tempo_seq_rand_14.wav	1200	400	3	242.027000000002
+3	25	1	tempo_seq_A_03.wav	tempo_seq_rand_42.wav	1200	400	2	199.364999999991
+3	26	1	tempo_seq_A_05.wav	tempo_seq_rand_07.wav	1200	400	3	802.832999999984
+3	27	2	tempo_seq_rand_22.wav	tempo_seq_A_24.wav	1200	400	3	230.274999999965
+3	28	1	tempo_seq_A_06.wav	tempo_seq_rand_37.wav	1200	400	3	257.826000000001
+3	29	2	tempo_seq_rand_24.wav	tempo_seq_A_02.wav	1200	400	3	353.168999999994
+3	30	2	tempo_seq_rand_43.wav	tempo_seq_A_23.wav	1200	400	3	1316.59500000003
+3	31	1	tempo_seq_A_18.wav	tempo_seq_rand_08.wav	1200	400	2	259.946999999986
+3	32	1	tempo_seq_A_16.wav	tempo_seq_rand_31.wav	1200	400	2	131.418999999994
+3	33	2	tempo_seq_rand_45.wav	tempo_seq_A_14.wav	1200	400	2	202.873999999953
+3	34	1	tempo_seq_A_19.wav	tempo_seq_rand_15.wav	1200	400	2	678.252999999968
+3	35	2	tempo_seq_rand_01.wav	tempo_seq_A_22.wav	1200	400	3	189.709999999963
+3	36	2	tempo_seq_rand_11.wav	tempo_seq_A_10.wav	1200	400	3	489.108000000007
+4	37	2	tempo_seq_rand_38.wav	tempo_seq_A_07.wav	1200	400	3	223.77899999998
+4	38	1	tempo_seq_A_10.wav	tempo_seq_rand_04.wav	1200	400	2	587.223999999987
+4	39	1	tempo_seq_A_09.wav	tempo_seq_rand_41.wav	1200	400	2	310.630999999994
+4	40	1	tempo_seq_A_08.wav	tempo_seq_rand_21.wav	1200	400	2	302.055999999982
+4	41	2	tempo_seq_rand_46.wav	tempo_seq_A_04.wav	1200	400	2	277.46100000001
+4	42	2	tempo_seq_rand_10.wav	tempo_seq_A_08.wav	1200	400	2	356.902000000002
+4	43	2	tempo_seq_rand_03.wav	tempo_seq_A_03.wav	1200	400	2	384.326000000001
+4	44	1	tempo_seq_A_14.wav	tempo_seq_rand_06.wav	1200	400	2	132.466000000015
+4	45	1	tempo_seq_A_21.wav	tempo_seq_rand_27.wav	1200	400	2	299.878000000026
+4	46	2	tempo_seq_rand_19.wav	tempo_seq_A_05.wav	1200	400	3	219.35699999996
+4	47	2	tempo_seq_rand_34.wav	tempo_seq_A_17.wav	1200	400	2	422.758000000031
+4	48	1	tempo_seq_A_17.wav	tempo_seq_rand_18.wav	1200	400	2	218.253000000026
