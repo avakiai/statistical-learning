@@ -17,7 +17,7 @@ library(lme4)
 library(broom)
 library(emmeans)
 library(car)
-source("summarySE.R")
+#source("summarySE.R")
 library(cluster) # clustering algorithms
 library(factoextra) # ibid & visualization
 library(wesanderson)
@@ -33,7 +33,7 @@ Aim: Explore Target Detection Task data from experiment 3, then use the finding 
 
 First, load data... 
 ```{r include=FALSE}
-exp_3_data <- read_csv("C:/Users/Ava/Desktop/Experiments/temporal_perception_SL/#E3_MasteR/exp_3_rt_data.csv") %>%
+exp_3_data <- read_csv("C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_3/exp_3_rt_data.csv") %>%
   #   dplyr::select(2:6,8:9,11,13) %>%
     mutate(subject = as.factor(subject),
            target = as.factor(target),
@@ -42,7 +42,7 @@ exp_3_data <- read_csv("C:/Users/Ava/Desktop/Experiments/temporal_perception_SL/
 ```
 
 ```{r include=FALSE}
-exp_4_data <- read_csv("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1/exp_4_rt_data.csv") %>%
+exp_4_data <- read_csv("C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4/exp_4_rt_data.csv") %>%
   select(1:2,5:10,12,14) %>%
   mutate(subject = as.factor(subject),
          target = as.factor(target),
@@ -55,7 +55,7 @@ exp_4_data <- read_csv("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scrip
 ```
 
 ```{r include=FALSE}
-exp_4_data_delta <- read_csv("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1/exp_4_rt_data_delta.csv") %>%
+exp_4_data_delta <- read_csv("C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4/exp_4_rt_data_delta.csv") %>%
   select(subject,cond_order,sess,delta_rt,tgt_word:N,delta,rt_mean:ci) %>%
   mutate(subject = as.factor(subject),
          cond_order = as.factor(cond_order),
@@ -1695,6 +1695,18 @@ exps.3.4.data <- rbind(exp_3_data %>% mutate(exp="exp 3") %>%
   mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
 # N = 53
 
+
+#data_path
+#code_path
+fig_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/combined'
+
+write.csv(exps.3.4.data,'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/combined/exps_3_4s_data.csv', row.names = FALSE)
+# exps.3.4.data <- read_csv('C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/combined/exps_3_4s_data.csv') %>%
+
+```
+
+
+```{r}
 # For each subject, compute a correlation matrix between syllables and then z transform that data. Put matrices into a list, and average them. Then transform back to rho. 
   all.list  <- list()
   all.cor.list  <- list()
@@ -1784,11 +1796,11 @@ for (curr_subj in unique(exps.3.4.data$subject)) {
   curr_data.cor.diss <- 1-(cor(curr_data.mat)) # diss
 
 # append
-  all.list <- append(all.list, list(curr_data.mat))
-  all.cor.list <- append(all.cor.list, list(curr_data.cor))
-  all.cor.z.list <- append(all.cor.z.list, list(curr_data.cor.z))
-  all.cor.diss.z.list <- append(all.cor.diss.z.list, list(curr_data.cor.diss.z))
-  all.cor.diss.list <- append(all.cor.diss, list(curr_data.cor.diss))
+  all.list <- append(all.list, list(curr_data.mat)) # Regular matrices, uneven
+  all.cor.list <- append(all.cor.list, list(curr_data.cor)) # Correlations
+  all.cor.z.list <- append(all.cor.z.list, list(curr_data.cor.z)) # Z-transformed correlations
+  all.cor.diss.z.list <- append(all.cor.diss.z.list, list(curr_data.cor.diss.z)) # Z-transformed 1-correlations
+  all.cor.diss.list <- append(all.cor.diss.list, list(curr_data.cor.diss)) # 1-correlations
 }
 
 # avg.z.list <- reduce(all.z.list, `+`, na.rm = TRUE) / length(all.z.list)
@@ -1887,13 +1899,13 @@ Low vs. Hi:
 i.e. .33s vs. 1s...
 ```{r}
 # indices for each matrix
-wn.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10), # low TP
-              c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
-             c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12))
-ac.TP <- list(c(1,2),c(4,5),c(7,8),c(10,11)) # .33-1 crosses within words
-# wn.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10)) # low TP
-# ac.TP <- list(c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
+# wn.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10), # low TP
+#               c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
 #              c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12))
+# ac.TP <- list(c(1,2),c(4,5),c(7,8),c(10,11)) # .33-1 crosses within words
+wn.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10)) # low TP
+ac.TP <- list(c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
+             c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12))
 
 
 wn.tp.arr <- list()
@@ -2069,7 +2081,7 @@ wt.DI$p.value)))
 ```
 
 
-
+### Plot
 ```{r}
 ggplot(WA.wilcox) + 
   geom_col(aes(test,mean), fill = "grey", color = "black") + 
@@ -2078,7 +2090,7 @@ ggplot(WA.wilcox) +
   scale_y_continuous(name = "within - across similarity (Pearson's r)") +
   theme_classic() + 
   theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave('fig_similarity.png', width = w, height = h)  
+  ggsave(file.path(fig_path,'/fig_similarity.png'), width = 7, height = 5)  
 
 ```
 
