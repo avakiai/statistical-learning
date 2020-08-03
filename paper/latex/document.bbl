@@ -1,0 +1,317 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.1 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nyt/global//global/global}
+    \entry{Dehaene2015}{article}{}
+      \name{author}{5}{}{%
+        {{un=0,uniquepart=base,hash=14ff7c970ba747f58e07de2e42e7c5bb}{%
+           family={Dehaene},
+           familyi={D\bibinitperiod},
+           given={Stanislas},
+           giveni={S\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=9764ad6b2a3ce10e120fdf98b6ddffad}{%
+           family={Meyniel},
+           familyi={M\bibinitperiod},
+           given={Florent},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=05a3b0b2535a7f79e8e3d88c38fa79c9}{%
+           family={Wacongne},
+           familyi={W\bibinitperiod},
+           given={Catherine},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=619428b9bc5864c8559e0a3744fa5c0a}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Liping},
+           giveni={L\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=089b3b479c068e109f0d6f0ab2022dfa}{%
+           family={Pallier},
+           familyi={P\bibinitperiod},
+           given={Christophe},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier Inc.}%
+      }
+      \strng{namehash}{40db90f32a9abe431756be2e2abb43d3}
+      \strng{fullhash}{65d69b625ad511547ae5149356204ba4}
+      \strng{bibnamehash}{40db90f32a9abe431756be2e2abb43d3}
+      \strng{authorbibnamehash}{40db90f32a9abe431756be2e2abb43d3}
+      \strng{authornamehash}{40db90f32a9abe431756be2e2abb43d3}
+      \strng{authorfullhash}{65d69b625ad511547ae5149356204ba4}
+      \field{sortinit}{D}
+      \field{sortinithash}{c438b3d5d027251ba63f5ed538d98af5}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{A sequence of images, sounds, or words can be stored at several levels of detail, from specific items and their timing to abstract structure. We propose a taxonomy of five distinct cerebral mechanisms for sequence coding: transitions and timing knowledge, chunking, ordinal knowledge, algebraic patterns, and nested tree structures. In each case, we review the available experimental paradigms and list the behavioral and neural signatures of the systems involved. Tree structures require a specific recursive neural code, as yet unidentified by electrophysiology, possibly unique to humans, and which may explain the singularity of human language and cognition.}
+      \field{issn}{0896-6273}
+      \field{journaltitle}{Neuron}
+      \field{month}{10}
+      \field{number}{1}
+      \field{title}{{The Neural Representation of Sequences: From Transition Probabilities to Algebraic Patterns and Linguistic Trees}}
+      \field{volume}{88}
+      \field{year}{2015}
+      \field{pages}{2\bibrangedash 19}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.1016/j.neuron.2015.09.019
+      \endverb
+      \verb{file}
+      \verb :C$\backslash$:/Users/Ava/Documents/Mendeley Library/Dehaene et al/Neuron/Dehaene et al.{\_}Neuron{\_}2015(2).pdf:pdf;:C$\backslash$:/Users/Ava/Documents/Mendeley Library/Dehaene et al/Neuron/Dehaene et al.{\_}Neuron{\_}2015.pdf:pdf
+      \endverb
+      \verb{urlraw}
+      \verb http://dx.doi.org/10.1016/j.neuron.2015.09.019 https://linkinghub.elsevier.com/retrieve/pii/S089662731500776X
+      \endverb
+      \verb{url}
+      \verb http://dx.doi.org/10.1016/j.neuron.2015.09.019%20https://linkinghub.elsevier.com/retrieve/pii/S089662731500776X
+      \endverb
+    \endentry
+    \entry{Pelucchi2009}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=966354091efec8558268527cc52b53ef}{%
+           family={Pelucchi},
+           familyi={P\bibinitperiod},
+           given={Bruna},
+           giveni={B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=1218fb5298c082090a5e24c4494d1cba}{%
+           family={Hay},
+           familyi={H\bibinitperiod},
+           given={Jessica\bibnamedelima F.},
+           giveni={J\bibinitperiod\bibinitdelim F\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ca54c86dac4e9f5280e90f18a27a8f50}{%
+           family={Saffran},
+           familyi={S\bibinitperiod},
+           given={Jenny\bibnamedelima R.},
+           giveni={J\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+      }
+      \list{publisher}{1}{%
+        {Elsevier}%
+      }
+      \strng{namehash}{3a3f7edf89caeb5540f30ec074e3fe58}
+      \strng{fullhash}{3a3f7edf89caeb5540f30ec074e3fe58}
+      \strng{bibnamehash}{3a3f7edf89caeb5540f30ec074e3fe58}
+      \strng{authorbibnamehash}{3a3f7edf89caeb5540f30ec074e3fe58}
+      \strng{authornamehash}{3a3f7edf89caeb5540f30ec074e3fe58}
+      \strng{authorfullhash}{3a3f7edf89caeb5540f30ec074e3fe58}
+      \field{sortinit}{P}
+      \field{sortinithash}{bb5b15f2db90f7aef79bb9e83defefcb}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Numerous recent studies suggest that human learners, including both infants and adults, readily track sequential statistics computed between adjacent elements. One such statistic, transitional probability, is typically calculated as the likelihood that one element predicts another. However, little is known about whether listeners are sensitive to the directionality of this computation. To address this issue, we tested 8-month-old infants in a word segmentation task, using fluent speech drawn from an unfamiliar natural language. Critically, test items were distinguished solely by their backward transitional probabilities. The results provide the first evidence that infants track backward statistics in fluent speech.}
+      \field{issn}{0010-0277}
+      \field{journaltitle}{Cognition}
+      \field{month}{11}
+      \field{number}{2}
+      \field{title}{{Learning in reverse: Eight-month-old infants track backward transitional probabilities}}
+      \field{volume}{113}
+      \field{year}{2009}
+      \field{pages}{244\bibrangedash 247}
+      \range{pages}{4}
+      \verb{doi}
+      \verb 10.1016/J.COGNITION.2009.07.011
+      \endverb
+      \verb{file}
+      \verb :C$\backslash$:/Users/Ava/Documents/Mendeley Library/Pelucchi, Hay, Saffran/Cognition/Pelucchi, Hay, Saffran{\_}Cognition{\_}2009.pdf:pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://www.sciencedirect.com/science/article/pii/S0010027709001826
+      \endverb
+      \verb{url}
+      \verb https://www.sciencedirect.com/science/article/pii/S0010027709001826
+      \endverb
+    \endentry
+    \entry{RichardN.Aslin1998}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=207d650678a1e7a388a14a7994a6e3c2}{%
+           family={{Richard N. Aslin}},
+           familyi={R\bibinitperiod}}}%
+        {{un=0,uniquepart=base,hash=ca54c86dac4e9f5280e90f18a27a8f50}{%
+           family={Saffran},
+           familyi={S\bibinitperiod},
+           given={Jenny\bibnamedelima R.},
+           giveni={J\bibinitperiod\bibinitdelim R\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=6ffc20486e2e81eeaa3e4c993d83679a}{%
+           family={Newport},
+           familyi={N\bibinitperiod},
+           given={Elissa\bibnamedelima L.},
+           giveni={E\bibinitperiod\bibinitdelim L\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{61d40438ce5b2f2485bdb4c3fb429475}
+      \strng{fullhash}{61d40438ce5b2f2485bdb4c3fb429475}
+      \strng{bibnamehash}{61d40438ce5b2f2485bdb4c3fb429475}
+      \strng{authorbibnamehash}{61d40438ce5b2f2485bdb4c3fb429475}
+      \strng{authornamehash}{61d40438ce5b2f2485bdb4c3fb429475}
+      \strng{authorfullhash}{61d40438ce5b2f2485bdb4c3fb429475}
+      \field{sortinit}{R}
+      \field{sortinithash}{b9c68a358aea118dfa887b6e902414a7}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{A recent report demonstrated that 8-month-olds can seg- ment a continuous stream of speech syllables, containing no acoustic or prosodic cues to word boundaries, into wordlike units after only 2 min of listening experience (Saffran, Aslin, {\&} Newport, 1996). Thus, a powerful learning mechanism capable of extracting statistical informa- tion from fluent speech is available early in development. The present study extends these results by documenting the particular type of statis- tical computation—transitional (conditional) probability—used by infants to solve this word-segmentation task. An artificial language corpus, consisting of a continuous stream of trisyllabic nonsense words, was presented to 8-month-olds for 3 min. A postfamiliarization test compared the infants' responses to words versus part-words (tri-syllabic sequences spanning word boundaries). The corpus was con- structed so that test words and part-words were matched in frequency, but differed in their transitional probabilities. Infants showed reliable discrimination of words from part-words, thereby demonstrating rapid segmentation of continuous speech into words on the basis of transitional probabilities of syllable pairs.}
+      \field{journaltitle}{Psychol. Sci.}
+      \field{number}{4}
+      \field{title}{{Computation of Conditional Probabilities by Infants}}
+      \field{volume}{9}
+      \field{year}{1998}
+      \field{pages}{321\bibrangedash 324}
+      \range{pages}{4}
+      \verb{file}
+      \verb :C$\backslash$:/Users/Ava/Documents/Mendeley Library/Richard N. Aslin, Saffran, Newport/Psychological Science/Richard N. Aslin, Saffran, Newport{\_}Psychological Science{\_}1998.pdf:pdf
+      \endverb
+      \verb{urlraw}
+      \verb https://journals.sagepub.com/doi/pdf/10.1111/1467-9280.00063
+      \endverb
+      \verb{url}
+      \verb https://journals.sagepub.com/doi/pdf/10.1111/1467-9280.00063
+      \endverb
+    \endentry
+    \entry{Turk-Browne2005}{article}{}
+      \name{author}{3}{}{%
+        {{un=0,uniquepart=base,hash=599b4070431d95b30ec9da55bd7f128f}{%
+           family={Turk-Browne},
+           familyi={T\bibinithyphendelim B\bibinitperiod},
+           given={Nicholas\bibnamedelima B.},
+           giveni={N\bibinitperiod\bibinitdelim B\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=ddf467580a095360abeeeddabff94e81}{%
+           family={Jung{é}},
+           familyi={J\bibinitperiod},
+           given={Justin\bibnamedelima A.},
+           giveni={J\bibinitperiod\bibinitdelim A\bibinitperiod},
+           givenun=0}}%
+        {{un=2,uniquepart=given,hash=cd5fa4ea1a650fe2818e9025477546c3}{%
+           family={Scholl},
+           familyi={S\bibinitperiod},
+           given={Brian\bibnamedelima J.},
+           giveni={B\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=2}}%
+      }
+      \list{publisher}{1}{%
+        {US: American Psychological Association}%
+      }
+      \strng{namehash}{1d81a0f69ab80773167c47f0bd171f4c}
+      \strng{fullhash}{1d81a0f69ab80773167c47f0bd171f4c}
+      \strng{bibnamehash}{1d81a0f69ab80773167c47f0bd171f4c}
+      \strng{authorbibnamehash}{1d81a0f69ab80773167c47f0bd171f4c}
+      \strng{authornamehash}{1d81a0f69ab80773167c47f0bd171f4c}
+      \strng{authorfullhash}{1d81a0f69ab80773167c47f0bd171f4c}
+      \field{sortinit}{T}
+      \field{sortinithash}{51f9faf24c60c62ca764a77f78cf5666}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1939-2222}
+      \field{journaltitle}{J. Exp. Psychol. Gen.}
+      \field{number}{4}
+      \field{title}{{The Automaticity of Visual Statistical Learning}}
+      \field{volume}{134}
+      \field{year}{2005}
+      \field{pages}{552\bibrangedash 564}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1037/0096-3445.134.4.552
+      \endverb
+      \verb{file}
+      \verb :C$\backslash$:/Users/Ava/Documents/Mendeley Library/Turk-Browne, Jung{\'{e}}, Scholl/Journal of Experimental Psychology General/Turk-Browne, Jung{\'{e}}, Scholl{\_}Journal of Experimental Psychology General{\_}2005.pdf:pdf
+      \endverb
+      \verb{urlraw}
+      \verb http://doi.apa.org/getdoi.cfm?doi=10.1037/0096-3445.134.4.552
+      \endverb
+      \verb{url}
+      \verb http://doi.apa.org/getdoi.cfm?doi=10.1037/0096-3445.134.4.552
+      \endverb
+    \endentry
+    \entry{Turk-Browne2008}{article}{}
+      \name{author}{4}{ul=2}{%
+        {{un=0,uniquepart=base,hash=599b4070431d95b30ec9da55bd7f128f}{%
+           family={Turk-Browne},
+           familyi={T\bibinithyphendelim B\bibinitperiod},
+           given={Nicholas\bibnamedelima B.},
+           giveni={N\bibinitperiod\bibinitdelim B\bibinitperiod},
+           givenun=0}}%
+        {{un=2,uniquepart=given,hash=cd5fa4ea1a650fe2818e9025477546c3}{%
+           family={Scholl},
+           familyi={S\bibinitperiod},
+           given={Brian\bibnamedelima J},
+           giveni={B\bibinitperiod\bibinitdelim J\bibinitperiod},
+           givenun=2}}%
+        {{un=0,uniquepart=base,hash=79dbf74245956ac8fc2f9b4f38077755}{%
+           family={Chun},
+           familyi={C\bibinitperiod},
+           given={Marvin\bibnamedelima M},
+           giveni={M\bibinitperiod\bibinitdelim M\bibinitperiod},
+           givenun=0}}%
+        {{un=0,uniquepart=base,hash=48966a48a33891bb6154f6aef081bd06}{%
+           family={Johnson},
+           familyi={J\bibinitperiod},
+           given={Marcia\bibnamedelima K},
+           giveni={M\bibinitperiod\bibinitdelim K\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{c1629b2625cb2f45a31aeebcb648c5ae}
+      \strng{fullhash}{f4cb9c496046f53cf1310782af1bdb44}
+      \strng{bibnamehash}{c1629b2625cb2f45a31aeebcb648c5ae}
+      \strng{authorbibnamehash}{c1629b2625cb2f45a31aeebcb648c5ae}
+      \strng{authornamehash}{c1629b2625cb2f45a31aeebcb648c5ae}
+      \strng{authorfullhash}{f4cb9c496046f53cf1310782af1bdb44}
+      \field{sortinit}{T}
+      \field{sortinithash}{51f9faf24c60c62ca764a77f78cf5666}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Our environment contains regularities distributed in space and time that can be detected by way of statistical learning. This unsupervised learning occurs without intent or awareness, but little is known about how it relates to other types of learning , how it affects perceptual processing, and how quickly it can occur. Here we use fMRI during statistical learning to explore these questions. Participants viewed statistically structured versus unstructured sequences of shapes while performing a task unrelated to the structure. Robust neural responses to statistical structure were observed, and these responses were notable in four ways: First, responses to structure were observed in the striatum and medial temporal lobe, suggesting that statistical learning may be related to other forms of associative learning and relational memory. Second, statistical regularities yielded greater activation in category-specific visual regions (object-selective lateral occipital cortex and word-selective ventral occipito-temporal cortex), demonstrating that these regions are sensitive to information distributed in time. Third, evidence of learning emerged early during familiarization, showing that statistical learning can operate very quickly and with little exposure. Finally, neural signatures of learning were dissociable from subsequent explicit familiarity, suggesting that learning can occur in the absence of awareness. Overall, our findings help elucidate the underlying nature of statistical learning. {\&}}
+      \field{journaltitle}{J. Cogn. Neurosci.}
+      \field{number}{10}
+      \field{title}{{Neural Evidence of Statistical Learning: Efficient Detection of Visual Regularities Without Awareness}}
+      \field{volume}{21}
+      \field{year}{2008}
+      \field{pages}{1934\bibrangedash 1945}
+      \range{pages}{12}
+      \verb{file}
+      \verb :C$\backslash$:/Users/Ava/Documents/Mendeley Library/Turk-Browne et al/Journal of Cognitive Neuroscience/Turk-Browne et al.{\_}Journal of Cognitive Neuroscience{\_}2008.pdf:pdf
+      \endverb
+      \verb{urlraw}
+      \verb www.omniglot.com.
+      \endverb
+      \verb{url}
+      \verb www.omniglot.com.
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
