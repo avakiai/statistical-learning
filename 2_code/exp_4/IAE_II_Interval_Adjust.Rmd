@@ -4,13 +4,28 @@ author: "Ava Kiai"
 date: "4/15/2020"
 output: pdf_document
 ---
+
+```{r}
+rm(list=ls()) # clear workspace
+# load(".RData") # load saved workspace image for this file
+
+# Directories
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+
+# Data Path
+data_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4/interval_adjust_data/dj_test_data'
+data_path_save <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4'
+# Code Path
+code_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/exp_4'
+# Results Path
+res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp_4'
+
+```
+
 # Initialize
 ```{r message=FALSE, warning=FALSE}
 # Init.
-# output
-library(knitr)
-library(Cairo)
-  opts_chunk$set(dev="CairoPDF")
+
 
 # latex font
 library(extrafont)
@@ -20,27 +35,24 @@ library(extrafont)
 
 # basics
 library(tidyverse)
-library(reshape2)
-library(ggplot2)
-library(ggsignif)
-library(ggpubr)
-library(gplots)
-
-# stats
-library(lme4)
-library(multcomp) 
-library(emmeans)
-library(car)
-
-# save tables
-library(kableExtra)
-
-# advanced plotting & stats  
-library(forcats)
-library(effects)
-library(lsr) 
-library(pwr)
-library(RcppRoll) # for rolling means
+# library(reshape2)
+# library(ggplot2)
+# library(ggsignif)
+# library(ggpubr)
+# library(gplots)
+# 
+# # stats
+# library(lme4)
+# library(multcomp) 
+# library(emmeans)
+# library(car)
+# 
+# # advanced plotting & stats  
+# library(forcats)
+# library(effects)
+# library(lsr) 
+# library(pwr)
+# library(RcppRoll) # for rolling means
 
 # colors
 library("wesanderson")
@@ -51,14 +63,11 @@ library("wesanderson")
 word_pal <- wes_palette("GrandBudapest2",4)
 
 # Load
-setwd("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1")
 
 # Some stuffs for summary stats
-source("summarySE.R")
-source("summarySEwithin.R")
-source("R_rainclouds.R")
 
-data_path <- ("C:/Users/Ava/Desktop/Experiments/interval_adjust/interval_adjust_data/dj_test_data")
+source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/summarySE.R')
+source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/R_rainclouds.R')
 data_files <- list.files(path = data_path, pattern = ".txt")
 
 # Global Plotting Params
@@ -104,8 +113,8 @@ wrangle_dial_data <- raw_dial_data
 summary(wrangle_dial_data) 
 ```
 
-# 1. Wrangle Data
-```{r}
+# 0 - PREPROCESSING 
+```{r Wrangle Data, eval=FALSE, include=FALSE}
 # Add Condition Order Column
 subjs_SR <- sort(c("s1911","n1906","m0207","h0502","h1209","s0310","t0506","b0704","s2205","s1302"))
 n_subjs_SR <- length(subjs_SR)
@@ -217,6 +226,9 @@ wrangle_dial_data2[which(wrangle_dial_data2$Subject==subj_IDs_dial[curr_subj]),]
 
 
 dial_data <- wrangle_dial_data2
+
+write.csv(dial_data,file.path(data_path_save,"exp_4_dial_data.csv"), row.names = FALSE)
+
 ```
 Note that all subjects should have 60 Trials (3 (Blocks) x 10 (Trials) x 2 (Conditions)) x 18 (Subjects) + 
 2 subjects who have incomplete data sets... 
@@ -265,13 +277,16 @@ ending_points_data$Point <- as.factor(rep("end",nrow(ending_points_data)))
 dial_points_data <- bind_rows(starting_points_data,ending_points_data) %>%
   mutate(Cond_Order = as.factor(Cond_Order),
          Point = as.factor(Point))
+
+
+write.csv(dial_points_data,file.path(data_path_save,"exp_4_dial_points_data.csv"), row.names = FALSE)
 ```
 
 
 # -- PLANNED BASIC ANALYSES -- 
 # 2. Summary Stats
 ```{r}
-dial_points_sum1 <- dial_points_data %>%
+dial_points_data %>%
       summarySE(measurevar="Curr_ISI", groupvars=c("Session","Position","Point"), na.rm=TRUE)
 
 ```
@@ -304,52 +319,7 @@ pos_end_sum2 <- ending_points_data %>%
 
 
 # 3. Plot Start/End
-## a. Control: Plot Dial Starts & Ends
-```{r}
-# Starts
-ggplot(starting_points_data, aes(x = Dial, y = Curr_ISI, fill = Dial, colour = Dial)) +
-  geom_flat_violin(position = position_nudge(x = .25, y = 0), adjust = 2) +
-  geom_point(position = position_jitter(width = .15), size = .25) +
-  geom_point(data = dial_start_sum2, aes(x = Dial, y = Curr_ISI_mean), 
-             position = position_nudge(.25), colour = "BLACK") +
-  geom_errorbar(data = dial_start_sum2, aes(x = Dial, y = Curr_ISI_mean, 
-                                       ymin = Curr_ISI_mean-se, ymax = Curr_ISI_mean+se), 
-                position = position_nudge(.25), colour = "BLACK", width = 0.1, size = 0.8) +
-  # axes
-  scale_x_discrete(name="Dials") + # scale x 
-  scale_y_continuous(name="Interval (msec.)",limits=c(0,700)) + # scale y
-  scale_fill_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
-  scale_color_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
-  guides(fill=FALSE,color=FALSE) +
-  # theme
-  theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
-  ggtitle("Starting ISIs") + 
-  ggsave('ia_starting_isi_rainclouds.png', width = w, height = h+1)
-
-# Ends
-ggplot(ending_points_data, aes(x = Dial, y = Curr_ISI, fill = Dial, colour = Dial)) +
-  geom_flat_violin(position = position_nudge(x = .25, y = 0), adjust = 2) +
-  geom_point(position = position_jitter(width = .15), size = .25) +
-  geom_point(data = dial_end_sum2, aes(x = Dial, y = Curr_ISI_mean), 
-             position = position_nudge(.25), colour = "BLACK") +
-  geom_errorbar(data = dial_end_sum2, aes(x = Dial, y = Curr_ISI_mean, 
-                                       ymin = Curr_ISI_mean-se, ymax = Curr_ISI_mean+se), 
-                position = position_nudge(.25), colour = "BLACK", width = 0.1, size = 0.8) +
-  # axes
-  scale_x_discrete(name="Dials") + # scale x 
-  scale_y_continuous(name="Interval (msec.)",limits=c(0,700)) + # scale y
-  scale_fill_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
-  scale_color_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
-  guides(fill=FALSE,color=FALSE) +
-  # theme
-  theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
-  ggtitle("Ending ISIs") + 
-  ggsave('ia_ending_isi_rainclouds.png', width = w, height = h+1)
-```
-
-## b. Control: Plot Dial Facets
+## a. Control: Plot Dial Facets
 ```{r}
 # Starts
 ggplot(starting_points_data, aes(x = Dial, y = Curr_ISI, fill = Dial, colour = Dial)) +
@@ -364,14 +334,14 @@ ggplot(starting_points_data, aes(x = Dial, y = Curr_ISI, fill = Dial, colour = D
   # axes
   scale_x_discrete(name="Dials") + # scale x 
   scale_y_continuous(name="Interval (msec.)",limits=c(0,700)) + # scale y
-  scale_fill_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
-  scale_color_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
+  scale_fill_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
+  scale_color_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
   guides(fill=FALSE,color=FALSE) +
   # theme
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold")) + 
   ggtitle("Starting ISIs") + 
-  ggsave('ia_starting_isi_rainclouds_facets.png', width = w, height = h+1)
+  ggsave(file.path(res_path,'figures','exp4_dials_starts.png'), width = w, height = h+1)
 
 # Ends
 ggplot(ending_points_data, aes(x = Dial, y = Curr_ISI, fill = Dial, colour = Dial)) +
@@ -386,51 +356,6 @@ ggplot(ending_points_data, aes(x = Dial, y = Curr_ISI, fill = Dial, colour = Dia
   # axes
   scale_x_discrete(name="Dials") + # scale x 
   scale_y_continuous(name="Interval (msec.)",limits=c(0,700)) + # scale y
-  scale_fill_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
-  scale_color_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
-  guides(fill=FALSE,color=FALSE) +
-  # theme
-  theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
-  ggtitle("Ending ISIs") + 
-  ggsave('ia_ending_isi_rainclouds_facets.png', width = w, height = h+1)
-```
-
-## c. Test: Plot Position Starts & Ends
-```{r}
-# Starts
-ggplot(starting_points_data, aes(x = Position, y = Curr_ISI, fill = Position, colour = Position)) +
-  geom_flat_violin(position = position_nudge(x = .25, y = 0), adjust = 2) +
-  geom_point(position = position_jitter(width = .15), size = .25) +
-  geom_point(data = pos_start_sum2, aes(x = Position, y = Curr_ISI_mean), 
-             position = position_nudge(.25), colour = "BLACK") +
-  geom_errorbar(data = pos_start_sum2, aes(x = Position, y = Curr_ISI_mean, 
-                                       ymin = Curr_ISI_mean-se, ymax = Curr_ISI_mean+se), 
-                position = position_nudge(.25), colour = "BLACK", width = 0.1, size = 0.8) +
-  # axes
-  scale_x_discrete(name="Gaps") + # scale x 
-  scale_y_continuous(name="Interval (msec.)",limits=c(0,700)) + # scale y
-  scale_fill_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
-  scale_color_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
-  guides(fill=FALSE,color=FALSE) +
-  # theme
-  theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
-  ggtitle("Starting ISIs") + 
-  ggsave('ia_DV_starting_isi_rainclouds.png', width = w, height = h+1)
-
-# Ends
-ggplot(ending_points_data, aes(x = Position, y = Curr_ISI, fill = Position, colour = Position)) +
-  geom_flat_violin(position = position_nudge(x = .25, y = 0), adjust = 2) +
-  geom_point(position = position_jitter(width = .15), size = .25) +
-  geom_point(data = pos_end_sum2, aes(x = Position, y = Curr_ISI_mean), 
-             position = position_nudge(.25), colour = "BLACK") +
-  geom_errorbar(data = pos_end_sum2, aes(x = Position, y = Curr_ISI_mean, 
-                                       ymin = Curr_ISI_mean-se, ymax = Curr_ISI_mean+se), 
-                position = position_nudge(.25), colour = "BLACK", width = 0.1, size = 0.8) +
-  # axes
-  scale_x_discrete(name="Gaps") + # scale x 
-  scale_y_continuous(name="Interval (msec.)",limits=c(0,700)) + # scale y
   scale_fill_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
   scale_color_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
   guides(fill=FALSE,color=FALSE) +
@@ -438,8 +363,7 @@ ggplot(ending_points_data, aes(x = Position, y = Curr_ISI, fill = Position, colo
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold")) + 
   ggtitle("Ending ISIs") + 
-  ggsave('ia_DV_ending_isi_rainclouds.png', width = w, height = h+1)
-
+  ggsave(file.path(res_path,'figures','exp4_dials_ends.png'), width = w, height = h+1)
 ```
 
 ## b. Test: Plot Position Facets
@@ -459,14 +383,14 @@ ggplot(starting_points_data, aes(x = Position, y = Curr_ISI, fill = Position, co
   # axes
   scale_x_discrete(name="Gaps") + # scale x 
   scale_y_continuous(name="Interval (msec.)",limits=c(0,700)) + # scale y
-  scale_fill_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
-  scale_color_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
+  scale_fill_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
+  scale_color_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
   guides(fill=FALSE,color=FALSE) +
   # theme
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold")) + 
   ggtitle("Starting ISIs") + 
-  ggsave('ia_DV_starting_isi_rainclouds_facets.png', width = w, height = h+1)
+  ggsave(file.path(res_path,'figures','exp4_gaps_starts.png'), width = w, height = h+1)
 
 # Ends
 ggplot(ending_points_data, aes(x = Position, y = Curr_ISI, fill = Position, colour = Position)) +
@@ -483,16 +407,15 @@ ggplot(ending_points_data, aes(x = Position, y = Curr_ISI, fill = Position, colo
   # axes
   scale_x_discrete(name="Gaps") + # scale x 
   scale_y_continuous(name="Interval (msec.)",limits=c(0,700)) + # scale y
-  scale_fill_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
-  scale_color_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
+  scale_fill_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
+  scale_color_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
   guides(fill=FALSE,color=FALSE) +
   #coord_cartesian(ylim=c(100,300)) +
-
   # theme
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold")) + 
   ggtitle("Ending ISIs") + 
-  ggsave('ia_DV_ending_isi_rainclouds_facets.png', width = w, height = h+1)
+  ggsave(file.path(res_path,'figures','exp4_gaps_ends.png'), width = w, height = h+1)
 ```
 
 #4. Plot Trajectories Data 
@@ -529,11 +452,11 @@ ggplot(pos_traj_sorted, mapping=aes(desc(X),Curr_ISI_mean,fill=Position, colour=
   scale_y_continuous(name="Interval (msec)") + 
   #scale_x_discrete(name="Gaps") + # scale x 
   scale_y_continuous(name="Interval (msec.)",limits=c(0,700)) + # scale y
-  scale_fill_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
-  scale_color_manual(values=c("#01665e","#5ab4ac","#c7eae5")) +
+  scale_fill_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
+  scale_color_manual(values=wes_palette("Darjeeling1")[c(4,3,2)]) +
   theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave('ia_dial_traj.png',width=w,height=h+1)
+  theme(text = element_text(family = "LM Roman 10", face="bold")) #+
+#  ggsave('ia_dial_traj.png',width=w,height=h+1)
 
 
 ```
@@ -778,6 +701,9 @@ ending_points_data[which(ending_points_data$Subject==subj_IDs_dial[curr_subj]),]
 }
 
 hist(ending_points_data$Z_normed,breaks = 100)
+
+
+
 ```
 
 ## Normalization and filtering 0's and 600's 
@@ -805,7 +731,7 @@ for (curr_subj in 1:n_subjs_dial) {
       
       # if they're the same and at the extremes 
       if (length(unique(curr_dial_subj_blk_trl_sess$Curr_ISI))==1 &
-          (all(curr_dial_subj_blk_trl_sess$Curr_ISI == 600) | all(curr_dial_subj_blk_trl_sess$Curr_ISI == 0))) {
+          (all(curr_dial_subj_blk_trl_sess$Curr_ISI == 600) | all(curr_dial_subj_blk_trl_sess$Curr_ISI == 0))) { # change this to any if you want to remove them...
         
         clustered_at_extremes <- rbind(clustered_at_extremes, data.frame(
           subj = subj_IDs_dial[curr_subj], sess = curr_sess, block = curr_blk, trial = curr_trl, 
@@ -982,36 +908,34 @@ ggplot(ending_points_data_filt, aes(x = Position, y = Mu_normed, fill = Position
 ## Re-GLMM
 Once you decide on a dplyr::filtering strategy, return here. 
 ```{r}
-hist(ending_points_data_filt$Curr_ISI)
+descdist(ending_points_data$Mu_normed, discrete = FALSE,boot=800)
+
+hist(ending_points_data_filt$Mu_normed, breaks = 100)
+
+
+
+fit.norm  <- fitdist(ending_points_data$Mu_normed[!is.na(ending_points_data$Mu_normed)], "norm")
+fit.log <- fitdist(ending_points_data$Mu_normed[!is.na(ending_points_data$Mu_normed)], "logistic")
+summary(fit.wei)
+summary(fit.gam)
+summary(fit.ln)
+
+par(mfrow=c(2,2))
+plot.legend <- c("Weibull", "lognormal", "gamma")
+denscomp(list(fit.wei, fit.gam, fit.ln), legendtext = plot.legend)
+cdfcomp (list(fit.wei, fit.gam, fit.ln), legendtext = plot.legend)
+qqcomp  (list(fit.wei, fit.gam, fit.ln), legendtext = plot.legend)
+ppcomp  (list(fit.wei, fit.gam, fit.ln), legendtext = plot.legend)
+
+gofstat(list(fit.wei, fit.gam, fit.ln), fitnames = c("weibull", "gamma", "lognorm"))
+
+
+
+z.mod.full <- glmer(Curr_ISI ~ Session * Position * Block + (1 | Cond_Order/Subject), data = ending_points_data_filt, family = Gamma)
+
+
 ```
 
 
 
-# Garbage. 
-```{r}
-# - Loading Files
-# raw_curr_data <- readLines(file.path(data_path, data_files[i]))
-  # if (grepl("End_Time",tail(raw_curr_data,n=1))) {read_n_rows = length(skip_rows+1:(length(raw_curr_data)-1))
-  # } else {read_n_rows = length(skip_rows+1:length(raw_curr_data))}
-# - Detecting types
-  # sapply(curr_data,typeof)
-  # sapply(curr_data,class)
-# - Troubleshooting a few files... 
-  # momentarily...
-  # [20:36, 4/16/2020] Peter Harrison: When you do as.numeric on a factor, it returns the underlying integer encoding, rather than the labels. This can be confusing when your original labels were also numbers. In these situations, you often want to do as.numeric(as.character(x)) instead.
-   # if (subj_name %in% c("f0511","h0502", "m0207", "s2205")) {next}
-    # sapply(curr_data,typeof)
-  # sapply(curr_data,class)
-  # unique(curr_data$Trial)
-  # curr_data <- curr_data %>% 
-  #   mutate(Subject = as.factor(Subject), 
-  #          Block = as.numeric(Block),
-  #          Trial = as.numeric(Trial),
-  #          Session = as.factor(Session),
-  #          Syll = as.factor(Syll)) %>%
-  #   mutate_if(is.integer,as.numeric)
-  # sapply(curr_data,typeof)
-  # sapply(curr_data,class)
-  # unique(curr_data$Trial)
-```
 

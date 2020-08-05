@@ -8,6 +8,23 @@ output:
   pdf_document: default
 ---
 
+
+```{r}
+rm(list=ls()) # clear workspace
+# load(".RData") # load saved workspace image for this file
+
+# Directories
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+
+# Data Path
+data_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4'
+# Code Path
+code_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/exp_4'
+# Results Path
+res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp_4'
+
+```
+
 # Load, Init.
 ```{r message=FALSE}
 # Init.
@@ -37,18 +54,21 @@ library(RcppRoll) # for rolling means
 library("wesanderson")
 
 # Load
-setwd("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1")
-data_files <- list.files(pattern = ".csv")
-raw_data <- read_csv(data_files[1])
+# setwd("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1")
+# data_files <- list.files(pattern = ".csv")
+# raw_data <- read_csv(data_files[1])
 
 # Some stuffs for summary stats
-source("summarySE.R")
-source("summarySEwithin.R")
+source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/summarySE.R')
+source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/R_rainclouds.R')
 
 # Global Params
 w = 6
 h = 4
+```
 
+
+```{r message=FALSE}
 # Global Vars
 n_subjs_raw <- length(unique(raw_data$subject))
 subj_IDs <- unique(raw_data$subject)
@@ -265,7 +285,7 @@ There were 1430 NAs or missed targets (miss rate was 16.93%, now 17.97%).
 # - PLANNED ANALYSES -
 # Load Saved TD
 ```{r}
-data <- read_csv("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1/exp_4_rt_data.csv") %>%
+data <- read_csv("C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4/exp_4_rt_data.csv") %>%
   mutate(subject = as.factor(subject),
          target = as.factor(target),
          sess = as.factor(sess), 
@@ -800,7 +820,7 @@ data <- data %>%
 
 # Save TD Data
 ```{r}
-write.csv(data,file.path("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1/exp_4_rt_data.csv"), row.names = FALSE)
+# write.csv(data,file.path("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1/exp_4_rt_data.csv"), row.names = FALSE)
 
 ```
 
@@ -993,6 +1013,10 @@ glm.less.slope3 <- glmer(rt_secs ~ sess * tgt_pos + (1 | cond_order/subject) + #
 anova(glm.less.int,glm.less.slope,glm.less.slope1,glm.less.slope2,glm.less.slope3)
 
 ```
+# Load GLM
+```{r}
+load(file.path(res_path,'models','glm_less_slope_sessrand.Rdata'))
+```
 
 ```{r}
 library(lattice)
@@ -1051,31 +1075,31 @@ add.lines = list(c("Fixed Effects", "Session Order/Subject + Session"),
 ### Contrasts
 #### position within session
 ```{r}
-
+ options("scipen"=100, "digits"=4)
 car::Anova(glm.less.slope3, type = 3)
 
 
 (em.tgt_pos.sess <- emmeans(glm.less.slope3, specs = pairwise ~ tgt_pos|sess, adjust = "tukey", transform = "response"))
 
 em.tgt_pos.sess$contrasts %>%
-     #summary(infer=TRUE) %>%
+     summary(infer=TRUE) %>%
      rbind() %>%
      as.data.frame() -> pos.sess.c
 pos.sess.c_out <- pos.sess.c %>%
-  mutate(session = sess,
-        "estimated marginal diff." = round(estimate,digits = 3),
+  transmute("ordinal position" = contrast, 
+        session = sess,
+        estimate = round(estimate,digits = 3),
          SE = round(SE, digits =3),
-       #  "lower CI" = round(asymp.LCL, digits = 3),
-       #  "upper CI" = round(asymp.UCL, digits = 3), 
+         "lower CI" = round(asymp.LCL, digits = 3),
+         "upper CI" = round(asymp.UCL, digits = 3), 
          "z ratio" = round(z.ratio, digits = 3),
-         "p value" = "<.001") %>%
-  remove_rownames() %>%
-  add_column("s value" = round(-log2(pos.sess.c$p.value),digits = 3)) %>%
-  dplyr::select(8,1,9,3:4,10:12)
+         "p value" = round(p.value, digits = 3)) %>%
+  add_column("s value" = round(-log2(pos.sess.c$p.value),digits = 3))
+
 
 stargazer(pos.sess.c_out, 
           type = "html", 
-          out = "4_pos_sess_con.doc", summary = FALSE, rownames = FALSE)
+          out = file.path(res_path,'tables',"4_pos_sess_con.doc"), summary = FALSE, rownames = FALSE)
 
 plot(em.tgt_pos.sess, comparisons = TRUE)
 

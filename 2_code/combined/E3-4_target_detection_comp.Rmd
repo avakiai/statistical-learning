@@ -2081,7 +2081,7 @@ wt.DI$p.value)))
 ```
 
 
-### Plot
+## Plot
 ```{r}
 ggplot(WA.wilcox) + 
   geom_col(aes(test,mean), fill = "grey", color = "black") + 
@@ -2103,63 +2103,6 @@ Ok, now that we have a list with responses from each subject, sample 200 times a
 3. Take subset
 4. Compute 1-corr, z norm
 5. Wilcoxon, heatmap
-
-
-
-### Ordinal Position - Rank Sum Test
-```{r}
-ordinal.z.1v2 <- as.data.frame(all.z) %>% gather(key = first, value = z_1, nu, ro, mi, za) %>%
-         gather(key = second, value = z_2, ga, ki, po, be) %>%
-  dplyr::select(z_1,z_2) 
-wilcox.test(ordinal.z.1v2$z_1,ordinal.z.1v2$z_2)
-
-ordinal.z.1v3 <- as.data.frame(all.z) %>% gather(key = first, value = z_1, nu, ro, mi, za) %>%
-         gather(key = second, value = z_3, di, se, la, tu) %>%
-  dplyr::select(z_1,z_3) 
-wilcox.test(ordinal.z.1v2$z_1,ordinal.z.1v2$z_3)
-
-ordinal.z.2v3 <- as.data.frame(all.z) %>% gather(key = first, value = z_2, ga, ki, po, be) %>%
-         gather(key = second, value = z_3, di, se, la, tu) %>%
-  dplyr::select(z_2,z_3) 
-wilcox.test(ordinal.z.2v3$z_2,ordinal.z.1v2$z_3)
-```
-True location shifts between pos 1 and pos 2 and pos 3 syllables are not equal to 0. 
-Marginally different 2 & 3. 
-Coding for ordinal position.
-
-### TP
-```{r}
-ordinal.z.1v33 <- as.data.frame(all.z) %>% gather(key = first, value = z_33, nu, ro, mi, za) %>%
-         gather(key = second, value = z_1, ga, ki, po, be, di, se, la, tu) %>%
-  dplyr::select(z_1,z_33) 
-wilcox.test(ordinal.z.1v33$z_1,ordinal.z.1v33$z_33)
-
-```
-Coding for transitional probability. 
-
-### Within vs. Across Words
-e.g. nu-ga, ga-di vs. nu/ga/di-everything else
-```{r}
-all.z.df <- as.data.frame(all.z)
-
-across = c(all.z.df[lower.tri(all.z.df)][-c(1, 12, 31, 39, 52, 57, 64, 66)])
-within = c(all.z.df[lower.tri(all.z.df)][c(1, 12, 31, 39, 52, 57, 64, 66)])
-within = c(within, rep(NA, length(across)-length(within)))
-within.vs.across <- as.data.frame(cbind(across, within))
-wilcox.test(within.vs.across$across,within.vs.across$within)
-
-
-
-```
-Note that across includes na-di, which is never seen. 
-Does that makes this a duplet test only? I suppose so. 
-
-
-word would have to include: the above, plus nu-di pairs. 
-```{r}
-
-```
-
 
 ## Heatmap
 ```{r}

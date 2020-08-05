@@ -1,6 +1,6 @@
 
-<table style="text-align:center"><tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">contrast</td><td>estimate</td><td>SE</td><td>df</td><td>p value</td><td>s value</td></tr>
-<tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">1 - 2</td><td>0.078</td><td>0.006</td><td>Inf</td><td>< .001</td><td>139.307</td></tr>
-<tr><td style="text-align:left">1 - 3</td><td>0.110</td><td>0.006</td><td>Inf</td><td>< .001</td><td>262.422</td></tr>
-<tr><td style="text-align:left">2 - 3</td><td>0.032</td><td>0.004</td><td>Inf</td><td>< .001</td><td>39.918</td></tr>
-<tr><td colspan="6" style="border-bottom: 1px solid black"></td></tr></table>
+<table style="text-align:center"><tr><td colspan="8" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">ordinal position</td><td>estimate</td><td>SE</td><td>lower CI</td><td>upper CI</td><td>z ratio</td><td>p value</td><td>s value</td></tr>
+<tr><td colspan="8" style="border-bottom: 1px solid black"></td></tr><tr><td style="text-align:left">1 - 2</td><td>0.078</td><td>0.006</td><td>0.065</td><td>0.092</td><td>13.770</td><td>< .001</td><td>139.307</td></tr>
+<tr><td style="text-align:left">1 - 3</td><td>0.110</td><td>0.006</td><td>0.097</td><td>0.124</td><td>18.964</td><td>< .001</td><td>262.419</td></tr>
+<tr><td style="text-align:left">2 - 3</td><td>0.032</td><td>0.004</td><td>0.022</td><td>0.042</td><td>7.285</td><td>< .001</td><td>39.917</td></tr>
+<tr><td colspan="8" style="border-bottom: 1px solid black"></td></tr></table>

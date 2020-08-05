@@ -4,7 +4,7 @@ output: html_notebook
 ---
 
 ```{r}
-# rm(list=ls()) # clear workspace
+rm(list=ls()) # clear workspace
 # load(".RData") # load saved workspace image for this file
 
 # Directories
@@ -20,8 +20,8 @@ res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp
 ```
 
 
-## Init.
-```{r message=FALSE, include=FALSE}
+Init.
+```{r Initialize libraries, message=FALSE, include=FALSE}
 # output
 # library(knitr)
 # library(Cairo)
@@ -35,8 +35,8 @@ library(tidyverse)
 #library(gplots)
 library(fitdistrplus)
 
-library(Rmisc) # summary stats
-source(file.path(code_path, "/R_rainclouds.R"))
+source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/summarySE.R')
+source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/R_rainclouds.R')
   
 # stats
 library(lme4)
@@ -51,7 +51,8 @@ library(stargazer)
 library(lsr) 
 library(pwr)
 library(RcppRoll) # for rolling means
-  
+library(car)
+
 # latex font
 library(extrafont)
   loadfonts(device = "win")
@@ -65,23 +66,35 @@ w = 7
 h = 5
 ```
 
-## Load
-```{r message=FALSE, include=FALSE}
+Load
+```{r Load data, message=FALSE, include=FALSE}
 # 1. Online SL: Target Detection Task 
-rt_data_orig <- read_csv(file.path(data_path,data_files[2]))
+
+# IF YOU WISH TO PREPROCESS: LOAD THE ORIG FILE AND RUN CHUNKS UNDER
+# 0 - PREPROCESING
+# rt_data_orig <- read_csv(file.path(data_path,'RT_response_table.csv'))
+# OTHERWISE, LOAD PREPROCESSED DATA: 
+rt_data <- read_csv(file.path(data_path,'exp_3_rt_data.csv')) %>%
+      mutate(subject = as.factor(subject),
+           block = as.factor(block),
+           target = as.factor(target),
+           tgt_pos = as.factor(tgt_pos),
+           tgt_word = as.factor(tgt_word))
 
 # 2. Offline SL: Word Recognition Task
-wordrec_data_orig <- read_csv(file.path(data_path,data_files[5]))
+wordrec_data_orig <- read_csv(file.path(data_path,'wordrec_task_data.csv'))
 
 # 3. Pre/Post: Tempo Task 
-tempotask_data_orig <- read_csv(file.path(data_path,data_files[4]))
+tempotask_data_orig <- read_csv(file.path(data_path,'tempo_task_data.csv'))
 
 ```
 
-## ----------- Target Detection Task 
-## 0 - Preprocessing
-Clean up data... N = 39
-```{r eval=FALSE, include=FALSE}
+# --- Target Detection Task 
+# 0 - PREPROCESSING
+```{r Clean up data, eval=FALSE, include=FALSE}
+
+
+
 # Add blocks
 rt_data_clean <- rt_data_orig[which(rt_data_orig$code!=0),]
   n_meta_blocks <- max(rt_data_orig$block)/max(rt_data_orig$tgt_pos)
@@ -112,8 +125,7 @@ rt_data_cleaned.1 <- rt_data_clean %>%
 
 
 ```
-Remove data sets with technical/programming errors... N = 33
-```{r eval=FALSE, include=FALSE}
+```{r Remove data with technical errors, eval=FALSE, include=FALSE}
 rm_subjs <- c("b2308", # Did not respond at all
               "b1912","r1028", "t0204", # Trials were not blocked, so block numbers meaningless.
               "d2006", # Blocking messed up and didn't see all sylls; Block 6 = Target Positions 3,2,3; Blocks seen =  1-16, 1-8
@@ -124,30 +136,7 @@ rt_data_cleaned.2 <- rt_data_cleaned.1[which(!rt_data_cleaned.1$subject %in% rm_
 print(paste0("Of the original ", length(unique(rt_data_cleaned.1$subject)), " subjects, ", length(unique(rt_data_cleaned.2$subject)), " remain after removing participants with technical errors."))
   
 ```
-Later, keep only these 33 participants when you correlate with word recognition or tempo task. 
-```{r eval=FALSE, include=FALSE}
-# First clean up a bit... 
-# ... use wordrec_data_orig for word rec analysis...
-# wordrec_data_orig <- wordrec_data_orig %>%
-#   dplyr::select(2:9) %>%
-#   dplyr::rename(subject = subj_id) %>%
-#   mutate(subject = as.factor(subject))
-# 
-# # ... use wordrec_data for correlating with rt_data.
-# wordrec_data <- filter(wordrec_data_orig, subject %in% unique(rt_data_cleaned.2$subject))
-# 
-# # ... use orig for tempot task analysis... 
-# tempotask_data_orig <- tempotask_data_orig %>%
-#   dplyr::select(2:9) %>%
-#   dplyr::rename(subject = subj_id) %>%
-#   mutate(subject = as.factor(subject))
-# 
-# # ... for correlating with rt_data.
-# tempotask_data <- filter(tempotask_data_orig, subject %in% unique(rt_data_cleaned.2$subject))
-```
-
-##Visualize RT distributions
-```{r eval=FALSE, warning=FALSE, include=FALSE}
+```{r Visualize RT distributions/histograms, eval=FALSE, warning=FALSE, include=FALSE}
 # view
 hist(rt_data_cleaned.2$rt)
 summary(rt_data_cleaned.2$rt)
@@ -156,11 +145,9 @@ rts <- rt_data_cleaned.2$rt %>% na.omit() %>% as.numeric()
 
 descdist(rts, discrete = FALSE)
 descdist(rts, discrete = FALSE, boot = 500)
+# Distribution is gamma/lognormal.
 ```
-Distribution is gamma/lognormal.
-
-#Comparison of fits
-```{r eval=FALSE, warning=FALSE, include=FALSE}
+```{r Compare fits to RT data, eval=FALSE, warning=FALSE, include=FALSE}
 fit.gam  <- fitdist(rts, "gamma")
 fit.ln <- fitdist(rts, "lnorm")
 summary(fit.gam)
@@ -174,12 +161,9 @@ qqcomp  (list(fit.gam, fit.ln), legendtext = plot.legend)
 ppcomp  (list(fit.gam, fit.ln), legendtext = plot.legend)
 
 gofstat(list(fit.gam, fit.ln), fitnames = c("gamma", "lognorm"))
+# Gamma distribution fits best. 
 ```
-Gamma distribution fits best. 
-
-Now remove some outliers... 
-# Outlier Removal
-```{r eval=FALSE, warning=FALSE, include=FALSE}
+```{r Outlier removal, eval=FALSE, warning=FALSE, include=FALSE}
 # Outlier Removal Method: median +- 3(mad) 
 # --> https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/mad
 # calculate
@@ -217,44 +201,23 @@ gofstat(list(fit.norm, fit.gam, fit.ln), fitnames = c("norm","gamma", "lognorm")
 
 print(paste0("The method of removing +- 3 * the median absolute deviation results in a data loss of only ", round(1-length(rt_data$rt)/length(rt_data_cleaned.2$rt), digits = 3), "%. Meanwhile, although outlier removal makes the distribution much more normal (note scaling does not add any further normality), gamma remains the best fit."))
 ```
-Summary statistics before and after outlier removal...
-```{r eval=FALSE, include=FALSE}
+```{r Summary statistics before/after outlier removal, eval=FALSE, include=FALSE}
 summary(sort(rts))
 summary(sort(rts.rm))
 ```
-
-# Save / Read data
-```{r include=FALSE}
-#write.csv(rt_data,'exp_3_rt_data.csv', row.names = FALSE)
-rt_data <- read_csv(file.path(data_path,'exp_3_rt_data.csv')) %>%
-      mutate(subject = as.factor(subject),
-           target = as.factor(target),
-           tgt_pos = as.factor(tgt_pos),
-           tgt_word = as.factor(tgt_word))
-```
-
-
-
-
-```{r}
+```{r Rescale response variable, eval=FALSE, include=FALSE}
 # rescale y var
-# rt_data <- rt_data %>%
-#   mutate(rt_secs = rt/1000)
-# 
-# # rescale y   
-# rt_data_sum4 <- rt_data_sum4 %>%
-#   mutate(rt_secs_mean = rt_mean/1000)
-# 
-# # sort
-# rt_data_sum6 <- rt_data_sum6 %>%
-#   mutate(row_name = row_number())
-# rt_data_sum6_sorted <- rt_data_sum6[order(rt_data_sum6$rt_mean),]
-
-    
+rt_data <- rt_data %>%
+   mutate(rt_secs = rt/1000)
+```
+```{r Save data, eval=FALSE, include=FALSE}
+write.csv(rt_data,'exp_3_rt_data.csv', row.names = FALSE)
 ```
 
-#_
-## Fig. 1. Plot RT ~ Pos x Block 
+
+# 1 - PLOTS
+
+## Fig. 1a. Plot RT ~ Pos x Block 
 ```{r message=FALSE, warning=FALSE}
 rt_data_sum1 <- rt_data %>% # target position x block
     summarySE(measurevar = "rt", groupvars = c("block","tgt_pos"),na.rm=TRUE) 
@@ -274,8 +237,8 @@ ggplot() +
   labs(colour= "Block") + ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') +
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave('fig1a_rt_pos_block.png', width = w, height = h)
-dev.copy(pdf,file.path(file.path(res_path,'/figures'),'exp3fig1a.pdf'), width = 6, height = 4)
+  ggsave(file.path(res_path,'figures','fig1a_rt_pos_block.png'), width = w, height = h)
+dev.copy(pdf,file.path(res_path,'figures','fig1artposblock.pdf'), width = 6, height = 4)
 dev.off()
 ```
 
@@ -296,8 +259,8 @@ ggplot(rt_data_sum3, aes(x = tgt_pos, y = rt_median, fill = tgt_pos)) +
   guides(fill = FALSE, color = FALSE) + 
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave('fig1b_rt_pos.png', width = w, height = h)
-dev.copy(pdf,file.path(file.path(res_path,'/figures/'),'exp3fig1b.pdf'), width = 6, height = 4)
+  ggsave(file.path(res_path,'figures','fig1b_rt_pos.png'), width = w, height = h)
+dev.copy(pdf,file.path(res_path,'figures','fig1b.pdf'), width = 6, height = 4)
 dev.off()
 ```
 
@@ -318,340 +281,15 @@ ggplot(rt_data_sum4, mapping=aes(x=tgt_pos,y=rt_median,color=as.factor(block))) 
   ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') + labs(color="Block") +
   scale_color_brewer(palette="Paired") + 
   facet_wrap(. ~ subject, ncol=7) +
-  theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave('fig2_rt_pos_block_subj.png',width=18,height=14)
-dev.copy(pdf,file.path(file.path(res_path,'/figures/'),'exp3fig2.pdf'))
-dev.off()
-
-```
-
-
-```{r}
-rt_data %>% summarySE(., measurevar = "rt_secs", groupvars = c("tgt_pos"), na.rm = TRUE)
-```
-
-## GLMM: RT ~ Pos x Block
-### Full 
-```{r}
-options(contrasts = c("contr.sum", "contr.poly"))
-# Full Model | Random Intercept Only | Block as Factor | Gamma-log function
-rt.mod.full.int.fct <- glmer(rt_secs ~ 1 + tgt_pos*block + (1 | subject), data = rt_data, family = Gamma(link = "log"), 
-                             control = glmerControl(optimizer="bobyqa",
-                            optCtrl=list(maxfun=2e5)))
-summary(rt.mod.full.int.fct)
-plot(residuals(rt.mod.full.int.fct))
-qqnorm(resid(rt.mod.full.int.fct))
-Anova(rt.mod.full.int.fct, type = 2)
-anova(rt.mod.full.int.fct)
-```
-### *Lesser
-```{r}
-# Lesser Model | Random Intercept Only | Gamma-log function
-rt.mod.less.int <- glmer(rt_secs ~ 1 + tgt_pos + (1 | subject), data = rt_data, family = Gamma(link = "log"))
-  summary(rt.mod.less.int)
-  plot(residuals(rt.mod.less.int))
-  qqnorm(resid(rt.mod.less.int))
-  
-  car::Anova(rt.mod.less.int)
-
-#   res.table <- as.data.frame(coef(summary(rt.mod.less.int)))
-#   row.names(res.table) <- c("Tgt_Pos1","Tgt_Pos2","Tgt_Pos3")
-#   res.table$`Pr(>|z|)`<- c("<.001","<.001","<.001")
-#   res.table %>%
-#     kable() %>%
-#      kable_styling(bootstrap_options = c("striped", "hover")) %>%
-#      save_kable(file = 'target_glmm.png', self_contained = T) #width = w, height = h)
-# 
-# # png(file.path(file.path(res_path,'/figures/'), '/target_glmm.png'), width=480,height=480,bg = "white")
-# # grid.table(res.table)
-# # dev.off()
-
-  
-tidy(rt.mod.less.int,conf.int=TRUE) %>% as_tibble()
-# all fit values
-glance(rt.mod.less.int)
-# plot estimates
-tidy(rt.mod.less.int,conf.int=TRUE) %>% as_tibble() %>% 
-  .[c(1:3),] %>%
-  ggplot(aes(term, estimate, ymin=conf.low, ymax=conf.high)) +
-  geom_pointrange() +
-  geom_hline(yintercept = 0) 
-
-# augment pulls out the fitted estimate and the residuals for all observations
-augment(rt.mod.less.int) %>%
-   ggplot(aes(x=.fitted, y=.resid)) +
-  geom_point() +
-  geom_smooth()  
-  
-  
-    
-```
-
-#### Model Evaluation
-```{r}
-anova(rt.mod.full.int.fct,rt.mod.less.int) 
-```
-There is a marginal but significant difference in the fit of the two models. The lesser model is the one we'll continue with, but we will still explore the effect of block. 
-
-Models with a delta AIC of greater than 10 suggest almost no support for the fuller model. For more info, see here: https://stats.stackexchange.com/questions/232465/how-to-compare-models-on-the-basis-of-aic
-
-##### -> Output Regression Table
-```{r}
-stargazer(rt.mod.less.int, rt.mod.full.int.fct,
-#type="html",
-out="td_mods_1.doc",
-intercept.bottom = FALSE,
-intercept.top = TRUE,
-ci = TRUE, 
-digits=2,
-notes = "Fitted using Gamma distribution and log link function.",
-model.names = FALSE,
-object.names = FALSE,
-column.labels = c("lesser", "fuller"),
-single.row = T,
-title="Table 1. GLM Results",
-align=TRUE, dep.var.labels=c("reaction time (s)"),
-covariate.labels = c("Intercept(Pos 1)",
-"Pos 2",
-"Pos 3", 
-"Block 2",
-"Block 3",
-"Block 4",
-"Block 5",
-"Block 6",
-"Block 7",
-"Block 8",
-"Pos 2:Block 2",
-"Pos 3:Block 2",
-"Pos 2:Block 3",
-"Pos 3:Block 3",
-"Pos 2:Block 4",
-"Pos 3:Block 4",
-"Pos 2:Block 5",
-"Pos 3:Block 5",
-"Pos 2:Block 6",
-"Pos 3:Block 6",
-"Pos 2:Block 7",
-"Pos 3:Block 7",
-"Pos 2:Block 8",
-"Pos 3:Block 8"))
-
-
-```
-
-
-### Full, Lesser | Random Slopes 
-```{r}
-rt.mod.full.int.slope <- glmer(rt_secs ~ 1 + tgt_pos*block + (tgt_pos | subject), data = rt_data, family = Gamma(link = "log"), 
-                             control = glmerControl(optimizer="bobyqa",
-                            optCtrl=list(maxfun=2e5)))
-summary(rt.mod.full.int.slope)
-plot(residuals(rt.mod.full.int.slope))
-qqnorm(resid(rt.mod.full.int.slope))
-
-
-rt.mod.less.int.slope <- glmer(rt_secs ~ 1 + tgt_pos + (tgt_pos | subject), data = rt_data, family = Gamma(link = "log"))
-summary(rt.mod.less.int.slope)
-plot(residuals(rt.mod.less.int.slope))
-qqnorm(resid(rt.mod.less.int.slope))
-```
-
-#### Model Evaluation
-```{r}
-anova(rt.mod.less.int,rt.mod.full.int.slope,rt.mod.less.int.slope)
-```
-Again, the lesser, random intercepts model is a better description of the data, by AIC value. 
-
-A final comparison, by testing if allowing random slopes for both position and block per subject is a better reflector than only for target position. 
-
-
-##### -> Output Regression Table
-```{r}
-stargazer(rt.mod.less.int, rt.mod.less.int.slope, rt.mod.full.int.fct,
-type="html",
-out="td_mods_2.doc",
-intercept.bottom = FALSE,
-intercept.top = TRUE,
-ci = TRUE, 
-digits=2,
-notes = "Fitted using Gamma distribution and log link function.",
-model.names = FALSE,
-object.names = FALSE,
-column.labels = c("lesser", "lesser (random slopes)","fuller"),
-single.row = T,
-title="Table 1. GLM Results",
-align=TRUE, 
-dep.var.labels=c("reaction time (s)"),
-covariate.labels = c("Intercept(Pos 1)",
-"Pos 2",
-"Pos 3", 
-"Block 2",
-"Block 3",
-"Block 4",
-"Block 5",
-"Block 6",
-"Block 7",
-"Block 8",
-"Pos 2:Block 2",
-"Pos 3:Block 2",
-"Pos 2:Block 3",
-"Pos 3:Block 3",
-"Pos 2:Block 4",
-"Pos 3:Block 4",
-"Pos 2:Block 5",
-"Pos 3:Block 5",
-"Pos 2:Block 6",
-"Pos 3:Block 6",
-"Pos 2:Block 7",
-"Pos 3:Block 7",
-"Pos 2:Block 8",
-"Pos 3:Block 8"),
-add.lines = list(c("Fixed Effects", "Subject", "Position | Subject", "Subject"),
-                 c("Fixed Effects Struct.", "Rand. Int.", "Rand. Int., Slope", "Rand Int.")))
-
-
-```
-
-
-### Lesser | Random Slopes for both Factors
-```{r}
-rt.mod.less.int.slope2 <- glmer(rt_secs ~ 1 + tgt_pos + (tgt_pos | subject) + (block | subject), data = rt_data, family = Gamma(link = "log"))
-summary(rt.mod.less.int.slope2)
-plot(residuals(rt.mod.less.int.slope2))
-qqnorm(resid(rt.mod.less.int.slope2))
-
-```
-#### Model Evaluation
-```{r}
-anova(rt.mod.less.int,rt.mod.less.int.slope,rt.mod.less.int.slope2)
-```
-Yet again, go for the simplest model. 
-
-## Contrasts 
-```{r}
-(emm.pos <- emmeans(rt.mod.less.int, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response"))
-
-position_contrasts <- emm.pos$contrasts %>%
-  #confint() %>%
-  rbind() %>%
-  as.data.frame() 
-
-position_contrasts_out <- position_contrasts %>%
-  mutate("estimated marginal diff." = round(estimate,digits = 3),
-         SE = round(SE, digits =3),
-       #  "lower CI" = round(asymp.LCL, digits = 3),
-       #  "upper CI" = round(asymp.UCL, digits = 3), 
-         "z ratio" = round(z.ratio, digits = 3),
-         "p value" = "<.001") %>%
-  remove_rownames() %>%
-  add_column("s value" = round(-log2(position_contrasts$p.value),digits = 3)) %>%
-  dplyr::select(1:4,9:10)
-
-stargazer(position_contrasts_out, 
-          type = "html", 
-          out = "td_mod_cont.doc", summary = FALSE, rownames = FALSE)
-```
-
-### Fig. 1c. & S1 Contrasts: RT ~ Pos
-```{r}
-# Predicted Contrasts
-png(file = 'exp3fig1c.png', width = w, height = h, res = 300, units = "in")
-plot(emm.pos, comparisons = TRUE,
-     xlab = "estimated marginal means",
-     ylab = "ordinal position of target syllable") +
-  theme_bw()
-#dev.copy(pdf,file.path(file.path(res_path,'/figures/'),'exp3fig1c.pdf'), width = 6, height = 4)
-dev.off()
-
-#pwpp(emm.pos$emmeans, method = "pairwise")
-
-# Predicted Values
-png(file = 'exp3figS1.png', width = w, height = h, res = 300, units = "in")
-emmip(rt.mod.less.int, ~ tgt_pos, xlab = "Target Position", CIs = TRUE) +
-  theme_bw()
-#dev.copy(pdf,file.path(file.path(res_path,'/figures/'),'exp3figS1.pdf'), width = 6, height = 4)
-dev.off()
-
-```
-
-## Contrasts Con't (Pos x Block)
-```{r}
-# anova(rt.mod.full.int.fct,rt.mod.full.int.slope, rt.mod.full.int.slope2)
-# Test showing that the full model with random intercepts only is the best fitting ^... 
-
-(emm.pos.block <- emmeans(rt.mod.full.int.fct, specs = pairwise ~ tgt_pos|block, adjust = "tukey", transform = "response"))
-
-block_contrasts <- emm.pos.block$contrasts %>%
-  rbind() %>%
-  as.data.frame() 
-
-block_contrasts_out <- block_contrasts %>%
-  mutate("estimated marginal diff." = round(estimate,digits = 3),
-         SE = round(SE, digits =3),
-         "z ratio" = round(z.ratio, digits = 3),
-         "p value" = "<.001") %>%
-  remove_rownames() %>%
-  dplyr::select(1:2,8,4:5,9:10) %>%
-  add_column("s value" = round(-log2(block_contrasts$p.value),digits = 3))
-```
-
-### Fig. S2. Contrasts: RT ~ Pos x Block
-```{r}
-plot(emm.pos.block, comparisons = TRUE,
-     xlab = "estimated marginal means",
-     ylab = "ordinal position of target syllable") +
-   theme_bw() 
-dev.copy(pdf,file.path(file.path(res_path,'/figures/'),'exp3figS2a.pdf'), width = 6, height = 4)
-dev.off()
-
-emmip(rt.mod.full.int.fct, tgt_pos ~ block, CIs = TRUE, xlab = "Block") +
   theme_bw() +
-  scale_color_manual(name = "Position",
-                     values=wes_palette("Royal2")[c(5,4,3)]) 
-dev.copy(pdf,file.path(file.path(res_path,'/figures/'),'exp3figS2b.pdf'), width = 6, height = 4)
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggsave(file.path(res_path,'figures','fig2_rt_pos_block_subj.png'),width=18,height=14)
+dev.copy(pdf,file.path(res_path,'figures','exp3fig2.pdf'))
 dev.off()
 
-emmip(rt.mod.full.int.fct, block ~ tgt_pos, CIs = TRUE, xlab = "Target Position") + 
-    theme_bw() + 
-    scale_color_manual(name="block",
-                 values=RColorBrewer::brewer.pal(8,"Paired"))
-dev.copy(pdf,file.path(res_path,'/figures/','exp3figS2c.pdf'), width = 6, height = 4)
-dev.off()
 ```
 
-
-
-  ## Regress out syllable effect
-```{r}
-# across all participants, median RTs for each of the syllables
-# rm anova with syllable and position as factors
-subj.mod <- glmer(rt ~ tgt_pos*target + (1 | subject), data = rt_data, family = Gamma("log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
-summary(subj.mod)
-# for each participant, subtracted the residual RT value from observed value for each syllable, co-varying out the effects of physical stimulus factors and yielding corrected RT effect
-
-# Model is rank-deficient
-
-library(broom)
-broom::glance(subj.mod)
-augment(subj.mod)
-rt_data_adj <- data.frame(subject = as.factor(augment(subj.mod)$subject),
-           tgt_pos = as.factor(augment(subj.mod)$tgt_pos),
-           rt_adj = as.numeric(augment(subj.mod)$rt - augment(subj.mod)$.resid))
-         
-rt.mod.less.int.adj <- glmer(rt_adj ~ 1 + tgt_pos + (1 | subject), data = rt_data_adj, family = Gamma(link = "log"))
-  summary(rt.mod.less.int.adj)
-  plot(residuals(rt.mod.less.int.adj))
-  qqnorm(resid(rt.mod.less.int.adj))
-  
-  car::Anova(rt.mod.less.int.adj)
-```
-
-
-
-#_
-
-# Fig. 3. Rolling Average RT
+## Fig. 3a. Rolling Average RT
 ```{r warning=FALSE, include=FALSE}
 # There are 18 targets per block. 3 blocks in each block (set of trials where all 3 positions serve as targets). 
 # We can have a moving average spanning 3 items...
@@ -703,12 +341,11 @@ ggplot(rolled_over_subjs_blocks, mapping=aes(target_num,moving_mean_mean,colour=
   #                    labels = c("1st","2nd","3rd")) +
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold"), legend.position = "top") +
-  ggsave('fig3_rt_rolling.png', width = w, height = h)
-dev.copy(pdf,file.path(res_path,'/figures/','exp3fig3rolling.pdf'), width = w, height = h)
+  ggsave(file.path(res_path,'figures','fig3_rt_rolling.png'), width = w, height = h)
+dev.copy(pdf,file.path(res_path,'figures','exp3fig3rolling.pdf'), width = w, height = h)
 dev.off()
 ```
 Impressively, only a few exposures to the words are enough for participants' reaction times to differentiate syllables based on their position.
-
 
 ## Fig. 3b. Plot Blocks as Facets/1st Block Only
 ```{r}
@@ -733,45 +370,12 @@ ggplot(rolled_over_subjs, mapping=aes(target_num,moving_mean_mean,colour=tgt_pos
   facet_wrap(.~ block, ncol=4) +
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold"), legend.position = "top") +
-  ggsave('fig3b_rt_rolling.png',width=14,height=10)
-dev.copy(pdf,file.path(res_path,'/figures/','exp3fig3brolling.pdf'), width = 12, height = 10)
+  ggsave(file.path(res_path,'figures','fig3b_rt_rolling.png'),width=14,height=10)
+dev.copy(pdf,file.path(res_path,'figures','exp3fig3brolling.pdf'), width = 12, height = 10)
 dev.off()
 
 ```
 
-## GLMM
-```{r}
-rt_data_rolled <- rt_data_rolled %>%
-  mutate(target_num = as.numeric(target_num), # occurence within trial
-         tgt_pos = as.factor(tgt_pos), # position
-         block = as.factor(block), 
-        # trial is not meaningful because spread across different target positions
-         subject = as.factor(subject),
-         mm_secs = moving_mean/1000)
-hist(rt_data_rolled$mm_secs)
-
-mm_rts <- rt_data_rolled$mm_secs %>% na.omit() %>% as.numeric()
-descdist(mm_rts, discrete = FALSE, boot = 1000)
-fit.norm <- fitdist(mm_rts, "norm")
-fit.gam  <- fitdist(mm_rts, "gamma")
-fit.ln <- fitdist(mm_rts, "lnorm")
-summary(fit.norm)
-summary(fit.gam)
-summary(fit.ln)
-
-par(mfrow=c(2,2))
-plot.legend <- c("norm","gamma", "lognorm")
-denscomp(list(fit.norm,fit.gam, fit.ln), legendtext = plot.legend)
-cdfcomp (list(fit.norm,fit.gam, fit.ln), legendtext = plot.legend)
-qqcomp  (list(fit.norm,fit.gam, fit.ln), legendtext = plot.legend)
-ppcomp  (list(fit.norm, fit.gam, fit.ln), legendtext = plot.legend)
-
-gofstat(list(fit.norm, fit.gam, fit.ln), fitnames = c("norm","gamma", "lognorm"))
-
-```
-
-
-# _ 
 ## Fig. 4. Accuracy: RT ~ Pos
 ```{r}
 accuracy_data1 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos","subject"),na.rm=TRUE) 
@@ -790,8 +394,7 @@ accuracy_data2 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tg
 #   guides(fill=FALSE, color = FALSE) +
 #   theme_minimal() +
 #   theme(text = element_text(family = "LM Roman 10", face="bold")) +
-#   ggsave('fig4_rt_acc.png',width=w,height=h)
-
+#   ggsave(file.path(res_path,'figures','fig4_rt_acc.png'),width=w,height=h)
 
 # Raincloud
 ggplot(accuracy_data1, aes(x = tgt_pos, y = detect_mean, fill = tgt_pos)) +
@@ -809,12 +412,282 @@ ggplot(accuracy_data1, aes(x = tgt_pos, y = detect_mean, fill = tgt_pos)) +
   guides(fill = FALSE, color = FALSE) + 
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave('fig4_rt_acc.png',width=w,height=h)
-dev.copy(pdf,file.path(res_path,'/figures/','exp3fig4acc.pdf'), width = w, height = h)
+  ggsave(file.path(res_path,'figures','fig4_rt_acc.png'),width=w,height=h)
+dev.copy(pdf,file.path(res_path,'figures','exp3fig4acc.pdf'), width = w, height = h)
 dev.off()
 
 ```
 
+
+
+# 2 - MODELS
+
+
+```{r}
+rt_data %>% summarySE(., measurevar = "rt_secs", groupvars = c("tgt_pos"), na.rm = TRUE)
+```
+
+## GLMM: RT ~ Pos x Block
+### Fuller 
+```{r}
+options(contrasts = c("contr.sum", "contr.poly"))
+
+# LOAD THE MODEL ALREADY RUN
+load(file.path(res_path,'models','rt_block_full_int.Rdata'))
+
+# Full Model | Random Intercept Only | Block as Factor | Gamma-log function
+# rt.mod.full.int.fct <- glmer(rt_secs ~ 1 + tgt_pos*block + (1 | subject), data = rt_data, family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  summary(rt.mod.full.int.fct)
+  plot(residuals(rt.mod.full.int.fct))
+  qqnorm(resid(rt.mod.full.int.fct))
+  Anova(rt.mod.full.int.fct, type = 2)
+  anova(rt.mod.full.int.fct)
+  # save(rt.mod.full.int.fct, file = file.path(res_path,'models','rt_block_full_int.Rdata'))
+
+```
+
+### *Lesser
+```{r}
+# Lesser Model | Random Intercept Only | Gamma-log function
+
+load(file.path(res_path,'models','rt_block_less_int.Rdata'))
+
+ # rt.mod.less.int <- glmer(rt_secs ~ 1 + tgt_pos + (1 | subject), data = rt_data, family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  summary(rt.mod.less.int)
+  plot(residuals(rt.mod.less.int))
+  qqnorm(resid(rt.mod.less.int))
+  Anova(rt.mod.less.int,type = 2)
+  anova(rt.mod.less.int)
+ # save(rt.mod.less.int, file = file.path(res_path,'models','rt_block_less_int.Rdata'))
+```
+
+#### Model Evaluation
+```{r}
+anova(rt.mod.full.int.fct,rt.mod.less.int) 
+```
+There is a small but significant difference in the fit of the two models. The lesser model is the one we'll continue with, but we will still explore the effect of block. 
+
+Models with a delta AIC of greater than 10 suggest almost no support for the fuller model. For more info, see here: https://stats.stackexchange.com/questions/232465/how-to-compare-models-on-the-basis-of-aic
+
+
+### Full, Lesser | Random Slopes 
+```{r}
+load(file.path(res_path,'models','rt_block_full_slope.Rdata'))
+#rt.mod.full.int.slope <- glmer(rt_secs ~ 1 + tgt_pos*block + (tgt_pos | subject), data = rt_data, family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  summary(rt.mod.full.int.slope)
+  plot(residuals(rt.mod.full.int.slope))
+  qqnorm(resid(rt.mod.full.int.slope))
+ #save(rt.mod.full.int.slope, file = file.path(res_path,'models','rt_block_full_slope.Rdata'))
+
+load(file.path(res_path,'models','rt_block_less_slope.Rdata'))
+#rt.mod.less.int.slope <- glmer(rt_secs ~ 1 + tgt_pos + (tgt_pos | subject), data = rt_data, family = Gamma(link = "log"))
+  summary(rt.mod.less.int.slope)
+  plot(residuals(rt.mod.less.int.slope))
+  qqnorm(resid(rt.mod.less.int.slope))
+ # save(rt.mod.less.int.slope, file = file.path(res_path,'models','rt_block_less_slope.Rdata'))
+
+# Eval  
+anova(rt.mod.less.int,rt.mod.full.int.slope,rt.mod.less.int.slope)
+```
+Again, the lesser, random intercepts model is a better description of the data, by AIC value. 
+
+A final comparison, by testing if allowing random slopes for both position and block per subject is a better reflector than only for target position. 
+
+```{r Output regression table., include=FALSE}
+stargazer(rt.mod.less.int, rt.mod.less.int.slope, rt.mod.full.int.fct,
+type="html",
+out=file.path(res_path,'tables','td_mods.doc'),
+intercept.bottom = FALSE,
+intercept.top = TRUE,
+ci = TRUE, 
+digits=2,
+notes = "Fitted using Gamma distribution and log link function.",
+model.names = FALSE,
+object.names = FALSE,
+column.labels = c("lesser", "lesser (random slopes)","fuller"),
+single.row = T,
+title="Table 1. GLM Results",
+align=TRUE, 
+dep.var.labels=c("reaction time (s)"),
+covariate.labels = c("Intercept(Pos 1)",
+"Pos 2",
+"Pos 3", 
+"Block 2",
+"Block 3",
+"Block 4",
+"Block 5",
+"Block 6",
+"Block 7",
+"Block 8",
+"Pos 2:Block 2",
+"Pos 3:Block 2",
+"Pos 2:Block 3",
+"Pos 3:Block 3",
+"Pos 2:Block 4",
+"Pos 3:Block 4",
+"Pos 2:Block 5",
+"Pos 3:Block 5",
+"Pos 2:Block 6",
+"Pos 3:Block 6",
+"Pos 2:Block 7",
+"Pos 3:Block 7",
+"Pos 2:Block 8",
+"Pos 3:Block 8"),
+add.lines = list(c("Fixed Effects", "Subject", "Position | Subject", "Subject"),
+                 c("Fixed Effects Struct.", "Rand. Int.", "Rand. Int., Slope", "Rand Int.")))
+
+
+```
+
+### Lesser | Random Slopes for both Factors
+```{r}
+#load(file.path(res_path,'models','rt_block_less_slope2.Rdata'))
+rt.mod.less.int.slope2 <- glmer(rt_secs ~ 1 + tgt_pos + (tgt_pos | subject) + (block | subject), data = rt_data, family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+summary(rt.mod.less.int.slope2)
+plot(residuals(rt.mod.less.int.slope2))
+qqnorm(resid(rt.mod.less.int.slope2))
+save(rt.mod.less.int.slope2, file = file.path(res_path,'models','rt_block_less_slope2.Rdata'))
+
+# Model comparison
+anova(rt.mod.less.int,rt.mod.less.int.slope,rt.mod.less.int.slope2)
+```
+Yet again, go for the simplest model. 
+
+
+## Contrasts 
+```{r}
+(emm.pos <- emmeans(rt.mod.less.int, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response"))
+
+position_contrasts <- emm.pos$contrasts %>%
+  rbind() %>%
+  as.data.frame() %>%
+  cbind(CI.low = 
+    emm.pos$contrasts %>% confint() %>% as.data.frame() %>% dplyr::select(asymp.LCL) %>% remove_rownames(),
+             CI.hi = 
+    emm.pos$contrasts %>% confint() %>% as.data.frame() %>% dplyr::select(asymp.UCL) %>% remove_rownames())
+
+position_contrasts_out <- position_contrasts %>%
+  transmute("ordinal position" = contrast,
+         estimate = round(estimate,digits = 3),
+         SE = round(SE, digits =3),
+         "lower CI" = round(asymp.LCL, digits = 3),
+         "upper CI" = round(asymp.UCL, digits = 3), 
+         "z ratio" = round(z.ratio, digits = 3),
+         "p value" = "<.001") %>%
+  add_column("s value" = round(-log2(position_contrasts$p.value),digits = 3))
+
+stargazer(position_contrasts_out, 
+          type = "html", 
+          out = file.path(res_path,'tables','td_mod_cont.doc'), summary = FALSE, rownames = FALSE)
+```
+
+```{r Explore Coefficients}
+# library(broom)
+# tidy(rt.mod.less.int,conf.int=TRUE) %>% as_tibble()
+# # all fit values
+# glance(rt.mod.less.int)
+# # plot estimates
+# tidy(rt.mod.less.int,conf.int=TRUE) %>% as_tibble() %>% 
+#   .[c(1:3),] %>%
+#   ggplot(aes(term, estimate, ymin=conf.low, ymax=conf.high)) +
+#   geom_pointrange() +
+#   geom_hline(yintercept = 0) 
+# 
+# # augment pulls out the fitted estimate and the residuals for all observations
+# augment(rt.mod.less.int) %>%
+#    ggplot(aes(x=.fitted, y=.resid)) +
+#   geom_point() +
+#   geom_smooth()  
+
+```
+
+## Fig. 1c. & S1 Contrasts: RT ~ Pos
+```{r}
+# Predicted Contrasts
+png(file = file.path(res_path,'figures','fig1c.png'), width = w, height = h, res = 300, units = "in")
+plot(emm.pos, comparisons = TRUE,
+     xlab = "estimated marginal means",
+     ylab = "ordinal position of target syllable") +
+  theme_bw()
+#dev.copy(pdf,file.path(res_path,'figures','fig1c.pdf'), width = 6, height = 4)
+dev.off()
+
+# Predicted Values
+png(file = file.path(res_path,'figures','figS1.png'), width = w, height = h, res = 300, units = "in")
+emmip(rt.mod.less.int, ~ tgt_pos, xlab = "Target Position", CIs = TRUE) +
+  theme_bw()
+#dev.copy(pdf,file.path(res_path,'figures','figS1.pdf'), width = 6, height = 4)
+dev.off()
+
+```
+
+## Contrasts Con't (Pos x Block)
+```{r}
+# anova(rt.mod.full.int.fct,rt.mod.full.int.slope, rt.mod.full.int.slope2)
+# Test showing that the full model with random intercepts only is the best fitting ^... 
+(emm.pos.block <- emmeans(rt.mod.full.int.fct, specs = pairwise ~ tgt_pos|block, adjust = "tukey", transform = "response"))
+
+block_contrasts <- emm.pos.block$contrasts %>%
+  confint() %>%
+  rbind() %>%
+  as.data.frame() 
+
+```
+
+### Fig. S2. Contrasts: RT ~ Pos x Block
+```{r}
+plot(emm.pos.block, comparisons = TRUE,
+     xlab = "estimated marginal means",
+     ylab = "ordinal position of target syllable") +
+   theme_bw() 
+dev.copy(pdf,file.path(res_path,'figures'),'exp3figS2a.pdf'), width = 6, height = 4)
+dev.off()
+
+emmip(rt.mod.full.int.fct, tgt_pos ~ block, CIs = TRUE, xlab = "Block") +
+  theme_bw() +
+  scale_color_manual(name = "Position",
+                     values=wes_palette("Royal2")[c(5,4,3)]) 
+dev.copy(pdf,file.path(res_path,'figures','exp3figS2b.pdf'), width = 6, height = 4)
+dev.off()
+
+emmip(rt.mod.full.int.fct, block ~ tgt_pos, CIs = TRUE, xlab = "Target Position") + 
+    theme_bw() + 
+    scale_color_manual(name="block",
+                 values=RColorBrewer::brewer.pal(8,"Paired"))
+dev.copy(pdf,file.path(res_path,'figures','exp3figS2c.pdf'), width = 6, height = 4)
+dev.off()
+```
+
+
+
+## Regress out syllable effect
+```{r}
+# across all participants, median RTs for each of the syllables
+# rm anova with syllable and position as factors
+subj.mod <- glmer(rt ~ tgt_pos*target + (1 | subject), data = rt_data, family = Gamma("log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+summary(subj.mod)
+# for each participant, subtracted the residual RT value from observed value for each syllable, co-varying out the effects of physical stimulus factors and yielding corrected RT effect
+
+# Model is rank-deficient
+
+library(broom)
+broom::glance(subj.mod)
+augment(subj.mod)
+rt_data_adj <- data.frame(subject = as.factor(augment(subj.mod)$subject),
+           tgt_pos = as.factor(augment(subj.mod)$tgt_pos),
+           rt_adj = as.numeric(augment(subj.mod)$rt - augment(subj.mod)$.resid))
+         
+rt.mod.less.int.adj <- glmer(rt_adj ~ 1 + tgt_pos + (1 | subject), data = rt_data_adj, family = Gamma(link = "log"))
+  summary(rt.mod.less.int.adj)
+  plot(residuals(rt.mod.less.int.adj))
+  qqnorm(resid(rt.mod.less.int.adj))
+  
+  car::Anova(rt.mod.less.int.adj)
+```
+
+
+
+# 3 - ACCURACY STATS
 ### Stats
 ```{r}
 rt_data %>%
@@ -928,8 +801,7 @@ dev.off()
 ```
 
 
-# --------------- Word Recognition
-
+# --- Word Recognition
 ### Summarize Data
 ```{r}
 # wordrec_data_sum1 <- wordrec_data %>%
