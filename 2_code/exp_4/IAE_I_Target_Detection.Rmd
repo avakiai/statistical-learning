@@ -1099,7 +1099,7 @@ glm.f.3 <- glmer(rt_secs ~ target*sess*tgt_pos + (1 | cond_order/subject), data 
 
 ## To Do: R2 Values
 ```{r}
-library(MuMIn)
+#library(MuMIn)
 
 #r.squaredGLMM(glm.a)
 
