@@ -1,7 +1,6 @@
 #SL_To Do
 
 ## Writing
-- Introduction
 - Experiment 2 Methods
 - Experiment 2 Discussion
 - General Discussion

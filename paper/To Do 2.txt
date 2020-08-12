@@ -1,0 +1,3 @@
+For individual performance, return to Splitting the variance - Bogaerts
+- Do the correlation the way each of those papers did it! 
+Turk-Brown Mutual Interference paper for discussion
