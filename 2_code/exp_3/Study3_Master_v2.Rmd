@@ -82,7 +82,10 @@ rt_data <- read_csv(file.path(data_path,'exp_3_rt_data.csv')) %>%
            tgt_word = as.factor(tgt_word))
 
 # 2. Offline SL: Word Recognition Task
-wordrec_data_orig <- read_csv(file.path(data_path,'wordrec_task_data.csv'))
+wordrec_data_orig <- read_csv(file.path(data_path,'wordrec_task_data.csv')) %>%
+    dplyr::select(subj_id:zabetu) %>%
+    mutate(subject = as.factor(subj_id), subj_id = NULL) %>% 
+    dplyr::select(subject,prop_word_chosen:zabetu)
 
 # 3. Pre/Post: Tempo Task 
 tempotask_data_orig <- read_csv(file.path(data_path,'tempo_task_data.csv'))
@@ -996,7 +999,6 @@ exp_3_data_delta <- exp_3_data_delta %>%
     arrange(subject) %>%
     group_by(subject) %>%
     mutate(delta1.3 = rt_sc.s_median - lead(rt_sc.s_median,n=2)) %>%
-    #mutate(delta1.3 = rt_median - lead(rt_median,n=2)) %>%
     mutate(delta1.3 = data.table::shift(delta1.3,n=2))
 # take those values in tgt_pos 3 rows...
 vals.1.3 <- exp_3_data_delta$delta1.3[which(exp_3_data_delta$tgt_pos==3)]
@@ -1006,7 +1008,7 @@ exp_3_data_delta$delta[which(exp_3_data_delta$tgt_pos==3)] <- vals.1.3
 exp_3_data_delta <- exp_3_data_delta %>% dplyr::select(-delta1.3)
 
 exp_3_data_delta <- exp_3_data_delta %>%
-  select(subject:N,delta,rt_sc.s_mean:ci) %>%
+  dplyr::select(subject:N,delta,rt_sc.s_mean:ci) %>%
   #select(subject:N,delta,rt_mean:ci) %>%
   dplyr::rename(., delta_rt = tgt_pos) %>%
   mutate(
@@ -1015,6 +1017,7 @@ exp_3_data_delta <- exp_3_data_delta %>%
                          delta_rt==3 ~ "D1-3"))
 exp_3_data_delta$delta_rt <- factor(exp_3_data_delta$delta_rt, levels = c("D1-2", "D2-3", "D1-3"))
 ```
+
 Select only word recognition data from participants in the set: 
 ```{r}
 wordrec_data_corr <- wordrec_data_orig[(wordrec_data_orig$subject) %in% unique(exp_3_data_delta$subject),] 
@@ -1081,7 +1084,6 @@ exp_3_data_delta.mu <- rt_data_sum_corr %>%
   arrange(subject) %>%
   group_by(subject) %>%
   mutate(delta = rt_sc.s_mean - lead(rt_sc.s_mean,default=first(rt_sc.s_mean))) %>%
-  #mutate(delta = rt_median - lead(rt_median,default=first(rt_median))) %>%
   mutate(delta = round(delta,digits=5))
 
 #This works for 1-2 and 2-3, but for 3-1 it pulls the "1" not from the same group, but from the next item in the array.
@@ -1090,7 +1092,6 @@ exp_3_data_delta.mu <- exp_3_data_delta.mu %>%
     arrange(subject) %>%
     group_by(subject) %>%
     mutate(delta1.3 = rt_sc.s_mean - lead(rt_sc.s_mean,n=2)) %>%
-    #mutate(delta1.3 = rt_median - lead(rt_median,n=2)) %>%
     mutate(delta1.3 = data.table::shift(delta1.3,n=2))
 # take those values in tgt_pos 3 rows...
 vals.1.3 <- exp_3_data_delta.mu$delta1.3[which(exp_3_data_delta.mu$tgt_pos==3)]
@@ -1100,7 +1101,7 @@ exp_3_data_delta.mu$delta[which(exp_3_data_delta.mu$tgt_pos==3)] <- vals.1.3
 exp_3_data_delta.mu <- exp_3_data_delta.mu %>% dplyr::select(-delta1.3)
 
 exp_3_data_delta.mu <- exp_3_data_delta.mu %>%
-  select(subject:N,delta,rt_sc.s_mean:ci) %>%
+  dplyr::select(subject:N,delta,rt_sc.s_mean:ci) %>%
   #select(subject:N,delta,rt_mean:ci) %>%
   dplyr::rename(., delta_rt = tgt_pos) %>%
   mutate(
@@ -1159,12 +1160,241 @@ annotate(geom = "text", x = 1.25, y = 0.4, label = paste0("\u03C1 = ",round(corr
 ```
 
 
+## Batterink 2017
+From Batterink & Paller 2017:
+"Finally, an “RT score” was computed for each individual participant by subtracting the corrected median RT to third syllable targets from the corrected median RT to first syllable targets, with larger values indicating greater facilitation."
+
+"Mean RT score across participant (computed as the RT difference between first syllable targets and third syllable targets) was 79.1 msec (SD = 59.7), significantly above chance [t(23) ¼ 6.49, p < .001]."
+
+"Performance on the rating task and target detection task significantly correlated across participants (rating score: r = .51, p = .010; rating accuracy: r = .42, p = .044), indicating that learners who performed better on the rating task also showed larger facilitation effects on the target detection task. Given that the rating task provides a measure of explicit memory, this correlation suggests that the target detection task is at least somewhat sensitive to explicit memory as well. Nonetheless, a subgroup of participants (n = 7) who did not achieve above 50% accuracy on the rating task (mean = 45%, SD = 4.4%) still showed a significant RT effect [Corrected RTs: Syllable Position effect: F(2,12) = 6.11, p = .030; linear effect of Syllable Position: F(1,6) = 28.7, p = .002]."
 
 
 
 
+From Batterink et al. 2015:
+Exp 1: "Correlations were calculated between each participant’s recognition score and their RT priming effect, computed as the RT difference between initial position and final position syllables (RT1–RT3). As shown in Fig. 1B, there was no significant correlation between these two measures (r = .07, p = .75, 95% CI for r = -.34 to .46)."
+
+Exp 2: "As in Experiment 1, the across-subject correlation between recognition scores and the magnitude of the RT priming effect (RT1–RT3) on the target detection task was nonsignif- icant (r = .26, p = .20, 95% CI for r = -.15 to .60). However, this correlation may have been artificially inflated by three participants who showed no behavioral evidence of learning as assessed by either the recognition or the RT measure [criteria: <50% accuracy in recognition task, <10 ms effect (RT1–RT3) in target detection task]. When these three par- ticipants were excluded from the sample, there was still no trend for a correlation between recognition and RT (r=.17, p = .45, 95% CI for r = -.27 to .55)."
+
+Even including "all participants from both experiments, with the exception of the 3 nonlearners identified in Experiment 2 (n = 46). No significant correlation was found between recognition and RT priming (r = .11, p = .47, 95% CI for r = -.19 to .39)."
+
+```{r}
+# calculate
+rt_data_sum_corr.2 <- rt_data %>% 
+    summarySE(measurevar="rt", groupvars=c("subject","tgt_pos"), na.rm=TRUE)
+
+exp_3_data_delta.batterink2017 <- rt_data_sum_corr.2 %>% 
+  group_by(subject) %>%
+  mutate(delta = rt_median - lead(rt_median, n=2)) %>%
+  mutate(delta = round(delta,digits=5)) %>%
+  dplyr::select(subject:rt_median,delta,sd:ci) %>%
+  filter(tgt_pos == 1)
+
+# summary
+mean(exp_3_data_delta.batterink2017$delta)
+sd(exp_3_data_delta.batterink2017$delta)
+
+t.test(exp_3_data_delta.batterink2017$delta, mu = 0, alternative = "greater")
+
+# subset
+wordrec_data_corr <- wordrec_data_orig[(wordrec_data_orig$subject) %in% unique(exp_3_data_delta.batterink2017$subject),] 
+exp_3_data_delta.batterink2017 <- exp_3_data_delta.batterink2017[(exp_3_data_delta.batterink2017$subject) %in% unique(wordrec_data_corr$subject),] 
+
+# merge
+corr.batterink2017 <- merge(exp_3_data_delta.batterink2017,
+                      wordrec_data_corr %>% dplyr::select(subject, prop_word_chosen))
+# correlate
+corrtest.batterink2017 <- cor.test(corr.batterink2017$delta,
+                                   corr.batterink2017$prop_word_chosen, 
+                                   method = "pearson")
+
+```
+
+### Fig. a.
+```{r}
+
+ggplot(data = corr.batterink2017, aes(delta, prop_word_chosen)) + 
+  geom_point(size = 2, alpha = 0.8) +
+  geom_smooth(method = lm, se = FALSE, size = 1.1) +
+  scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
+                     name = NULL, labels = c("1st - 2nd", "2nd - 3rd", "1st - 3rd")) +
+  xlab("RT score (as per Batterink 2017)") + ylab("P(word chosen over partword)") +
+annotate(geom = "text", x = 275, y = 0.2, 
+         label = paste0("\u03C1 = ", round(corrtest.batterink2017$estimate, digits = 2),", p = ",round(corrtest.batterink2017$p.value, digits = 2)), color = "#D44739") +   
+  geom_vline(xintercept = 0, color = "gray", linetype="dashed") + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"), 
+        legend.title = element_text(""),  legend.position = "top") +
+   ggsave(file.path(res_path,'figures','batterink_corr.png'), width = w, height = h)
+  
+```
 
 
+## Siegelman et al. 2018
+
+Online Measure of SL = log.RT() 1st position) - mean.log.RT(2nd & 3rd position)
+
+```{r}
+
+# calculate
+rt_data_sum_corr.3a <- rt_data %>% 
+    mutate(rt_log = log(rt)) %>%
+    summarySE(measurevar="rt_log", groupvars=c("subject","tgt_pos"), na.rm=TRUE) %>%
+    filter(tgt_pos == 1)
+
+
+rt_data_sum_corr.3b <- rt_data %>% 
+    mutate(rt_log = log(rt)) %>%
+    group_by(subject) %>%
+    filter(tgt_pos == 2 || 3) %>%
+    summarySE(measurevar="rt_log", groupvars=c("subject"), na.rm=TRUE) %>%
+    add_column(tgt_pos = as.factor("2-3"), .after = "subject")
+
+rt_data_sum.corr.3 <- rbind(rt_data_sum_corr.3a,rt_data_sum_corr.3b) %>%
+  arrange(subject)
+
+
+exp_3_data_delta.siegelman2018 <- rt_data_sum.corr.3 %>% 
+  group_by(subject) %>%
+  mutate(delta = rt_log_mean - lead(rt_log_mean)) %>%
+  mutate(delta = round(delta,digits=5)) %>%
+  dplyr::select(subject:rt_log_median,delta,sd:ci) %>%
+  filter(tgt_pos == 1)
+
+# summary
+mean(exp_3_data_delta.siegelman2018$delta)
+sd(exp_3_data_delta.siegelman2018$delta)
+
+# subset
+wordrec_data_corr <- wordrec_data_orig[(wordrec_data_orig$subject) %in% unique(exp_3_data_delta.batterink2017$subject),] 
+exp_3_data_delta.siegelman2018 <- exp_3_data_delta.siegelman2018[(exp_3_data_delta.siegelman2018$subject) %in% unique(wordrec_data_corr$subject),] 
+
+# merge
+corr.siegelman2018 <- merge(exp_3_data_delta.siegelman2018,
+                      wordrec_data_corr %>% dplyr::select(subject, prop_word_chosen))
+# correlate
+corrtest.siegelman2018 <- cor.test(corr.siegelman2018$delta,
+                                   corr.siegelman2018$prop_word_chosen, 
+                                   method = "pearson")
+
+```
+
+###
+```{r}
+ggplot(data = corr.siegelman2018, aes(delta, prop_word_chosen)) + 
+  geom_point(size = 2, alpha = 0.8) +
+  geom_smooth(method = lm, se = FALSE, size = 1.1) +
+  scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
+                     name = NULL, labels = c("1st - 2nd", "2nd - 3rd", "1st - 3rd")) +
+  xlab("RT score (as per Siegelman 2018)") + ylab("P(word chosen over partword)") +
+annotate(geom = "text", x = 0.45, y = 0.2, 
+         label = paste0("\u03C1 = ", round(corrtest.siegelman2018$estimate, digits = 2),", p = ",round(corrtest.siegelman2018$p.value, digits = 2)), color = "#D44739") +   
+  geom_vline(xintercept = 0, color = "gray", linetype="dashed") + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"), 
+        legend.title = element_text(""),  legend.position = "top") +
+  ggsave(file.path(res_path,'figures','siegelman_corr.png'), width = w, height = h)
+```
+
+#----------------------------
+## Siegelman Analyses
+```{r}
+rt_data <- rt_data %>% mutate(rt_log = log(rt))
+
+rt_data_log_sum <- rt_data %>%
+  summarySE(measurevar="rt_log", groupvars=c("tgt_pos","block"), na.rm=TRUE)
+
+ggplot(data = rt_data_log_sum, aes(x = block, y = rt_log_mean, group = tgt_pos, color = tgt_pos)) + 
+  geom_point(size = 2, alpha = 0.8) +
+  geom_line(size = 1.5, alpha = 0.5) + 
+  geom_smooth(method = "glm", formula = y~x,
+              method.args = list(family = gaussian(link = 'log')), 
+              se = TRUE, size = 1, alpha = 0.2) +
+  scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
+                     name = NULL, labels = c("1st", "2nd", "3rd")) +
+  xlab("Block") + ylab("Mean log(RT)") +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"), 
+        legend.title = element_text("Position"),  legend.position = "right") + 
+  ggsave(file.path(res_path,'figures','logRT_block.png'), width = w, height = h)
+# dev.copy(pdf,file.path(res_path,'figures','fig1artposblock.pdf'), width = 6, height = 4)
+# dev.off()
+
+```
+
+
+```{r}
+
+exp_3_log_traj <- rbind(rt_data_log_sum %>% filter(tgt_pos == 1),
+    rt_data %>%
+    filter(tgt_pos == 2 || 3) %>%
+    summarySE(measurevar="rt_log", groupvars=c("block"), na.rm=TRUE) %>%
+    add_column(tgt_pos = as.factor("2-3"), .before = "block"))
+
+exp_3_log_traj.siegelman2018 <- exp_3_log_traj %>% 
+  arrange(block) %>%
+  mutate(delta = rt_log_mean - lead(rt_log_mean)) %>%
+  mutate(delta = round(delta,digits=5)) %>%
+  dplyr::select(tgt_pos:rt_log_median,delta,sd:ci) %>%
+  filter(tgt_pos == 1)
+
+
+ggplot(data = exp_3_log_traj.siegelman2018, aes(x = block, y = rt_log_mean, group = 1)) + 
+  geom_point(size = 2, alpha = 0.8) +
+  geom_line(size = 1.5, alpha = 0.5) +
+  geom_errorbar(mapping = aes(ymin = rt_log_mean-se, ymax = rt_log_mean+se), colour = "BLACK", width = 0.1, size = 0.8) + 
+  geom_smooth(method = "glm", formula = y~x,
+              method.args = list(family = gaussian(link = 'log')), 
+              se = TRUE, size = 1, alpha = 0.2) +
+  xlab("Block") + ylab(expression(logRT[1]~-~mu(logRT[2]+logRT[3]))) + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"), 
+        legend.title = element_text("Position"),  legend.position = "right") + 
+  ggsave(file.path(res_path,'figures','logRT_block_traj.png'), width = w, height = h)
+
+
+```
+
+
+
+```{r}
+
+
+exp_3_log_traj_ind <- rbind(rt_data %>% 
+  summarySE(measurevar="rt_log", groupvars=c("subject","tgt_pos","block"), na.rm=TRUE) %>%
+  filter(tgt_pos == 1),
+ rt_data %>%
+    filter(tgt_pos == 2 || 3) %>%
+    summarySE(measurevar="rt_log", groupvars=c("subject","block"), na.rm=TRUE) %>%
+    add_column(tgt_pos = as.factor("2-3"), .before = "block")) %>%
+  arrange(block,subject)
+
+exp_3_log_traj_ind.siegelman2018 <- exp_3_log_traj_ind %>% 
+  mutate(delta = rt_log_mean - lead(rt_log_mean)) %>%
+  mutate(delta = round(delta,digits=5)) %>%
+  dplyr::select(subject:rt_log_median,delta,sd:ci) %>%
+  filter(tgt_pos == 1)
+
+library(pbkrtest)
+library(emmeans)
+emm_options(lmer.df = "satterth")
+traj.mod1 <- lmer(delta ~ 1 + block + (1|subject), data = exp_3_log_traj_ind.siegelman2018)
+, family = gaussian(link="log"))
+summary(traj.mod1)
+Anova(traj.mod1)
+emmeans(traj.mod1, specs = pairwise ~ block, adjust = "Tukey",  transform = "response")
+
+# http://www.alexanderdemos.org/ANOVA6.html
+
+# cont <- emmeans(traj.mod1, ~ block) #we already created this
+# pairs(cont, adjust='tukey')
+
+descdist(exp_3_log_traj_ind.siegelman2018$rt_log_mean[!is.na(exp_3_log_traj_ind.siegelman2018$rt_log_mean)])
+gofstat(fitdist(exp_3_log_traj_ind.siegelman2018$rt_log_mean[!is.na(exp_3_log_traj_ind.siegelman2018$rt_log_mean)],"lnorm"))
+denscomp(fitdist(exp_3_log_traj_ind.siegelman2018$rt_log_mean[!is.na(exp_3_log_traj_ind.siegelman2018$rt_log_mean)],"lnorm"))
+```
+
+So, nothing new is gained in the above analysis. Using logRT, we find again that there's no effect of block on reaction times, again likely because the learning is happening in the first few presentations in each block.  
 
 #----------------------------
  Corr. Delta / Wordrec per Word
