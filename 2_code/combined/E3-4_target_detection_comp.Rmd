@@ -1700,8 +1700,14 @@ exps.3.4.data <- rbind(exp_3_data %>% mutate(exp="exp 3") %>%
 #code_path
 fig_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/combined'
 
-write.csv(exps.3.4.data,'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/combined/exps_3_4s_data.csv', row.names = FALSE)
-# exps.3.4.data <- read_csv('C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/combined/exps_3_4s_data.csv') %>%
+# write.csv(exps.3.4.data,'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/combined/exps_3_4s_data.csv', row.names = FALSE)
+exps.3.4.data <- read_csv('C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/combined/exps_3_4s_data.csv') %>% mutate(subject = as.factor(subject),
+         target = as.factor(target),
+         sess = as.factor(sess), 
+         tgt_pos = as.factor(tgt_pos), 
+         tgt_word = as.factor(tgt_word),
+         cond_order = as.factor(cond_order),
+         exp = as.factor(exp))
 
 ```
 
@@ -2088,6 +2094,9 @@ ggplot(WA.wilcox) +
   geom_hline(yintercept = 0, color = "black", linetype="dashed") + 
   scale_x_discrete(name = NULL) + 
   scale_y_continuous(name = "within - across similarity (Pearson's r)") +
+  annotate(geom = "text", x = 1, y = -0.018, size = 4, label = "***") +
+  annotate(geom = "text", x = 2, y = -0.045, size = 4, label = "***") +
+  annotate(geom = "text", x = 4, y = -0.0, size = 4, label = "***") +
   theme_classic() + 
   theme(text = element_text(family = "LM Roman 10", face="bold")) +
   ggsave(file.path(fig_path,'/fig_similarity.png'), width = 7, height = 5)  

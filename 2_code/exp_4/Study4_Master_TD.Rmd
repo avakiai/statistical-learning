@@ -22,7 +22,7 @@ data_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4
 code_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/exp_4'
 # Results Path
 res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp_4'
-
+fig_path <- file.path(res_path,'figures')
 ```
 
 # Load, Init.
@@ -53,10 +53,7 @@ library(RcppRoll) # for rolling means
 # colors
 library("wesanderson")
 
-# Load
-# setwd("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1")
-# data_files <- list.files(pattern = ".csv")
-# raw_data <- read_csv(data_files[1])
+
 
 # Some stuffs for summary stats
 source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/summarySE.R')
@@ -68,7 +65,11 @@ h = 4
 ```
 
 
-```{r message=FALSE}
+```{r eval=FALSE, message=FALSE, include=FALSE}
+# Load
+# data_files <- list.files(pattern = ".csv")
+raw_data <- read_csv(file.path(data_path,'ia_incidental_data_v1.csv'))
+
 # Global Vars
 n_subjs_raw <- length(unique(raw_data$subject))
 subj_IDs <- unique(raw_data$subject)
@@ -228,7 +229,7 @@ or_data2 <- pre_or_data %>%
          rt < upper_bound_med | is.na(rt))
 
 hist(or_data2$rt)
-ggqqplot(or_data2$rt,na.action=na.omit)
+#qqplot(or_data2$rt,na.action=na.omit)
 summary(or_data2$rt)
 sd(or_data2$rt,na.rm=TRUE)
 
@@ -297,59 +298,53 @@ data <- read_csv("C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/e
 #1. Accuracy
 ## Summarize
 ```{r}
-accuracy_data1 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_pos","subject","target","tgt_word"),na.rm=TRUE) # collapse over trials
+data %>% summarySE(measurevar = "resp",na.rm=TRUE) base_acc1 <- 
+base_acc1 <- data %>% summarySE(measurevar = "resp", groupvars = c("subject"),na.rm=TRUE)
 
-accuracy_data2 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_pos"),na.rm=TRUE) 
+t.test(base_acc1$resp_mean, mu = 0.5, alternative = "greater")
 
-accuracy_data3 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","target","tgt_pos"),na.rm=TRUE) 
+data %>% summarySE(measurevar = "resp", groupvars = c("sess"),na.rm=TRUE) 
 
-accuracy_data4 <- data[which(data$sess=="struct"),] %>% summarySE(measurevar = "resp", groupvars = c("tgt_word"),na.rm=TRUE)
+base_acc2 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","subject"),na.rm=TRUE) 
+
+t.test(base_acc2$resp_mean[which(base_acc2$sess=="rand")],
+       base_acc2$resp_mean[which(base_acc2$sess=="struct")],
+       alternative = "less") # h1 = y is larger than x
 ```
 
 ## a. Plot Session x Position 
 ```{r}
-ggplot() + 
-  geom_col(accuracy_data2, mapping=aes(sess, resp_mean, group=as.factor(tgt_pos), fill=as.factor(tgt_pos)), 
-           position = position_dodge(0.5), width=0.5) +
-  geom_errorbar(accuracy_data2, mapping=aes(sess, y=resp_mean, ymin=resp_mean-se, ymax=resp_mean+se,
-           group=tgt_pos,color=as.factor(tgt_pos)), position=position_dodge(0.5), width = 0.3, size = 1) +
+accuracy_data1 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_pos","subject"),na.rm=TRUE) 
+accuracy_data2 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_pos"),na.rm=TRUE) 
+
+ggplot(accuracy_data1, aes(x = tgt_pos, y = resp_mean, fill = tgt_pos)) +
+   geom_point(position = position_jitter(width = .07)) +
+   geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 0.8, trim = FALSE) + 
+   geom_point(accuracy_data2, mapping = aes(tgt_pos, resp_mean), position = position_nudge(x = 0.2, y = 0)) +
+   geom_errorbar(accuracy_data2, mapping=aes(tgt_pos, y=resp_mean, ymin=resp_mean-se,
+                                             ymax=resp_mean+se),
+                 position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
+ # geom_col(accuracy_data2, mapping=aes(sess, resp_mean, group=as.factor(tgt_pos), fill=as.factor(tgt_pos)), 
+ #          position = position_dodge(0.5), width=0.5) +
+ # geom_errorbar(accuracy_data2, mapping=aes(sess, y=resp_mean, ymin=resp_mean-se, ymax=resp_mean+se,
+ #          group=tgt_pos,color=as.factor(tgt_pos)), position=position_dodge(0.5), width = 0.3, size = 1) +
  # geom_signif(comparisons=list(c("rand", "struct")), annotations="***", y_position=0.95, tip_length=0.3) + 
-  scale_x_discrete(name = "Session") +
-  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
-  scale_color_brewer(palette="Dark2") + 
+  facet_grid(.~ sess) +
+  scale_x_discrete(name = "Target Position") +
+  scale_y_continuous(name = "mean detection accuracy [bars = SEM]") +
+  scale_color_brewer(palette="Dark2") +
   scale_fill_brewer(palette="Pastel2") +
-  labs(color=" Target \nPosition") +
-  guides(fill=FALSE) +
+  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
+  scale_x_discrete(name = "Target Position") +
+  guides(fill = FALSE, color = FALSE) +
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave('targetdetection_accuracy.png', width = w, height = h)
-
-# ADAPT FROM EXPERIMENT 3 to 4!!!
-# ggplot(accuracy_data2, aes(x = tgt_pos, y = detect_mean, fill = tgt_pos)) +
-#   geom_point(position = position_jitter(width = .07)) +
-#   geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE) + 
-#   geom_point(accuracy_data2, mapping = aes(tgt_pos, detect_mean), position = position_nudge(x = 0.2, y = 0)) +
-#   geom_errorbar(accuracy_data2, mapping=aes(tgt_pos, y=detect_mean, ymin=detect_mean-se,
-#                                             ymax=detect_mean+se),
-#                 position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
-#   #scale_fill_manual(values=wes_palette("Royal2")[c(3,4,5)]) +
-#   scale_color_brewer(palette="Dark2") + 
-#   scale_fill_brewer(palette="Pastel2") +
-#   scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
-#   scale_x_discrete(name = "Target Position") + 
-#   guides(fill = FALSE, color = FALSE) + 
-#   theme_minimal() +
-#   theme(text = element_text(family = "LM Roman 10", face="bold")) +
-#   ggsave('fig4_rt_acc.png',width=w,height=h)
-# dev.copy(pdf,file.path(fig_path,'exp3fig4_acc.pdf'), width = w, height = h)
-# dev.off()
-
-
+  ggsave(file.path(fig_path,'exp4_acc_fig1.png'),width=w,height=h)
 ```
 Investigate why the sd's seem to be so large? Calulation error?...
 
-### Stats
-```{r}
+Stats
+```{r eval=FALSE, include=FALSE}
 # ANOVA
 # use lm() then car::Anova() to evaluate model (because allows Types I, II & III Sums of squares*)
 acc.mod1 <- lm(resp_mean ~ sess * tgt_pos, data=accuracy_data1)
@@ -373,20 +368,11 @@ anova(acc.mod1, acc.mod2, test = 'Chisq')
 (em.sess.tgtpos <- emmeans(acc.mod2, specs = pairwise ~ tgt_pos|sess)) 
 
 acc.table <- as.data.frame(Anova(acc.mod1, type = '2'))
-acc.table %>% 
-    kable() %>%
-     kable_styling(bootstrap_options = c("striped", "hover")) %>%
-     save_kable(file = 'targetdetection_accuracy_table.png', self_contained = T)  
 
 em.acc <- em.sess.tgtpos$contrasts %>%
     summary(infer=TRUE) %>%
      rbind() %>%
      as.data.frame()
-as.data.frame(em.acc) %>% 
-    kable() %>%
-     kable_styling(bootstrap_options = c("striped", "hover")) %>%
-     save_kable(file = 'targetdetection_accuracy_table_contrasts.png', self_contained = T)  
-
 plot(em.sess, comparisons = TRUE)
 plot(em.sess.tgtpos, comparisons = TRUE)
 
@@ -395,24 +381,76 @@ plot(em.sess.tgtpos, comparisons = TRUE)
 Significant effect of session. 
 No effect of target position. 
 
-## b. Plot Target ID
+## b. Plot Target Word
 ```{r}
-ggplot() + 
-  geom_col(accuracy_data3, mapping=aes(sess, resp_mean, group=target, fill=target,color=tgt_pos),
-           position = position_dodge(0.5), width=0.5) +
-  geom_errorbar(accuracy_data3, mapping=aes(sess, y=resp_mean, ymin=resp_mean-se, ymax=resp_mean+se,
-           group=target,fill=target,color=tgt_pos), position=position_dodge(0.5), width = 0.3, size = 1) +
-  scale_x_discrete(name = "Session") +
+accuracy_data3 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_word","subject"),na.rm=TRUE) %>%
+  mutate(tgt_word = case_when(tgt_word==1 ~ "nugadi",
+                         tgt_word==2 ~ "rokise",
+                         tgt_word==3 ~ "mipola",
+                         tgt_word==4 ~ "zabetu"))
+accuracy_data4 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_word"),na.rm=TRUE)
+accuracy_data4$tgt_word <- rep(c("nugadi","rokise","mipola","zabetu"),2)
+stargazer(accuracy_data4, 
+          type = "html", 
+          out = file.path(res_path,'tables','word_accuracy.doc'), summary = FALSE, rownames = FALSE)
+
+ggplot(accuracy_data3, aes(x = tgt_word, y = resp_mean, fill = tgt_word)) +
+   geom_point(position = position_jitter(width = .07)) +
+   geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 0.8, trim = FALSE) + 
+   geom_point(accuracy_data4, mapping = aes(tgt_word, resp_mean), position = position_nudge(x = 0.2, y = 0)) +
+   geom_errorbar(accuracy_data4, mapping=aes(tgt_word, y=resp_mean, ymin=resp_mean-se,
+                                             ymax=resp_mean+se),
+                 position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
+  facet_grid(.~ sess) +
+  scale_fill_manual(values=wes_palette("Zissou1")[c(1,3,4,5)]) +
   scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
-  scale_color_brewer(palette="Dark2") + 
-  scale_fill_brewer(palette="Set3") +
-  labs(fill="Syllable",color="Position") +
-  guides(color=guide_legend(override.aes=list(fill=NA))) +
+  scale_x_discrete(name = "Pseudoword", labels = c("nugadi","rokise","mipola","zabetu")) + 
+  guides(fill = FALSE, color = FALSE) +
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold")) +
-        #legend.key = element_rect(colour = "white", fill = "white"),
-        #legend.background = element_blank()) +
-  ggsave('targetdetection_accuracy_target.png', width = w, height = h+1)
+  ggsave(file.path(fig_path,'exp4_acc_fig2.png'),width=w,height=h)
+```
+
+### Stats
+```{r}
+word.lm <- lm(resp_mean ~ tgt_word, data=dplyr::filter(accuracy_data1,sess=="struct"))
+Anova(word.lm, type = '2')
+
+# Contrasts...
+em.word <- emmeans(word.lm, specs = pairwise ~ tgt_word)
+
+  
+```
+There's no real difference between accuracy in detection syllables, as grouped by word. This analysis being only meaningful for struct condition, it at least tells us that all words features a sum of syllables that are roughly equally detectable. 
+
+## c. Plot Target Syllable
+```{r}
+
+accuracy_data5 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","target","subject", "tgt_pos"),na.rm=TRUE) %>%
+  mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+accuracy_data6 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","target"),na.rm=TRUE) %>%
+  mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+
+stargazer(accuracy_data6, 
+          type = "html", 
+          out = file.path(res_path,'tables','syllable_accuracy.doc'), summary = FALSE, rownames = FALSE)
+
+ggplot(accuracy_data5, aes(x = target, y = resp_mean)) +
+  geom_point(position = position_jitter(width = .07), aes(color = tgt_pos)) +
+  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE,
+                   fill = "gray") + 
+  geom_point(accuracy_data6, mapping = aes(target, resp_mean), position = position_nudge(x = 0.2, y = 0)) +
+  geom_errorbar(accuracy_data6, mapping=aes(target, y=resp_mean, ymin=resp_mean-se,
+                                            ymax=resp_mean+se),
+                position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
+  facet_grid(.~sess) + 
+  scale_color_brewer(palette="Dark2") + 
+  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
+  scale_x_discrete(name = "Target Syllables") + 
+  guides(fill = FALSE) + labs(color = "Ordinal Position") +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggsave(file.path(fig_path,'exp4_acc_fig3.png'),width=11,height=6)
 ```
 
 ### Stats
@@ -437,34 +475,7 @@ An effect of session suggests that whether those syllables were embedded in word
 There's no interaction, which suggests that embedding did not modulate the differences between syllables in the detectability. 
 
 
-## c. Plot Word (Struct)
-```{r}
-ggplot() + 
-  geom_col(accuracy_data4, mapping=aes(tgt_word, resp_mean, group=as.factor(tgt_word), fill=as.factor(tgt_word)), 
-           position = position_dodge(0.5), width=0.5) +
-  geom_errorbar(accuracy_data4, mapping=aes(tgt_word, y=resp_mean, ymin=resp_mean-se, ymax=resp_mean+se,
-           group=tgt_word), colour="BLACK",position=position_dodge(0.5), width = 0.3, size = 1) +
-  scale_x_discrete(name = "Word") +
-  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
-  #scale_color_brewer(palette="Accent") +
-  scale_fill_brewer(palette="Accent") +
-  guides(fill=FALSE,color=FALSE) +
-  theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave('targetdetection_accuracy_struct_word.png', width = w, height = h)
-```
 
-### Stats
-```{r}
-word.lm <- lm(resp_mean ~ tgt_word, data=dplyr::filter(accuracy_data1,sess=="struct"))
-Anova(word.lm, type = '2')
-
-# Contrasts...
-em.word <- emmeans(word.lm, specs = pairwise ~ tgt_word)
-
-  
-```
-There's no real difference between accuracy in detection syllables, as grouped by word. This analysis being only meaningful for struct condition, it at least tells us that all words features a sum of syllables that are roughly equally detectable. 
 
 
 
