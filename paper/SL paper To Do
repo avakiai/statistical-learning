@@ -9,66 +9,61 @@
 ## Analyses
 - Add the word-wise correlation?
 - Consider equivalence testing?
-- Add statistics for the accuracy? 
 
 ## Read
 - Turk-Brown Mutual Interference paper for discussion
 - Paper Lucia mentioned
+- visual SL
+- exposure: 3 triplets
+- test phase: sequence of three shapes, so basically a word; 20 items, 17 new
 - For individual performance, return to Splitting the variance - Bogaerts
 
 ## Red Team
 - Show it to Valeria, Valerie
 
+---------
+1. Justify sample size based on the 3 papers - Done. 
+- Power analysis based on Batterink's papers for Exp. 1. Nothing mentioned for Exp. 2
 
--------
-Paper from Lucia
-- visual SL
-- exposure: 3 triplets
-- test phase: sequence of three shapes, so basically a word; 20 items, 17 new
+2. Outliers: need to justify a time window for acceptable responses - Done. 
+I explained the method used. Batterink used a hard cutoff in two papers. 
+- Batterink 2017: "Responses that did not occur within 0e1200 msec of a target were considered to be false alarms."
+- B 2015: "Only responses that occurred between 150 and 1200 ms after target onset were included; all other responses were considered to be false alarms."
+I looked and saw that indeed some responses are quite close to 0, but not many.
+Accuracy on before vs. after outlier removal showed no change in overall accuracy.
 
-LM:
-Justify sample size based on the 3 papers
-- Power analysis
-Outliers: need to justify a time window for acceptable responses
-- Check if you have responses at 0.
- 	- Batterink 2017: "Responses that did not occur within 0e1200 msec of a target were considered to be false alarms."
- 	- B 2015: "Only responses that occurred between 150 and 1200 ms after target onset were included; all other responses were considered to be false alarms."
-- Figure out if any are longer.- No.
-- Do accuracy on pre-outlier data. 
-		- Show no change? 
+3. Mean accuracy
+- All lm's and ttests. - Done
+All three variables vary in the 1st exp. The ones in the second exp vary depending on whether you use subject averages or the whole data set. Consider using the subject averages and then just explain away the effect in the first case. 
+**- Report corrected values (either by regressing out, as can be done for word or syllable ID, or subsampling?) - To Do**
 
-DONE for Exp 2., do for Exp. 1
-- Do the mean t-tests
-- If position varies: subsample; report also corrected values 
-
-DONE
+3. Dissimilarity Analysis - Done. 
 - Do z transformed z-dissimilarity | Kriegeskorte ref.
 - H0: there is a difference
 - LM: "If the sign is negative, there is a grouping, of information being used at these levels. There is a coding by which these things make a difference."
 
+4. Rolling Average - To Do
+**- Concat blocks. - Can't do that cause it doesn't make sense. 
+- 1/2 the number of points so that it's smoother. - Let me consider!** 
+- Compare blocks 1 & 2.
 
-Rolling Average - 
-9 points per block, concat them if it's not too much trouble
+5. Effect size - Done for each contrast.
 
-s value remove
-
-effect size for each analysis
-
-sl measure
-add a lm comparing blocks 1 and 2 
+6. SL measure. 
+- T-test blocks 1 & 2. 
 
 
-summarize tables, put in SM
+7. Contrasts as polynomials. 
+- LM: put the data in two new regressions, polynomial vs. linear, to see which it is. - No, I don't see the point. 
 
-put the data in two new regressions; polynomial vs. linear
-
-now that i have this information, which part of the information is entailed in the two tasks, correlate back with offline 
-
+8. Final Correlation
+- Take means from analysis, correlate with offline. 
+(What to do about small sample size?)
 
 ------------------------
-Honest Notes
-Sex/age in Procedure 1 based off 38 participants in Morla, didn't check sex/age of other 3 participants.
+###Honest Notes
+1. Reporting age/sex
+- Sex/age in Procedure 1 based off 38 participants in Morla, didn't check sex/age of other 3 participants.
 35 German speakers. 
-
-That for Procedure 2 based off 18 participants in Morla, so ignores 2. 
+- That for Procedure 2 based off 18 participants in Morla, so ignores 2. 
 14 German natives. 

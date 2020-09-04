@@ -503,6 +503,18 @@ ggplot(accuracy_data5, aes(x = target, y = resp_mean)) +
   ggsave(file.path(fig_path,'exp4_acc_fig3.png'),width=11,height=6)
 ```
 
+### Prove OR removal didn't change it
+```{r}
+pre_or_data %>%
+  summarise(mean = mean(resp),
+            sd = sd(resp))
+
+after <- data %>% summarySE(measurevar = "resp", groupvars = c("subject"),na.rm=TRUE)
+before <- pre_or_data %>% summarySE(measurevar = "resp", groupvars = c("subject"),na.rm=TRUE)
+
+t.test(after$resp_mean, before$resp_mean, alternative = "two.sided")
+
+```
 
 
 # 2. RT Data by Position - Test

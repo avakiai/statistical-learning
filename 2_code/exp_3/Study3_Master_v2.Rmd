@@ -571,14 +571,16 @@ anova(rt.mod.less.int,rt.mod.less.int.slope,rt.mod.less.int.slope2)
 ```
 Yet again, go for the simplest model. 
 
-# Load Lesser (Winning GLM)
-```{r}
-
-```
 
 ## Contrasts 
 ```{r}
 (emm.pos <- emmeans(rt.mod.less.int, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response"))
+
+p.contrasts = summary(pairs(emmeans(rt.mod.less.int, ~ tgt_pos)))
+
+# Cohen's d: divide emmeans estimates by residual sd of generating model:
+p.contrasts$d = p.contrasts$estimate / sigmaHat(rt.mod.less.int)
+
 
 position_contrasts <- emm.pos$contrasts %>%
   rbind() %>%
