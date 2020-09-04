@@ -19,3 +19,56 @@
 ## Red Team
 - Show it to Valeria, Valerie
 
+
+-------
+Paper from Lucia
+- visual SL
+- exposure: 3 triplets
+- test phase: sequence of three shapes, so basically a word; 20 items, 17 new
+
+LM:
+Justify sample size based on the 3 papers
+- Power analysis
+Outliers: need to justify a time window for acceptable responses
+- Check if you have responses at 0.
+ 	- Batterink 2017: "Responses that did not occur within 0e1200 msec of a target were considered to be false alarms."
+ 	- B 2015: "Only responses that occurred between 150 and 1200 ms after target onset were included; all other responses were considered to be false alarms."
+- Figure out if any are longer.- No.
+- Do accuracy on pre-outlier data. 
+		- Show no change? 
+
+DONE for Exp 2., do for Exp. 1
+- Do the mean t-tests
+- If position varies: subsample; report also corrected values 
+
+DONE
+- Do z transformed z-dissimilarity | Kriegeskorte ref.
+- H0: there is a difference
+- LM: "If the sign is negative, there is a grouping, of information being used at these levels. There is a coding by which these things make a difference."
+
+
+Rolling Average - 
+9 points per block, concat them if it's not too much trouble
+
+s value remove
+
+effect size for each analysis
+
+sl measure
+add a lm comparing blocks 1 and 2 
+
+
+summarize tables, put in SM
+
+put the data in two new regressions; polynomial vs. linear
+
+now that i have this information, which part of the information is entailed in the two tasks, correlate back with offline 
+
+
+------------------------
+Honest Notes
+Sex/age in Procedure 1 based off 38 participants in Morla, didn't check sex/age of other 3 participants.
+35 German speakers. 
+
+That for Procedure 2 based off 18 participants in Morla, so ignores 2. 
+14 German natives. 

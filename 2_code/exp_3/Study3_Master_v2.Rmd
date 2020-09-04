@@ -87,9 +87,6 @@ wordrec_data_orig <- read_csv(file.path(data_path,'wordrec_task_data.csv')) %>%
     mutate(subject = as.factor(subj_id), subj_id = NULL) %>% 
     dplyr::select(subject,prop_word_chosen:zabetu)
 
-# 3. Pre/Post: Tempo Task 
-tempotask_data_orig <- read_csv(file.path(data_path,'tempo_task_data.csv'))
-
 ```
 
 # --- Target Detection Task 
@@ -121,8 +118,8 @@ rt_data_cleaned.1 <- rt_data_clean %>%
                             target = as.factor(target), 
                             tgt_pos = as.factor(tgt_pos), 
                             tgt_word = as.factor(tgt_word),
-                            detect = case_when(detect==1 ~ 0,
-                                      detect==2 ~ 1),
+                           # detect = case_when(detect==1 ~ 0,
+                           #           detect==2 ~ 1),
                             detect = as.numeric(detect))
 
 
@@ -216,10 +213,15 @@ rt_data <- rt_data %>%
 ```{r Save data, eval=FALSE, include=FALSE}
 write.csv(rt_data,'exp_3_rt_data.csv', row.names = FALSE)
 ```
+```{r}
+hist(rt_data$rt)
+summary(rt_data$rt)
+count(sort(rt_data$rt) < 100)
 
+
+```
 
 # 1 - PLOTS
-
 ## Fig. 1a. Plot RT ~ Pos x Block 
 ```{r message=FALSE, warning=FALSE}
 rt_data_sum1 <- rt_data %>% # target position x block
@@ -228,8 +230,8 @@ rt_data_sum2 <- rt_data %>% # target position only
     summarySE(measurevar = "rt", groupvars = c("tgt_pos"),na.rm=TRUE)
   
 ggplot() +
-  geom_point(data = rt_data_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(block)), size = 2) +
-  geom_line(data = rt_data_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = block, colour = factor(block)),size = .5) +
+ # geom_point(data = rt_data_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(block)), size = 2) +
+#  geom_line(data = rt_data_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = block, colour = factor(block)),size = .5) +
   geom_point(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_median), colour = "BLACK") +
   geom_errorbar(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci), colour = "BLACK", width = 0.1, size = 0.8) +
   geom_line(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = 1), colour = "BLACK", size = .9) +
@@ -237,12 +239,15 @@ ggplot() +
   scale_colour_brewer(palette = "Paired") +
   scale_y_continuous(limits=c(380,580)) +
   #  annotate("text", x = 3.4, y = 570, label = paste("N =",toString(N))) +
-  labs(colour= "Block") + ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') +
+  #labs(colour= "Block") + 
+  ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') +
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave(file.path(res_path,'figures','fig1a_rt_pos_block.png'), width = w, height = h)
-dev.copy(pdf,file.path(res_path,'figures','fig1artposblock.pdf'), width = 6, height = 4)
-dev.off()
+#  ggsave(file.path(res_path,'figures','fig1a_rt_pos_block.png'), width = w, height = h)
+  ggsave(file.path(res_path,'figures','fig1a_rt_pos_avg.png'), width = w, height = h)
+
+# dev.copy(pdf,file.path(res_path,'figures','fig1artposblock.pdf'), width = 6, height = 4)
+# dev.off()
 ```
 
 ## Fig. 1b. Plot RT ~ Pos (Raincloud)
@@ -464,6 +469,16 @@ load(file.path(res_path,'models','rt_block_less_int.Rdata'))
  # save(rt.mod.less.int, file = file.path(res_path,'models','rt_block_less_int.Rdata'))
 ```
 
+#### Effect Size
+```{r}
+pwr.chisq.test(w =, N = 33, df = 2, sig.level = 0.5, power = )
+
+
+
+```
+
+
+
 #### Model Evaluation
 ```{r}
 anova(rt.mod.full.int.fct,rt.mod.less.int) 
@@ -556,6 +571,10 @@ anova(rt.mod.less.int,rt.mod.less.int.slope,rt.mod.less.int.slope2)
 ```
 Yet again, go for the simplest model. 
 
+# Load Lesser (Winning GLM)
+```{r}
+
+```
 
 ## Contrasts 
 ```{r}
@@ -707,6 +726,7 @@ rt_data %>% summarySE(measurevar = "detect", groupvars = c("target"),na.rm=TRUE)
 # Linear Model
 acc.mod.less <- lm(detect ~ tgt_pos, rt_data)
 summary(acc.mod.less)
+Anova(acc.mod.less)
 # Contrasts
 (em.acc.less <- emmeans(acc.mod.less, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response"))
 # Plot Interactions
@@ -719,6 +739,7 @@ plot(em.acc.less, comparisons = TRUE,
 # Linear Model
 acc.mod.less2 <- lm(detect ~ tgt_word, rt_data)
 summary(acc.mod.less2)
+Anova(acc.mod.less2)
 # Contrasts
 (em.acc.less2 <- emmeans(acc.mod.less2, specs = pairwise ~ tgt_word, adjust = "tukey", transform = "response"))
 # Plot Interactions
@@ -727,6 +748,18 @@ plot(em.acc.less2, comparisons = TRUE,
      ylab = "word of target syllable") +
   theme_bw()
 
+#---- Syllable
+# Linear Model
+acc.mod.less3 <- lm(detect ~ target, rt_data)
+summary(acc.mod.less3)
+Anova(acc.mod.less3)
+# Contrasts
+(em.acc.less3 <- emmeans(acc.mod.less3, specs = pairwise ~ target, adjust = "tukey", transform = "response"))
+# Plot Interactions
+plot(em.acc.less3, comparisons = TRUE,
+     xlab = "estimated marginal means (accuracy)",
+     ylab = "target syllable") +
+  theme_bw()
 
 
 
@@ -737,12 +770,21 @@ Previously: Average accuracy is 0.73 with an SD of 0.26. Precision (true positiv
 ### a. Accuracy per position
 ```{r}
 #[did i accidentally delete it?]
+
+accuracy_data1 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos","subject"),na.rm=TRUE) 
+accuracy_data2 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos"),na.rm=TRUE)
+
+#------ Averaged Data
+pos.lm <- lm(detect_mean ~ tgt_pos, accuracy_data1)
+    summary(pos.lm)
+    Anova(pos.lm, type = '2')
+    (emmeans(pos.lm, specs = pairwise ~ tgt_pos))
 ```
 
 
 ### b. Accuracy per word
 ```{r}
-  # there's an unequal number of observations in each cell for the following reasons: 
+# there's an unequal number of observations in each cell for the following reasons: 
   # 1. blocks were made to have one target from each position, but not for those targets to be equally distributed across words, so some blocks, e.g. subject 39, meta block 8, tgt word 4 has 35 observations because two of the targets in that block came from the same word. we didn't think to control for this, but i also can't see why it would be critical. 
   # 2. not all blocks x tgt words have the full n of obs (18, 36, 54) probably because observations were removed during the RT outlier removal phase. 
 
@@ -757,8 +799,17 @@ stargazer(accuracy_data4,
 
 accuracy_data5 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_word","subject"),na.rm=TRUE)
 
+# ------------ Averaged Data
+word.lm <- lm(detect_mean ~ tgt_word, accuracy_data5)
+summary(word.lm)
+Anova(word.lm)
+(em.word <- emmeans(word.lm, specs = pairwise ~ tgt_word, adjust = "tukey", transform = "response"))
 
 
+```
+
+
+```{r}
 ggplot(accuracy_data5, aes(x = tgt_word, y = detect_mean, fill = tgt_word)) +
   geom_point(position = position_jitter(width = .07)) +
   geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE) + 
@@ -790,9 +841,9 @@ dev.off()
 ```
 ### c Accuracy per Syllable
 ```{r}
-
 accuracy_data6 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("target","subject", "tgt_pos"),na.rm=TRUE) %>%
   mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+
 accuracy_data7 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("target"),na.rm=TRUE) %>%
   mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
 
@@ -800,6 +851,17 @@ stargazer(accuracy_data7,
           type = "html", 
           out = file.path(res_path,'tables','syllable_accuracy.doc'), summary = FALSE, rownames = FALSE)
 
+# ------------ Averaged Data
+syll.lm <- lm(detect_mean ~ target, accuracy_data6)
+summary(syll.lm)
+Anova(syll.lm)
+(syll.em <- emmeans(syll.lm, specs = pairwise ~ target, adjust = "tukey", transform = "response"))
+
+
+```
+
+
+```{r}
 ggplot(accuracy_data6, aes(x = target, y = detect_mean)) +
   geom_point(position = position_jitter(width = .07), aes(color = tgt_pos)) +
   geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE,
@@ -817,6 +879,29 @@ ggplot(accuracy_data6, aes(x = target, y = detect_mean)) +
   ggsave('fig4c_rt_acc.png',width=9,height=6)
 dev.copy(pdf,file.path(res_path,'/figures/','exp3fig4cacc.pdf'),width=9,height=6)
 dev.off()
+
+```
+
+
+## Prove it didn't change bc of OR
+Check: some accuracy test... -.-
+```{r}
+rt_data_cleaned.2 %>%
+  summarise(mean = mean(detect),
+            sd = sd(detect))
+
+after <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("subject"),na.rm=TRUE) 
+before <- rt_data_cleaned.2 %>% summarySE(measurevar = "detect", groupvars = c("subject"),na.rm=TRUE) 
+
+t.test(after$detect_mean, before$detect_mean, alternative = "two.sided")
+
+rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos"),na.rm=TRUE) 
+rt_data_cleaned.2 %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos"),na.rm=TRUE) 
+
+rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_word"),na.rm=TRUE) 
+rt_data_cleaned.2 %>% summarySE(measurevar = "detect", groupvars = c("tgt_word"),na.rm=TRUE) 
+
+#rt_data %>% summarySE(measurevar = "detect", groupvars = c("target"),na.rm=TRUE) 
 
 ```
 

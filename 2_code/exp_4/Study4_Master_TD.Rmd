@@ -315,8 +315,27 @@ t.test(base_acc2$resp_mean[which(base_acc2$sess=="rand")],
 ## a. Plot Session x Position 
 ```{r}
 accuracy_data1 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_pos","subject"),na.rm=TRUE) 
-accuracy_data2 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_pos"),na.rm=TRUE) 
+accuracy_data2 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_pos"),na.rm=TRUE)
 
+# ----- On whole data set
+acc.tgt <- lm(resp ~ tgt_pos, data[data$sess=="struct",])
+summary(acc.tgt)
+Anova(acc.tgt)
+(emmeans(acc.tgt, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response"))
+
+ data[data$sess=="struct",] %>% summarise(sd = sd(resp))
+ 
+ 
+# ---- On averaged across participants
+pos.lm <- lm(resp_mean ~ tgt_pos, data=dplyr::filter(accuracy_data1,sess=="struct"))
+summary(pos.lm)
+Anova(pos.lm, type = '2')
+(emmeans(pos.lm, specs = pairwise ~ tgt_pos))
+ 
+```
+
+
+```{r}
 ggplot(accuracy_data1, aes(x = tgt_pos, y = resp_mean, fill = tgt_pos)) +
    geom_point(position = position_jitter(width = .07)) +
    geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 0.8, trim = FALSE) + 
@@ -394,6 +413,22 @@ stargazer(accuracy_data4,
           type = "html", 
           out = file.path(res_path,'tables','word_accuracy.doc'), summary = FALSE, rownames = FALSE)
 
+# ----- On whole data set
+acc.word <- lm(resp ~ tgt_word, data[data$sess=="struct",])
+summary(acc.word)
+Anova(acc.word)
+(emmeans(acc.word, specs = pairwise ~ tgt_word, adjust = "tukey", transform = "response"))
+
+# ---- On averaged across participants
+word.lm <- lm(resp_mean ~ tgt_word, data=dplyr::filter(accuracy_data3,sess=="struct"))
+summary(word.lm)
+Anova(word.lm, type = '2')
+(emmeans(word.lm, specs = pairwise ~ tgt_word))
+
+```
+
+
+```{r}
 ggplot(accuracy_data3, aes(x = tgt_word, y = resp_mean, fill = tgt_word)) +
    geom_point(position = position_jitter(width = .07)) +
    geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 0.8, trim = FALSE) + 
@@ -411,21 +446,9 @@ ggplot(accuracy_data3, aes(x = tgt_word, y = resp_mean, fill = tgt_word)) +
   ggsave(file.path(fig_path,'exp4_acc_fig2.png'),width=w,height=h)
 ```
 
-### Stats
-```{r}
-word.lm <- lm(resp_mean ~ tgt_word, data=dplyr::filter(accuracy_data1,sess=="struct"))
-Anova(word.lm, type = '2')
-
-# Contrasts...
-em.word <- emmeans(word.lm, specs = pairwise ~ tgt_word)
-
-  
-```
-There's no real difference between accuracy in detection syllables, as grouped by word. This analysis being only meaningful for struct condition, it at least tells us that all words features a sum of syllables that are roughly equally detectable. 
 
 ## c. Plot Target Syllable
 ```{r}
-
 accuracy_data5 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","target","subject", "tgt_pos"),na.rm=TRUE) %>%
   mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
 accuracy_data6 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","target"),na.rm=TRUE) %>%
@@ -435,6 +458,33 @@ stargazer(accuracy_data6,
           type = "html", 
           out = file.path(res_path,'tables','syllable_accuracy.doc'), summary = FALSE, rownames = FALSE)
 
+# ----- On the whole data set
+acc.syll <- lm(resp ~ target*sess, data)
+summary(acc.syll)
+Anova(acc.syll)
+(emmeans(acc.syll, specs = pairwise ~ target | sess, adjust = "tukey", transform = "response"))
+
+# ---- On the averaged data
+target.lm <- lm(resp_mean ~ target*sess, data=accuracy_data5)
+summary(target.lm)
+Anova(target.lm)
+# Contrasts
+(emmeans(target.lm, specs = pairwise ~ sess, adjust = "tukey", transform = "response"))
+(emmeans(target.lm, specs = pairwise ~ target, adjust = "tukey", transform = "response"))
+
+
+# There's a main effect of target and session. That means some targets (syllables) were more easy or more difficult to detect. However, we need to account in the model for the fact that identity is confounded with position -- if the variation is entirely due to structure, then we need not worry about identity. 
+# In struct-rand contrasts, only tu and mi were different. 
+# 
+# No pairs were sig. different within levels of session. 
+# 
+# An effect of session suggests that whether those syllables were embedded in words or not had an effect on detectability.
+# 
+# There's no interaction, which suggests that embedding did not modulate the differences between syllables in the detectability. 
+```
+
+
+```{r}
 ggplot(accuracy_data5, aes(x = target, y = resp_mean)) +
   geom_point(position = position_jitter(width = .07), aes(color = tgt_pos)) +
   geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE,
@@ -452,30 +502,6 @@ ggplot(accuracy_data5, aes(x = target, y = resp_mean)) +
   theme(text = element_text(family = "LM Roman 10", face="bold")) +
   ggsave(file.path(fig_path,'exp4_acc_fig3.png'),width=11,height=6)
 ```
-
-### Stats
-```{r}
-target.lm <- lm(resp_mean ~ target*sess, data=accuracy_data1)
-summary(target.lm)
-Anova(target.lm)
-# Contrasts
-(em.target.sess <- emmeans(target.lm, specs = pairwise ~ target|sess))
-plot(em.target.sess, comparisons = TRUE)
-(em.sess.target <- emmeans(target.lm, specs = pairwise ~ sess|target))
-plot(em.sess.target, comparisons = TRUE,)
-
-```
-There's a main effect of target and session. That means some targets (syllables) were more easy or more difficult to detect. However, we need to account in the model for the fact that identity is confounded with position -- if the variation is entirely due to structure, then we need not worry about identity. 
-In struct-rand contrasts, only tu and mi were different. 
-
-No pairs were sig. different within levels of session. 
-
-An effect of session suggests that whether those syllables were embedded in words or not had an effect on detectability.
-
-There's no interaction, which suggests that embedding did not modulate the differences between syllables in the detectability. 
-
-
-
 
 
 
@@ -1086,26 +1112,38 @@ add.lines = list(c("Fixed Effects", "Session Order/Subject + Session"),
 ### Contrasts
 #### position within session
 ```{r}
- options("scipen"=100, "digits"=4)
+# express out to 4 digits
+options("scipen"=100, "digits"=4)
+
+# Anova on model 
 car::Anova(glm.less.slope3, type = 3)
 
-
+# Contrasts
 (em.tgt_pos.sess <- emmeans(glm.less.slope3, specs = pairwise ~ tgt_pos|sess, adjust = "tukey", transform = "response"))
 
-em.tgt_pos.sess$contrasts %>%
+ps.contrasts = summary(pairs(emmeans(glm.less.slope3, ~ tgt_pos|sess)))
+
+# Cohen's d: divide emmeans estimates by residual sd of generating model:
+ps.contrasts$d = ps.contrasts$estimate / sigmaHat(glm.less.slope3)
+
+pos.sess.c <- em.tgt_pos.sess$contrasts %>%
      summary(infer=TRUE) %>%
-     rbind() %>%
-     as.data.frame() -> pos.sess.c
+     cbind(.,ps.contrasts$d) %>%
+     as.data.frame() 
+
 pos.sess.c_out <- pos.sess.c %>%
   transmute("ordinal position" = contrast, 
         session = sess,
         estimate = round(estimate,digits = 3),
          SE = round(SE, digits =3),
+        df = df,
          "lower CI" = round(asymp.LCL, digits = 3),
          "upper CI" = round(asymp.UCL, digits = 3), 
          "z ratio" = round(z.ratio, digits = 3),
-         "p value" = round(p.value, digits = 3)) %>%
-  add_column("s value" = round(-log2(pos.sess.c$p.value),digits = 3))
+         "p value" = round(p.value, digits = 3),
+        "Cohen's d" = round(`ps.contrasts$d`,digits = 3))
+  
+  # add_column("s value" = round(-log2(pos.sess.c$p.value),digits = 3))
 
 
 stargazer(pos.sess.c_out, 
@@ -1123,6 +1161,11 @@ emmip(glm.less.slope3, sess ~ tgt_pos)
 #### session within position
 ```{r}
 (em.sess.pos <- emmeans(glm.less.slope3, specs = pairwise ~ sess|tgt_pos, adjust = "tukey", transform = "response"))
+
+sp.contrasts = summary(pairs(emmeans(glm.less.slope3, ~ sess|tgt_pos)))
+
+# Cohen's d: divide emmeans estimates by residual sd of generating model:
+sp.contrasts$d = sp.contrasts$estimate / sigmaHat(glm.less.slope3)
 
 em.sess.pos$contrasts %>%
      summary(infer=TRUE) %>%

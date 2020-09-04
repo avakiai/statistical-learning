@@ -1831,6 +1831,11 @@ for (curr_subj in unique(exps.3.4.data$subject)) {
 # all.z <- apply(simplify2array(all.cor.z.list), 1:2, mean, na.rm= TRUE)
 # The results of these two are nearly identical -- identical out to about 3 digits, but indeed the z's are normal-ish
 
+# The problem with all.cor.diss.z.list is that some values are > 1, which is incalculable for the z transformation. Thus, many
+# values become NA. 
+
+# > go with z transform of corr()
+  
 # all.diss.z <- FisherZ(all.cor.diss)
 # apply(simplify2array(all.cor.diss),1:2, na.rm = TRUE)
 ```
@@ -1863,17 +1868,20 @@ ac.OP <- list(c(1,2),c(2,3),c(1,3),
 # collect all possible values
 wn.arr <- list()
 for (i in 1:length(wn.OP)) {
-    wn.arr <- append(wn.arr, mapply(function(x, y) x[y][2], all.cor.list, wn.OP[i], SIMPLIFY = FALSE))
+    wn.arr <- append(wn.arr, mapply(function(x, y) x[y][2], all.cor.z.list, wn.OP[i], SIMPLIFY = FALSE))
 } 
 
 ac.arr <- list()
 for (i in 1:length(ac.OP)) {
-  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
-    ac.arr <- append(ac.arr, mapply(function(x, y) x[y][2], all.cor.list, ac.OP[i], SIMPLIFY = FALSE))
+  # all.cor.z.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    ac.arr <- append(ac.arr, mapply(function(x, y) x[y][2], all.cor.z.list, ac.OP[i], SIMPLIFY = FALSE))
 } 
 
 within.OP <- cbind(wn.arr[!is.na(wn.arr)]) %>% as.numeric()
+within.OP[mapply(is.infinite, within.OP)] <- NA
+
 across.OP <- cbind(ac.arr[!is.na(ac.arr)]) %>% as.numeric()
+across.OP[mapply(is.infinite, across.OP)] <- NA
 
 # compute maximum length
 n.op <- round(min(length(within.OP),length(across.OP))*(4/5))
@@ -1881,10 +1889,10 @@ n.op <- round(min(length(within.OP),length(across.OP))*(4/5))
 # sample & bootstrap to produce a matrix and bootstrapped means
 set.seed(42)
 within.OP.samp <- replicate(200, sample(within.OP, size = n.op, replace = TRUE)) 
-within.OP.means <- replicate(200, mean(sample(within.OP, size = n.op, replace = TRUE))) 
+within.OP.means <- replicate(200, mean(sample(within.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
 
 across.OP.samp <- replicate(200, sample(across.OP, size = n.op, replace = TRUE)) 
-across.OP.means <- replicate(200, mean(sample(across.OP, size = n.op, replace = TRUE))) 
+across.OP.means <- replicate(200, mean(sample(across.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
 
 
 (wt.OP <- wilcox.test(within.OP.samp,across.OP.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
@@ -1916,27 +1924,31 @@ ac.TP <- list(c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
 
 wn.tp.arr <- list()
 for (i in 1:length(wn.TP)) {
-  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
-    wn.tp.arr <- append(wn.tp.arr, mapply(function(x, y) x[y][2], all.cor.list, wn.TP[i], SIMPLIFY = FALSE))
+  # all.cor.z.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    wn.tp.arr <- append(wn.tp.arr, mapply(function(x, y) x[y][2], all.cor.z.list, wn.TP[i], SIMPLIFY = FALSE))
 } 
 
 ac.tp.arr <- list()
 for (i in 1:length(ac.TP)) {
-  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
-    ac.tp.arr <- append(ac.tp.arr, mapply(function(x, y) x[y][2], all.cor.list, ac.TP[i], SIMPLIFY = FALSE))
+  # all.cor.z.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    ac.tp.arr <- append(ac.tp.arr, mapply(function(x, y) x[y][2], all.cor.z.list, ac.TP[i], SIMPLIFY = FALSE))
 } 
 
 within.TP <- cbind(wn.tp.arr[!is.na(wn.tp.arr)]) %>% as.numeric()
+within.TP[mapply(is.infinite, within.TP)] <- NA
+
+
 across.TP <- cbind(ac.tp.arr[!is.na(ac.tp.arr)]) %>% as.numeric()
+across.TP[mapply(is.infinite, across.TP)] <- NA
 
 n.tp <- round(min(length(within.TP),length(across.TP))*(4/5))
 
 set.seed(42)
 within.TP.samp <- replicate(200, sample(within.TP, size = n.tp, replace = TRUE)) 
-within.TP.means <- replicate(200, mean(sample(within.TP, size = n.tp, replace = TRUE))) 
+within.TP.means <- replicate(200, mean(sample(within.TP, size = n.tp, replace = TRUE), na.rm = TRUE)) 
 
 across.TP.samp <- replicate(200, sample(across.TP, size = n.tp, replace = TRUE)) 
-across.TP.means <- replicate(200, mean(sample(across.TP, size = n.tp, replace = TRUE))) 
+across.TP.means <- replicate(200, mean(sample(across.TP, size = n.tp, replace = TRUE), na.rm = TRUE)) 
 
 (wt.TP <- wilcox.test(within.TP.samp,across.TP.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
 ```
@@ -1964,27 +1976,30 @@ ac.WI <- list(c(1,5),c(2,6),c(1,6),c(1,8),c(2,9),c(1,9),c(1,11),c(2,12),c(1,12),
 
 wn.WI.arr <- list()
 for (i in 1:length(wn.WI)) {
-  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
-    wn.WI.arr <- append(wn.WI.arr, mapply(function(x, y) x[y][2], all.cor.list, wn.WI[i], SIMPLIFY = FALSE))
+  # all.cor.z.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    wn.WI.arr <- append(wn.WI.arr, mapply(function(x, y) x[y][2], all.cor.z.list, wn.WI[i], SIMPLIFY = FALSE))
 } 
 
 ac.WI.arr <- list()
 for (i in 1:length(ac.WI)) {
-  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
-    ac.WI.arr <- append(ac.WI.arr, mapply(function(x, y) x[y][2], all.cor.list, ac.WI[i], SIMPLIFY = FALSE))
+  # all.cor.z.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    ac.WI.arr <- append(ac.WI.arr, mapply(function(x, y) x[y][2], all.cor.z.list, ac.WI[i], SIMPLIFY = FALSE))
 } 
 
 within.WI <- cbind(wn.WI.arr[!is.na(wn.WI.arr)]) %>% as.numeric()
+within.WI[mapply(is.infinite, within.WI)] <- NA
+
 across.WI <- cbind(ac.WI.arr[!is.na(ac.WI.arr)]) %>% as.numeric()
+across.WI[mapply(is.infinite, across.WI)] <- NA
 
 n.wi <- round(min(length(within.WI),length(across.WI))*(4/5))
 
 set.seed(42)
 within.WI.samp <- replicate(200, sample(within.WI, size = n.wi, replace = TRUE)) 
-within.WI.means <- replicate(200, mean(sample(within.WI, size = n.wi, replace = TRUE))) 
+within.WI.means <- replicate(200, mean(sample(within.WI, size = n.wi, replace = TRUE), na.rm = TRUE)) 
 
 across.WI.samp <- replicate(200, sample(across.WI, size = n.wi, replace = TRUE)) 
-across.WI.means <- replicate(200, mean(sample(across.WI, size = n.wi, replace = TRUE))) 
+across.WI.means <- replicate(200, mean(sample(across.WI, size = n.wi, replace = TRUE), na.rm = TRUE)) 
 
 (wt.WI <- wilcox.test(within.WI.samp,across.WI.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
 ```
@@ -2004,27 +2019,30 @@ ac.di <- list(c(1,3),c(4,6),c(8,9),c(10,12))
 
 wn.di.arr <- list()
 for (i in 1:length(wn.di)) {
-  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
-    wn.di.arr <- append(wn.di.arr, mapply(function(x, y) x[y][2], all.cor.list, wn.di[i], SIMPLIFY = FALSE))
+  # all.cor.z.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    wn.di.arr <- append(wn.di.arr, mapply(function(x, y) x[y][2], all.cor.z.list, wn.di[i], SIMPLIFY = FALSE))
 } 
 
 ac.di.arr <- list()
 for (i in 1:length(ac.di)) {
-  # all.cor.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
-    ac.di.arr <- append(ac.di.arr, mapply(function(x, y) x[y][2], all.cor.list, ac.di[i], SIMPLIFY = FALSE))
+  # all.cor.z.list[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
+    ac.di.arr <- append(ac.di.arr, mapply(function(x, y) x[y][2], all.cor.z.list, ac.di[i], SIMPLIFY = FALSE))
 } 
 
 within.di <- cbind(wn.di.arr[!is.na(wn.di.arr)]) %>% as.numeric()
+within.di[mapply(is.infinite, within.di)] <- NA
+
 across.di <- cbind(ac.di.arr[!is.na(ac.di.arr)]) %>% as.numeric()
+across.di[mapply(is.infinite, across.di)] <- NA
 
 n.di <- round(min(length(within.di),length(across.di))*(4/5))
 
 set.seed(42)
 within.di.samp <- replicate(200, sample(within.di, size = n.di, replace = TRUE))
-within.di.means <- replicate(200, mean(sample(within.di, size = n.di, replace = TRUE)))
+within.di.means <- replicate(200, mean(sample(within.di, size = n.di, replace = TRUE), na.rm = TRUE))
 
 across.di.samp <- replicate(200, sample(across.di, size = n.di, replace = TRUE))
-across.di.means <- replicate(200, mean(sample(across.di, size = n.di, replace = TRUE)))
+across.di.means <- replicate(200, mean(sample(across.di, size = n.di, replace = TRUE), na.rm = TRUE))
 
 (wt.DI <- wilcox.test(within.di.samp,across.di.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
 ```
@@ -2093,13 +2111,13 @@ ggplot(WA.wilcox) +
   geom_col(aes(test,mean), fill = "grey", color = "black") + 
   geom_hline(yintercept = 0, color = "black", linetype="dashed") + 
   scale_x_discrete(name = NULL) + 
-  scale_y_continuous(name = "within - across similarity (Pearson's r)") +
-  annotate(geom = "text", x = 1, y = -0.018, size = 4, label = "***") +
-  annotate(geom = "text", x = 2, y = -0.045, size = 4, label = "***") +
-  annotate(geom = "text", x = 4, y = -0.0, size = 4, label = "***") +
+  scale_y_continuous(name = "within - across dissimilarity (Pearson's r)") +
+  annotate(geom = "text", x = 1, y = -0.19, size = 4, label = "***") +
+  annotate(geom = "text", x = 2, y = -0.525, size = 4, label = "***") +
+  annotate(geom = "text", x = 4, y = -0.085, size = 4, label = "***") +
   theme_classic() + 
   theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave(file.path(fig_path,'/fig_similarity.png'), width = 7, height = 5)  
+  ggsave(file.path(fig_path,'/fig_z_dissimilarity.png'), width = 7, height = 5)  
 
 ```
 
