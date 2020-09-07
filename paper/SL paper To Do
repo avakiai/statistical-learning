@@ -1,7 +1,6 @@
 #SL Paper: To Do
 
 ## Writing
-- Experiment 2 Discussion
 - General Discussion
 - Conclusion
 - Abstract
@@ -36,22 +35,22 @@ Accuracy on before vs. after outlier removal showed no change in overall accurac
 - All lm's and ttests. - Done
 All three variables vary in the 1st exp. The ones in the second exp vary depending on whether you use subject averages or the whole data set. Consider using the subject averages and then just explain away the effect in the first case. 
 **- Report corrected values (either by regressing out, as can be done for word or syllable ID, or subsampling?) - To Do**
+- Deal with accuracy confound in Exp. 2. 
 
 3. Dissimilarity Analysis - Done. 
 - Do z transformed z-dissimilarity | Kriegeskorte ref.
 - H0: there is a difference
 - LM: "If the sign is negative, there is a grouping, of information being used at these levels. There is a coding by which these things make a difference."
 
-4. Rolling Average - To Do
-**- Concat blocks. - Can't do that cause it doesn't make sense. 
-- 1/2 the number of points so that it's smoother. - Let me consider!** 
-- Compare blocks 1 & 2.
+4. Rolling Average - Done
+- Concat blocks. - Can't do that cause it doesn't make sense. 
+- 1/2 the number of points so that it's smoother. - Done.
+- Compare blocks 1 & 2. - See block analyses. 
 
 5. Effect size - Done for each contrast.
 
-6. SL measure. 
-- T-test blocks 1 & 2. 
-
+6. SL measure. - Done. 
+- T-test blocks 1 & 2. - There's no main effect, that's enough. 
 
 7. Contrasts as polynomials. 
 - LM: put the data in two new regressions, polynomial vs. linear, to see which it is. - No, I don't see the point. 
@@ -67,3 +66,5 @@ All three variables vary in the 1st exp. The ones in the second exp vary dependi
 35 German speakers. 
 - That for Procedure 2 based off 18 participants in Morla, so ignores 2. 
 14 German natives. 
+
+2. Need to check the machine type and the Presentation version on the computers used in the Group testing room -- Experiment 2 Methods. 

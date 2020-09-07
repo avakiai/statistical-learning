@@ -276,8 +276,7 @@ dev.off()
 ## Fig. 2. Plot RT ~ Pos x Block x Subject
 ```{r message=FALSE, warning=FALSE}
 rt_data_sum4 <- rt_data %>% # target position x block x subject
-    summarySE(measurevar = "rt", groupvars = c("block","tgt_pos","subject"),na.rm=TRUE) %>%
-    filter(subject != "b2308")
+    summarySE(measurevar = "rt", groupvars = c("block","tgt_pos","subject"),na.rm=TRUE) 
 
 ggplot(rt_data_sum4, mapping=aes(x=tgt_pos,y=rt_median,color=as.factor(block))) + 
   geom_point(size=1) +
@@ -296,7 +295,6 @@ dev.copy(pdf,file.path(res_path,'figures','exp3fig2.pdf'))
 dev.off()
 
 ```
-
 ## Fig. 3a. Rolling Average RT
 ```{r warning=FALSE, include=FALSE}
 # There are 18 targets per block. 3 blocks in each block (set of trials where all 3 positions serve as targets). 
@@ -334,11 +332,15 @@ rolled_over_subjs_blocks <- rt_data_rolled %>%
 ```
 
 ```{r warning=FALSE}
+
+
+#ggplot(rolled_over_subjs_blocks[rolled_over_subjs_blocks$target_num %in% seq(1,18,2),], mapping=aes(target_num,moving_mean_mean,colour=tgt_pos)) +
 ggplot(rolled_over_subjs_blocks, mapping=aes(target_num,moving_mean_mean,colour=tgt_pos)) +
-  geom_point() +
+    geom_point() +
   geom_line(aes(group=tgt_pos)) +
   geom_ribbon(aes(x=target_num,ymin=moving_mean_mean-se,ymax=moving_mean_mean+se,fill=tgt_pos),alpha=.2) +
-  scale_x_discrete(limits=c(1:18),name="Occurrence of target syllable") + 
+    scale_x_discrete(limits=c(1:18),name="Occurrence of target syllable") + 
+#    scale_x_discrete(limits=seq(1,18,2),name="Occurrence of target syllable") + 
   scale_y_continuous(name="Mean RT [shaded = SEM]", ) +
   scale_color_brewer(palette="Dark2", name = "Target Position",
                      labels = c("1st","2nd","3rd")) + 
@@ -355,19 +357,21 @@ dev.off()
 ```
 Impressively, only a few exposures to the words are enough for participants' reaction times to differentiate syllables based on their position.
 
-## Fig. 3b. Plot Blocks as Facets/1st Block Only
+## Fig. 3b. Plot Blocks as Facets
 ```{r}
 rolled_over_subjs <- rt_data_rolled %>%
   filter(!is.na(moving_mean)) %>%
   summarySE(measurevar = "moving_mean",groupvars = c("tgt_pos","target_num","block"), na.rm = TRUE)
 
-ggplot(rolled_over_subjs, mapping=aes(target_num,moving_mean_mean,colour=tgt_pos)) +
-  geom_point(size=1) +
+ggplot(rolled_over_subjs[rolled_over_subjs$target_num %in% seq(1,18,3),], mapping=aes(target_num,moving_mean_mean,colour=tgt_pos)) +
+#ggplot(rolled_over_subjs, mapping=aes(target_num,moving_mean_mean,colour=tgt_pos)) +
+    geom_point(size=1) +
     geom_line(aes(group=tgt_pos)) +
   geom_ribbon(aes(x=target_num,ymin=moving_mean_mean-se,ymax=moving_mean_mean+se,fill=tgt_pos),alpha=.2) +
   xlab("Occurrence of target syllable") + 
   ylab("Mean RT [shaded = SEM]") + 
-  scale_x_discrete(limits = c(1:18)) + 
+#  scale_x_discrete(limits = c(1:18)) + 
+  scale_x_discrete(limits = seq(1,18,3)) + 
   scale_color_brewer(palette="Dark2", name = "Target Position",
                      labels = c("1st","2nd","3rd")) + 
   scale_fill_brewer(palette="Pastel2", guide = FALSE) +
@@ -378,59 +382,17 @@ ggplot(rolled_over_subjs, mapping=aes(target_num,moving_mean_mean,colour=tgt_pos
   facet_wrap(.~ block, ncol=4) +
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold"), legend.position = "top") +
-  ggsave(file.path(res_path,'figures','fig3b_rt_rolling.png'),width=14,height=10)
-dev.copy(pdf,file.path(res_path,'figures','exp3fig3brolling.pdf'), width = 12, height = 10)
-dev.off()
+  ggsave(file.path(res_path,'figures','fig3b_rt_rolling_smooth3.png'),width=14,height=10)
+# dev.copy(pdf,file.path(res_path,'figures','exp3fig3brollingsmooth3.pdf'), width = 12, height = 10)
+# dev.off()
 
 ```
 
-## Fig. 4. Accuracy: RT ~ Pos
-```{r}
-accuracy_data1 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos","subject"),na.rm=TRUE) 
-accuracy_data2 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos"),na.rm=TRUE) 
 
-# Boxplot
-# ggplot(accuracy_data2) + 
-#   geom_col(mapping=aes(tgt_pos, detect_mean, fill= (tgt_pos)), 
-#            position = position_dodge(0.5), width=0.5) +
-#   geom_errorbar(mapping=aes(tgt_pos, y=detect_mean, ymin=detect_mean-se, ymax=detect_mean+se,
-#            group=tgt_pos,color=tgt_pos), position=position_dodge(0.5), width = 0.3, size = 1) +
-#   scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
-#   scale_x_discrete(name = "Target Position") + 
-#   scale_color_brewer(palette="Dark2") + 
-#   scale_fill_brewer(palette="Pastel2") +
-#   guides(fill=FALSE, color = FALSE) +
-#   theme_minimal() +
-#   theme(text = element_text(family = "LM Roman 10", face="bold")) +
-#   ggsave(file.path(res_path,'figures','fig4_rt_acc.png'),width=w,height=h)
-
-# Raincloud
-ggplot(accuracy_data1, aes(x = tgt_pos, y = detect_mean, fill = tgt_pos)) +
-  geom_point(position = position_jitter(width = .07)) +
-  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE) + 
-  geom_point(accuracy_data2, mapping = aes(tgt_pos, detect_mean), position = position_nudge(x = 0.2, y = 0)) +
-  geom_errorbar(accuracy_data2, mapping=aes(tgt_pos, y=detect_mean, ymin=detect_mean-se,
-                                            ymax=detect_mean+se),
-                position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
-  #scale_fill_manual(values=wes_palette("Royal2")[c(3,4,5)]) +
-  scale_color_brewer(palette="Dark2") + 
-  scale_fill_brewer(palette="Pastel2") +
-  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
-  scale_x_discrete(name = "Target Position") + 
-  guides(fill = FALSE, color = FALSE) + 
-  theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave(file.path(res_path,'figures','fig4_rt_acc.png'),width=w,height=h)
-dev.copy(pdf,file.path(res_path,'figures','exp3fig4acc.pdf'), width = w, height = h)
-dev.off()
-
-```
 
 
 
 # 2 - MODELS
-
-
 ```{r}
 rt_data %>% summarySE(., measurevar = "rt_secs", groupvars = c("tgt_pos"), na.rm = TRUE)
 ```
@@ -683,8 +645,79 @@ dev.off()
 ```
 
 
+## Rolling Average GLMM
+```{r}
 
-## Regress out syllable effect
+rolled_over_subjs
+
+```
+
+
+## Block Contrasts
+```{r}
+Anova(rt.mod.full.int.fct)
+emmeans(rt.mod.full.int.fct, specs = pairwise ~ block, adjust = "Tukey", transform = "response")
+
+
+
+(within.em <- emmeans(rt.mod.full.int.fct, specs = pairwise ~ tgt_pos|block, adjust = "Tukey", transform = "response"))
+# Drop in RT between 1-2 and 1-3 present in all blocks, 2-3 present in all but 3
+
+
+contrasts1.2 <- within.em$contrasts %>%
+  as.data.frame() %>%
+  filter(contrast=="1 - 2")
+
+
+contrasts1.3 <- within.em$contrasts %>%
+  as.data.frame() %>%
+  filter(contrast=="1 - 3")
+
+
+t.test(contrasts1.2,)
+
+within.em$contrasts %>%
+  as.data.frame() %>%
+  filter(contrast=="2 - 3")
+
+emmeans(rt.mod.full.int.fct, specs = pairwise ~ block|tgt_pos, adjust = "Tukey", transform = "response")
+
+
+
+```
+
+
+```{r}
+
+block.matters <- rt_data_sum4 %>%
+  dplyr::select(subject, block, tgt_pos, rt_mean) %>%
+  spread(tgt_pos, rt_mean) %>% 
+  mutate(c1.2 = `1`-`2`,
+         c1.3 = `1`-`3`,
+         c2.3 = `2`-`3`)
+
+
+# Is 1-2, 1-3, or 2-3 different between blocks? 
+
+c1.2.mod <- lm(c1.2 ~ block, block.matters)
+Anova(c1.2.mod)
+emmeans(c1.2.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
+# > mean(1)-mean(2) is not sig. different between blocks 
+
+c1.3.mod <- lm(c1.3 ~ block, block.matters)
+Anova(c1.3.mod)
+emmeans(c1.3.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
+# > none.
+
+c2.3.mod <- lm(c2.3 ~ block, block.matters)
+Anova(c2.3.mod)
+emmeans(c2.3.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
+# > none. 
+
+```
+
+
+# Regress out syllable effect
 ```{r}
 # across all participants, median RTs for each of the syllables
 # rm anova with syllable and position as factors
@@ -769,6 +802,7 @@ plot(em.acc.less3, comparisons = TRUE,
 Now: Accuracy of 0.70 and sd of 0.45.
 Previously: Average accuracy is 0.73 with an SD of 0.26. Precision (true positives/true + false positives) is at 0.80 with an SD of 0.23. 
 
+
 ### a. Accuracy per position
 ```{r}
 #[did i accidentally delete it?]
@@ -783,6 +817,47 @@ pos.lm <- lm(detect_mean ~ tgt_pos, accuracy_data1)
     (emmeans(pos.lm, specs = pairwise ~ tgt_pos))
 ```
 
+## Fig. 4. Accuracy: RT ~ Pos
+```{r}
+accuracy_data1 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos","subject"),na.rm=TRUE) 
+accuracy_data2 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos"),na.rm=TRUE) 
+
+# Boxplot
+# ggplot(accuracy_data2) + 
+#   geom_col(mapping=aes(tgt_pos, detect_mean, fill= (tgt_pos)), 
+#            position = position_dodge(0.5), width=0.5) +
+#   geom_errorbar(mapping=aes(tgt_pos, y=detect_mean, ymin=detect_mean-se, ymax=detect_mean+se,
+#            group=tgt_pos,color=tgt_pos), position=position_dodge(0.5), width = 0.3, size = 1) +
+#   scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
+#   scale_x_discrete(name = "Target Position") + 
+#   scale_color_brewer(palette="Dark2") + 
+#   scale_fill_brewer(palette="Pastel2") +
+#   guides(fill=FALSE, color = FALSE) +
+#   theme_minimal() +
+#   theme(text = element_text(family = "LM Roman 10", face="bold")) +
+#   ggsave(file.path(res_path,'figures','fig4_rt_acc.png'),width=w,height=h)
+
+# Raincloud
+ggplot(accuracy_data1, aes(x = tgt_pos, y = detect_mean, fill = tgt_pos)) +
+  geom_point(position = position_jitter(width = .07)) +
+  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE) + 
+  geom_point(accuracy_data2, mapping = aes(tgt_pos, detect_mean), position = position_nudge(x = 0.2, y = 0)) +
+  geom_errorbar(accuracy_data2, mapping=aes(tgt_pos, y=detect_mean, ymin=detect_mean-se,
+                                            ymax=detect_mean+se),
+                position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
+  #scale_fill_manual(values=wes_palette("Royal2")[c(3,4,5)]) +
+  scale_color_brewer(palette="Dark2") + 
+  scale_fill_brewer(palette="Pastel2") +
+  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
+  scale_x_discrete(name = "Target Position") + 
+  guides(fill = FALSE, color = FALSE) + 
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggsave(file.path(res_path,'figures','fig4_rt_acc.png'),width=w,height=h)
+dev.copy(pdf,file.path(res_path,'figures','exp3fig4acc.pdf'), width = w, height = h)
+dev.off()
+
+```
 
 ### b. Accuracy per word
 ```{r}
@@ -1452,7 +1527,9 @@ ggplot(data = exp_3_log_traj.siegelman2018, aes(x = block, y = rt_log_mean, grou
   geom_smooth(method = "glm", formula = y~x,
               method.args = list(family = gaussian(link = 'log')), 
               se = TRUE, size = 1, alpha = 0.2) +
-  xlab("Block") + ylab(expression(logRT[1]~-~mu(logRT[2]+logRT[3]))) + 
+  xlab("Block") + 
+  ylab("Measure of Online SL") +
+  #ylab(expression(logRT[1]~-~mu(logRT[2]+logRT[3]))) + 
   theme_classic() +
   theme(text = element_text(family = "LM Roman 10", face="bold"), 
         legend.title = element_text("Position"),  legend.position = "right") + 
@@ -1484,8 +1561,10 @@ exp_3_log_traj_ind.siegelman2018 <- exp_3_log_traj_ind %>%
 library(pbkrtest)
 library(emmeans)
 emm_options(lmer.df = "satterth")
+
 traj.mod1 <- lmer(delta ~ 1 + block + (1|subject), data = exp_3_log_traj_ind.siegelman2018)
-, family = gaussian(link="log"))
+#, family = gaussian(link="log"))
+
 summary(traj.mod1)
 Anova(traj.mod1)
 emmeans(traj.mod1, specs = pairwise ~ block, adjust = "Tukey",  transform = "response")
