@@ -58,6 +58,7 @@ All three variables vary in the 1st exp. The ones in the second exp vary dependi
 8. Final Correlation
 - Take means from analysis, correlate with offline. 
 (What to do about small sample size?)
+To do this, we have to run this correlation analysis for each participant. But is the N large enough to do this? 
 
 ------------------------
 ###Honest Notes

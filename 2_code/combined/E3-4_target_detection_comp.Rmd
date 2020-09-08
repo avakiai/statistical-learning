@@ -1840,9 +1840,9 @@ for (curr_subj in unique(exps.3.4.data$subject)) {
 # apply(simplify2array(all.cor.diss),1:2, na.rm = TRUE)
 ```
 
-Lucia's version: 
-1. Take correlations for each subject, z transform | I did not z transform. 
-2. Sample 200 times from each participant's correlations for each within vs. across category
+Procedure: 
+1. Take 1-correlations for each subject, z transform
+2. Sample 200 times with replacement from all participant's matrices for each within vs. across category; subsample arrays to make them equal in length.
 3. Compute wilcoxon
 
 For each test, we look at the correlation between items in each category vs. items outside that category.
