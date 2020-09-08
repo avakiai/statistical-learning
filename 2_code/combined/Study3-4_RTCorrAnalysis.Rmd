@@ -5,11 +5,21 @@ date: "9/8/2020"
 output: html_document
 ---
 # Load & Init.
+
+```{r}
+library(tidyverse)
+library(extrafont)
+par(family="LM Roman 10")
+library(DescTools) 
+library(rcompanion)
+```
+
 ```{r}
 #data_path
 #code_path
+#res_path
 fig_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/combined'
-
+res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/combined'
 #source("summarySE.R")
 
 exps.3.4.data <- read_csv('C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/combined/exps_3_4s_data.csv') %>% mutate(subject = as.factor(subject),
@@ -22,18 +32,7 @@ exps.3.4.data <- read_csv('C:/Users/Ava/Desktop/Experiments/statistical_learning
 
 ```
 
-```{r}
-library(tidyverse)
-library(extrafont)
-par(family="LM Roman 10")
-library(lme4)
-library(emmeans)
-library(car)
-library(cluster) # clustering algorithms
-library(wesanderson)
-pal <- wes_palette("Zissou1", 100, type = "continuous")
-library(DescTools) 
-```
+
 
 ## Compute Correlation Matrices
 ```{r}
@@ -164,23 +163,45 @@ for (curr_subj in unique(exps.3.4.data$subject)) {
 # apply(simplify2array(all.cor.diss),1:2, na.rm = TRUE)
 ```
 
+## Group-Level Analysis
+```{r}
+meta_table <- data.frame(data = as.factor(0),
+                            test = as.factor(0),
+                            w = as.double(0),
+                            CI.low = as.double(0),
+                            CI.hi = as.double(0),
+                            p = as.double(0))
 
-
+i = 1
+```
 
 Procedure: 
 1. Take 1-correlations for each subject, z transform
+#### Set analysis type
 ```{r}
 # Group level analysis on this matrix: 
 
-
 # Dissimilarity Matrix
 # group.analysis <- all.cor.diss.list
+# name <- 'diss'
+# label <- 'dissimilarity (1-'
+
 # group.analysis <- all.cor.diss.z.list
+# name <- 'diss_z'
+# label <- 'dissimilarity z(1-'
+
 # Similarity Matrix
-# group.analysis <- all.cor.list
-group.analysis <- all.cor.z.list
+group.analysis <- all.cor.list
+name <- 'corr'
+label <- 'similarity ('
+
+# group.analysis <- all.cor.z.list
+# name <- 'corr_z'
+# label <- 'similarity z('
 
 ```
+
+
 
 
 2. Sample 200 times with replacement from all participant's matrices for each within vs. across category; subsample arrays to make them equal in length.
@@ -189,7 +210,6 @@ group.analysis <- all.cor.z.list
 For each test, we look at the correlation between items in each category vs. items outside that category.
 
 
-## Group-Level Analysis
 #### Set Seed
 ```{r}
 set.seed(42)
@@ -215,34 +235,57 @@ ac.OP <- list(c(1,2),c(2,3),c(1,3),
              c(7,8),c(7,9),c(8,9),
              c(10,11),c(11,12),c(10,12)) 
 
-# collect all possible values
+# collect values for each of these boxes from all participants (all matrices in the list)
+# You can check what's happening here like so: group.analysis[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
 wn.arr <- list()
-for (i in 1:length(wn.OP)) {
-    wn.arr <- append(wn.arr, mapply(function(x, y) x[y][2], group.analysis, wn.OP[i], SIMPLIFY = FALSE))
-} 
-
+for (i in 1:length(wn.OP)) {wn.arr <- append(wn.arr, mapply(function(x, y) x[y][2], group.analysis, wn.OP[i], SIMPLIFY = FALSE))} 
 ac.arr <- list()
-for (i in 1:length(ac.OP)) {
-  # group.analysis[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
-    ac.arr <- append(ac.arr, mapply(function(x, y) x[y][2], group.analysis, ac.OP[i], SIMPLIFY = FALSE))
-} 
+for (i in 1:length(ac.OP)) {ac.arr <- append(ac.arr, mapply(function(x, y) x[y][2], group.analysis, ac.OP[i], SIMPLIFY = FALSE))} 
 
 within.OP <- cbind(wn.arr[!is.na(wn.arr)]) %>% as.numeric()
-within.OP[mapply(is.infinite, within.OP)] <- NA
+within.OP[mapply(is.infinite, within.OP)] <- NA # clean, in case using z-transform
+#print(paste0('Within OP has ',length(within.OP[is.na(within.OP)]),' NAs out of ',length(within.OP),'. ',round(loss,digits=3), '% loss.'))
+loss <- length(within.OP[is.na(within.OP)])/length(within.OP)
+if (loss > 0.1) {stop()}
+within.OP <- within.OP[!is.na(within.OP)] # remove NA
 
 across.OP <- cbind(ac.arr[!is.na(ac.arr)]) %>% as.numeric()
 across.OP[mapply(is.infinite, across.OP)] <- NA
+loss <- length(across.OP[is.na(across.OP)])/length(across.OP) 
+if (loss > 0.1) {stop()}
+across.OP <- across.OP[!is.na(across.OP)] # remove NA
 
 # compute maximum length
 (n.op <- round(min(length(within.OP),length(across.OP))*(4/5)))
 
 # sample & bootstrap to produce a matrix and bootstrapped means
-within.OP.samp <- replicate(200, sample(within.OP, size = n.op, replace = TRUE)) 
+within.OP.samp <- as.numeric(replicate(200, sample(within.OP, size = n.op, replace = TRUE)))
 within.OP.means <- replicate(200, mean(sample(within.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
+#length(within.OP.samp)
 
-across.OP.samp <- replicate(200, sample(across.OP, size = n.op, replace = TRUE)) 
+
+across.OP.samp <- as.numeric(replicate(200, sample(across.OP, size = n.op, replace = TRUE)))
 across.OP.means <- replicate(200, mean(sample(across.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
-(wt.OP <- wilcox.test(within.OP.samp,across.OP.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
+#length(across.OP.samp)
+
+(wt.OP <- wilcox.test(within.OP.samp,across.OP.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
+
+# Effect size = Z statistic divided by the square root of the sample size (N) (Z/sqrt(N)). The Z value is extracted from either coin::wilcoxsign_test()
+ 
+#coin::wilcoxsign_test(within.OP.samp ~ across.OP.samp, distribution = "exact")
+# This took way way too long, had to stop.  
+
+# This throws an error that there are not enough x (finite) observations. I could not figure out how to debug this.  
+#rcompanion::wilcoxonPairedR(within.OP.samp, across.OP.samp)
+#histogram = TRUE, conf = 0.95, type = "perc", R = 1000, cases = TRUE, digits = 3)
+
+meta_table <- rbind(meta_table, 
+                    data.frame(data = name, 
+                     test = 'ordinal position',
+                     w = wt.OP$statistic,
+                     CI.low = wt.OP$conf.int[1],
+                     CI.hi = wt.OP$conf.int[2],
+                     p = wt.OP$p.value))
 ```
 
 
@@ -281,10 +324,12 @@ for (i in 1:length(ac.TP)) {
 
 within.TP <- cbind(wn.tp.arr[!is.na(wn.tp.arr)]) %>% as.numeric()
 within.TP[mapply(is.infinite, within.TP)] <- NA
+within.TP <- within.TP[!is.na(within.TP)] # remove NA
 
 
 across.TP <- cbind(ac.tp.arr[!is.na(ac.tp.arr)]) %>% as.numeric()
 across.TP[mapply(is.infinite, across.TP)] <- NA
+across.TP <- across.TP[!is.na(across.TP)] # remove NA
 
 (n.tp <- round(min(length(within.TP),length(across.TP))*(4/5)))
 
@@ -294,7 +339,16 @@ within.TP.means <- replicate(200, mean(sample(within.TP, size = n.tp, replace = 
 across.TP.samp <- replicate(200, sample(across.TP, size = n.tp, replace = TRUE)) 
 across.TP.means <- replicate(200, mean(sample(across.TP, size = n.tp, replace = TRUE), na.rm = TRUE)) 
 
-(wt.TP <- wilcox.test(within.TP.samp,across.TP.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
+(wt.TP <- wilcox.test(within.TP.samp,across.TP.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
+
+meta_table <- rbind(meta_table, 
+                    data.frame(data = name, 
+                     test = 'transitional probability',
+                     w = wt.TP$statistic,
+                     CI.low = wt.TP$conf.int[1],
+                     CI.hi = wt.TP$conf.int[2],
+                     p = wt.TP$p.value))
+
 ```
 
 ### - Triplet Identity
@@ -332,9 +386,11 @@ for (i in 1:length(ac.WI)) {
 
 within.WI <- cbind(wn.WI.arr[!is.na(wn.WI.arr)]) %>% as.numeric()
 within.WI[mapply(is.infinite, within.WI)] <- NA
+within.WI <- within.WI[!is.na(within.WI)] # remove NA
 
 across.WI <- cbind(ac.WI.arr[!is.na(ac.WI.arr)]) %>% as.numeric()
 across.WI[mapply(is.infinite, across.WI)] <- NA
+across.WI <- across.WI[!is.na(across.WI)] # remove NA
 
 (n.wi <- round(min(length(within.WI),length(across.WI))*(4/5)))
 
@@ -344,7 +400,15 @@ within.WI.means <- replicate(200, mean(sample(within.WI, size = n.wi, replace = 
 across.WI.samp <- replicate(200, sample(across.WI, size = n.wi, replace = TRUE)) 
 across.WI.means <- replicate(200, mean(sample(across.WI, size = n.wi, replace = TRUE), na.rm = TRUE)) 
 
-(wt.WI <- wilcox.test(within.WI.samp,across.WI.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
+(wt.WI <- wilcox.test(within.WI.samp,across.WI.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
+
+meta_table <- rbind(meta_table, 
+                    data.frame(data = name, 
+                     test = 'word identity',
+                     w = wt.WI$statistic,
+                     CI.low = wt.WI$conf.int[1],
+                     CI.hi = wt.WI$conf.int[2],
+                     p = wt.WI$p.value))
 ```
 
 
@@ -374,9 +438,11 @@ for (i in 1:length(ac.di)) {
 
 within.di <- cbind(wn.di.arr[!is.na(wn.di.arr)]) %>% as.numeric()
 within.di[mapply(is.infinite, within.di)] <- NA
+within.di <- within.di[!is.na(within.di)] # remove NA
 
 across.di <- cbind(ac.di.arr[!is.na(ac.di.arr)]) %>% as.numeric()
 across.di[mapply(is.infinite, across.di)] <- NA
+across.di <- across.di[!is.na(across.di)] # remove NA
 
 (n.di <- round(min(length(within.di),length(across.di))*(4/5)))
 
@@ -386,7 +452,16 @@ within.di.means <- replicate(200, mean(sample(within.di, size = n.di, replace = 
 across.di.samp <- replicate(200, sample(across.di, size = n.di, replace = TRUE))
 across.di.means <- replicate(200, mean(sample(across.di, size = n.di, replace = TRUE), na.rm = TRUE))
 
-(wt.DI <- wilcox.test(within.di.samp,across.di.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
+(wt.DI <- wilcox.test(within.di.samp,across.di.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
+
+
+meta_table <- rbind(meta_table, 
+                    data.frame(data = name, 
+                     test = 'duplet identity',
+                     w = wt.DI$statistic,
+                     CI.low = wt.DI$conf.int[1],
+                     CI.hi = wt.DI$conf.int[2],
+                     p = wt.DI$p.value))
 ```
 
 This was essentiall 4 Mann-Whitney Tests:  if both x and y are given and paired is FALSE, a Wilcoxon rank sum test (equivalent to the Mann-Whitney test: see the Note) is carried out. In this case, the null hypothesis is that the distributions of x and y differ by a location shift of mu and the alternative is that they differ by some other location shift (and the one-sided alternative "greater" is that x is shifted to the right of y).
@@ -396,7 +471,7 @@ P-values computed via normal approximation.
 Note that in the two-sample case the estimator for the difference in location parameters does not estimate the difference in medians (a common misconception) but rather the median of the difference between a sample from x and a sample from y.
 
 ### -> Combine Data/Wilcoxon
-```{r}
+```{r eval=FALSE, include=FALSE}
 
 WA.wilcox <- data.frame(test = factor(c(
 "ordinal position",
@@ -444,21 +519,48 @@ wt.WI$p.value,
 #wt.WI$p.value,
 #wt.DI$p.value,
 wt.DI$p.value)))
+
+write.csv(WA.wilcox,file.path(res_path,paste0('/wilcox_',name,'_run',i,'.csv')), row.names = FALSE)
 ```
+
+p-calc
+```{r eval=FALSE, include=FALSE}
+
+
+if (WA.wilcox$p < 0.001) {
+  xs = c(1:4)[WA.wilcox$p < 0.0001]
+  ys = WA.wilcox$mean[WA.wilcox$p < 0.0001]
+  labels = "***"
+} else if (WA.wilcox$p < 0.01) {
+  xs = c(1:4)[WA.wilcox$p < 0.01]
+  ys = WA.wilcox$mean[WA.wilcox$p < 0.01]
+  labels = "**"
+} else if (WA.wilcox$p < 0.05) {
+  xs = c(1:4)[WA.wilcox$p < 0.05]
+  ys = WA.wilcox$mean[WA.wilcox$p < 0.05]
+  labels = "**"
+}
+
+```
+
 
 ### -> Plot
 ```{r}
+
 ggplot(WA.wilcox) + 
   geom_col(aes(test,mean), fill = "grey", color = "black") + 
   geom_hline(yintercept = 0, color = "black", linetype="dashed") + 
   scale_x_discrete(name = NULL) + 
-  scale_y_continuous(name = "within - across similarity z(Pearson's r)") +
-  #annotate(geom = "text", x = 1, y = -0.19, size = 4, label = "***") +
-  #annotate(geom = "text", x = 2, y = -0.525, size = 4, label = "***") +
-  #annotate(geom = "text", x = 4, y = -0.085, size = 4, label = "***") +
+  scale_y_continuous(name = paste0("within - across ", label ,"Pearson's r)")) +
+ # annotate(geom = "text", x = 1, y = -0.015, size = 4, label = "***") +
+ # annotate(geom = "text", x = 2, y = 0.0135, size = 4, label = "***") +
+ # annotate(geom = "text", x = 4, y = -0.064, size = 4, label = "***") +
   theme_classic() + 
-  theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave(file.path(fig_path,'/fig9_similarity_z_run1.png'), width = 7, height = 5)  
+  theme(text = element_text(family = "LM Roman 10", face="bold")) #+
+  ggsave(file.path(fig_path, paste0('/fig9_',name,'_run',i,'.png')), width = 7, height = 5)  
+  
+i = i + 1
+
 ```
 
 ## Subject-Level Analysis
@@ -546,9 +648,60 @@ for (curr_subj in unique(exp.3.only$subject)) {
 
 ```
 
+Procedure: 
+1. Take 1-correlations for each subject, z transform
+#### Set analysis type
+```{r eval=FALSE, include=FALSE}
+# Group level analysis on this matrix: 
+
+
+# Dissimilarity Matrix
+# single.analysis <- exp3.cor.diss.list
+ single.analysis <- exp3.cor.diss.z.list
+# Similarity Matrix
+# single.analysis <- exp3.cor.list
+# single.analysis <- exp3.cor.z.list
+
+```
 
 ### - Ordinal Position
-```{r}
+```{r eval=FALSE, include=FALSE}
+
+wn.OP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10), # 1s
+             c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), #2s
+             c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12)) #3s
+ac.OP <- list(c(1,2),c(2,3),c(1,3),
+              c(4,5),c(5,6),c(4,6), 
+             c(7,8),c(7,9),c(8,9),
+             c(10,11),c(11,12),c(10,12)) 
+
+# collect all possible values
+wn.arr <- list()
+for (i in 1:length(wn.OP)) {
+    wn.arr <- append(wn.arr, mapply(function(x, y) x[y][2], single.analysis, wn.OP[i], SIMPLIFY = FALSE))
+} 
+ac.arr <- list()
+for (i in 1:length(ac.OP)) {
+    ac.arr <- append(ac.arr, mapply(function(x, y) x[y][2], single.analysis, ac.OP[i], SIMPLIFY = FALSE))
+} 
+
+within.OP <- cbind(wn.arr[!is.na(wn.arr)]) %>% as.numeric()
+within.OP[mapply(is.infinite, within.OP)] <- NA
+
+across.OP <- cbind(ac.arr[!is.na(ac.arr)]) %>% as.numeric()
+across.OP[mapply(is.infinite, across.OP)] <- NA
+
+# compute maximum length
+(n.op <- round(min(length(within.OP),length(across.OP))*(4/5)))
+
+# sample & bootstrap to produce a matrix and bootstrapped means
+within.OP.samp <- replicate(200, sample(within.OP, size = n.op, replace = TRUE)) 
+within.OP.means <- replicate(200, mean(sample(within.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
+
+across.OP.samp <- replicate(200, sample(across.OP, size = n.op, replace = TRUE)) 
+across.OP.means <- replicate(200, mean(sample(across.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
+(wt.OP <- wilcox.test(within.OP.samp,across.OP.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
+
 
 ```
 
