@@ -1,0 +1,171 @@
+---
+title: "posthoc_correlation"
+author: "Ava Kiai"
+date: "9/9/2020"
+output: html_document
+---
+
+Conclusion: use any method except z scored dissimilarity
+
+```{r}
+# fig_path 
+
+loss_table <- read_csv(file.path(fig_path,paste0('paired_wilcoxon_100runs/loss_table_allruns.csv'))) %>%
+  mutate(anal = as.factor(anal),
+         test = as.factor(test))
+
+meta_table <- read_csv(file.path(fig_path, paste0('paired_wilcoxon_100runs/meta_table_allruns.csv'))) %>%
+  mutate(data = as.factor(data),
+         test = as.factor(test))
+
+
+# if you want to plot the means of the groups, you need to load them all from the csv files we saved. at least it's there but it'll be a little time consuming. 
+
+library(ggpubr)
+```
+
+# P
+```{r}
+
+ggplot(meta_table, aes(p,w,color=data)) + 
+  geom_point() + 
+  facet_grid(. ~ test) + 
+  theme_classic()
+
+
+ggplot(meta_table %>% filter(data == "corr"), aes(p)) + 
+  geom_histogram(binwidth = 0.05) + 
+  facet_grid(. ~ test) + 
+  geom_vline(xintercept = 0.05, color = "red") + 
+  theme_classic() + 
+  ggtitle("correlation")
+
+
+ggplot(meta_table %>% filter(data == "corr_z"), aes(p)) + 
+  geom_histogram(binwidth = 0.05) + 
+  facet_grid(. ~ test) + 
+  geom_vline(xintercept = 0.05, color = "red") + 
+  theme_classic() + 
+  ggtitle("z(correlation)")
+
+
+ggplot(meta_table %>% filter(data == "diss"), aes(p)) + 
+  geom_histogram(binwidth = 0.05) + 
+  facet_grid(. ~ test) + 
+  geom_vline(xintercept = 0.05, color = "red") + 
+  theme_classic() + 
+  ggtitle("1-correlation")
+
+
+ggplot(meta_table %>% filter(data == "diss_z"), aes(p)) + 
+  geom_histogram(binwidth = 0.05) + 
+  facet_grid(. ~ test) + 
+  geom_vline(xintercept = 0.05, color = "red") + 
+  theme_classic() + 
+  ggtitle("z(1-correlation)")
+
+
+
+```
+
+# W
+```{r}
+
+ggplot(meta_table %>% filter(data == "corr"), aes(w)) + 
+  geom_histogram() + 
+  facet_grid(. ~ test) + 
+  geom_vline(xintercept = 0.05, color = "red") + 
+  theme_classic() + 
+  ggtitle("correlation")
+
+
+ggplot(meta_table %>% filter(data == "corr_z"), aes(w)) + 
+  geom_histogram() + 
+  facet_grid(. ~ test) + 
+  geom_vline(xintercept = 0.05, color = "red") + 
+  theme_classic() + 
+  ggtitle("z(correlation)")
+
+
+ggplot(meta_table %>% filter(data == "diss"), aes(w)) + 
+  geom_histogram() + 
+  facet_grid(. ~ test) + 
+  geom_vline(xintercept = 0.05, color = "red") + 
+  theme_classic() + 
+  ggtitle("1-correlation")
+
+
+ggplot(meta_table %>% filter(data == "diss_z"), aes(w)) + 
+  geom_histogram() + 
+  facet_grid(. ~ test) + 
+  geom_vline(xintercept = 0.05, color = "red") + 
+  theme_classic() + 
+  ggtitle("z(1-correlation)")
+
+
+
+```
+
+
+# loss table
+```{r}
+loss_table <- loss_table %>%
+  mutate(loss.p = nNAs/length)
+ggplot(loss_table, aes(x=anal, y=loss.p, color = test)) + 
+  geom_point()
+
+```
+
+# Corr - Z
+
+```{r}
+
+ggplot(meta_table%>%filter(data == "corr"), aes(test,p)) + 
+  geom_point() + 
+  stat_summary(fun = "mean", color = "red", geom = "point") + 
+  stat_summary(fun.data = mean_se, colour = "red", geom = "errorbar", width = 0.2, size = 0.8) + 
+  geom_hline(yintercept = c(0.001,0.01,0.05)) + 
+  scale_y_continuous(limits = c(0,0.5)) + 
+  theme_classic() + 
+  ggtitle("corr")
+
+
+ggplot(meta_table%>%filter(data == "corr_z"), aes(test,p)) + 
+  geom_point() + 
+  stat_summary(fun = "mean", color = "red", geom = "point") + 
+  stat_summary(fun.data = mean_se, colour = "red", geom = "errorbar", width = 0.2, size = 0.8) + 
+  geom_hline(yintercept = c(0.001,0.01,0.05)) + 
+  scale_y_continuous(limits = c(0,0.5)) + 
+  theme_classic() + 
+  ggtitle("corr z")
+
+
+ggplot(meta_table%>%filter(data == "diss"), aes(test,p)) + 
+  geom_point() + 
+  stat_summary(fun = "mean", color = "red", geom = "point") + 
+  stat_summary(fun.data = mean_se, colour = "red", geom = "errorbar", width = 0.2, size = 0.8) + 
+  geom_hline(yintercept = c(0.001,0.01,0.05)) + 
+  scale_y_continuous(limits = c(0,0.5)) + 
+  theme_classic() + 
+  ggtitle("diss")
+
+
+ggplot(meta_table%>%filter(data == "diss_z"), aes(test,p)) + 
+  geom_point() + 
+  stat_summary(fun = "mean", color = "red", geom = "point") + 
+  stat_summary(fun.data = mean_se, colour = "red", geom = "errorbar", width = 0.2, size = 0.8) + 
+  geom_hline(yintercept = c(0.001,0.01,0.05)) + 
+  scale_y_continuous(limits = c(0,0.5)) + 
+  theme_classic() + 
+  ggtitle("diss z")
+
+```
+
+```{r}
+
+meta_table%>%filter(data == "corr_z")
+
+
+
+```
+

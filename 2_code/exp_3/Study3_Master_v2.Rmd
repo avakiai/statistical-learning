@@ -9,14 +9,17 @@ rm(list=ls()) # clear workspace
 
 # Directories
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+```
 
+# Paths
+```{r}
 # Data Path
 data_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_3'
 # Code Path
 code_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/exp_3'
 # Results Path
 res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp_3'
-
+fig_path <- file.path(res_path,'/figures')
 ```
 
 
@@ -30,7 +33,6 @@ Init.
 # basics
 library(tidyverse)
 #library(reshape2)
-#library(ggplot2)
 #library(ggpubr)
 #library(gplots)
 library(fitdistrplus)
@@ -41,7 +43,7 @@ source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/R_raincloud
 # stats
 library(lme4)
 library(emmeans)
-
+library(car)
 # save tables
 library(stargazer)
 
@@ -51,7 +53,6 @@ library(stargazer)
 library(lsr) 
 library(pwr)
 library(RcppRoll) # for rolling means
-library(car)
 
 # latex font
 library(extrafont)
@@ -62,11 +63,15 @@ library(extrafont)
 library("wesanderson")
 
 # default figure size
+  
 w = 7
 h = 5
+theme_set(
+    theme_classic(base_size = 12)
+)
 ```
 
-Load
+##Load
 ```{r Load data, message=FALSE, include=FALSE}
 # 1. Online SL: Target Detection Task 
 
@@ -240,9 +245,9 @@ ggplot() +
   scale_y_continuous(limits=c(380,580)) +
   #  annotate("text", x = 3.4, y = 570, label = paste("N =",toString(N))) +
   #labs(colour= "Block") + 
-  ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') +
-  theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ylab('Median RT (ms)') + xlab('Ordinal postion') +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 15)) +
 #  ggsave(file.path(res_path,'figures','fig1a_rt_pos_block.png'), width = w, height = h)
   ggsave(file.path(res_path,'figures','fig1a_rt_pos_avg.png'), width = w, height = h)
 
@@ -257,19 +262,19 @@ rt_data_sum3 <- rt_data %>% # target position x subject
     
 ggplot(rt_data_sum3, aes(x = tgt_pos, y = rt_median, fill = tgt_pos)) +
   geom_point(position = position_jitter(width = .07)) +
-  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE) + 
+  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 0.8, trim = TRUE) + 
   geom_boxplot(width = 0.1, alpha = 0.5, position = position_nudge(x=0.2,y=0)) +
   #scale_fill_manual(values=wes_palette("Royal2")[c(3,4,5)]) +
-  scale_color_brewer(palette="Dark2") + 
-  scale_fill_brewer(palette="Pastel2") +
+#  scale_fill_brewer(palette="Dark2") + 
+  scale_fill_manual(values = c("#ABABAB", "#757575", "#454545")) + 
 #  scale_y_continuous(limits=c(380,580)) +
-  ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') +
+  ylab('Median RT (ms)') + xlab('Ordinal postion') +
   guides(fill = FALSE, color = FALSE) + 
-  theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave(file.path(res_path,'figures','fig1b_rt_pos.png'), width = w, height = h)
-dev.copy(pdf,file.path(res_path,'figures','fig1b.pdf'), width = 6, height = 4)
-dev.off()
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=15)) +
+  ggsave(file.path(res_path,'figures','fig1b_rt_pos_grey.png'), width = w, height = h)
+# dev.copy(pdf,file.path(res_path,'figures','fig1b.pdf'), width = 6, height = 4)
+# dev.off()
 ```
 
 
@@ -431,12 +436,9 @@ load(file.path(res_path,'models','rt_block_less_int.Rdata'))
  # save(rt.mod.less.int, file = file.path(res_path,'models','rt_block_less_int.Rdata'))
 ```
 
-#### Effect Size
+Effect Size
 ```{r}
 pwr.chisq.test(w =, N = 33, df = 2, sig.level = 0.5, power = )
-
-
-
 ```
 
 
@@ -607,140 +609,175 @@ dev.off()
 
 ```
 
-## Contrasts Con't (Pos x Block)
-```{r}
-# anova(rt.mod.full.int.fct,rt.mod.full.int.slope, rt.mod.full.int.slope2)
-# Test showing that the full model with random intercepts only is the best fitting ^... 
-(emm.pos.block <- emmeans(rt.mod.full.int.fct, specs = pairwise ~ tgt_pos|block, adjust = "tukey", transform = "response"))
-
-block_contrasts <- emm.pos.block$contrasts %>%
-  confint() %>%
-  rbind() %>%
-  as.data.frame() 
-
-```
-
-### Fig. S2. Contrasts: RT ~ Pos x Block
-```{r}
-plot(emm.pos.block, comparisons = TRUE,
-     xlab = "estimated marginal means",
-     ylab = "ordinal position of target syllable") +
-   theme_bw() 
-dev.copy(pdf,file.path(res_path,'figures'),'exp3figS2a.pdf'), width = 6, height = 4)
-dev.off()
-
-emmip(rt.mod.full.int.fct, tgt_pos ~ block, CIs = TRUE, xlab = "Block") +
-  theme_bw() +
-  scale_color_manual(name = "Position",
-                     values=wes_palette("Royal2")[c(5,4,3)]) 
-dev.copy(pdf,file.path(res_path,'figures','exp3figS2b.pdf'), width = 6, height = 4)
-dev.off()
-
-emmip(rt.mod.full.int.fct, block ~ tgt_pos, CIs = TRUE, xlab = "Target Position") + 
-    theme_bw() + 
-    scale_color_manual(name="block",
-                 values=RColorBrewer::brewer.pal(8,"Paired"))
-dev.copy(pdf,file.path(res_path,'figures','exp3figS2c.pdf'), width = 6, height = 4)
-dev.off()
-```
-
-
-## Rolling Average GLMM
-```{r}
-
-rolled_over_subjs
-
-```
-
-
 ## Block Contrasts
 ```{r}
-Anova(rt.mod.full.int.fct)
-emmeans(rt.mod.full.int.fct, specs = pairwise ~ block, adjust = "Tukey", transform = "response")
+# Full Model 
+car::Anova(rt.mod.full.int.fct)
+(emm.pos.block <- emmeans(rt.mod.full.int.fct, specs = pairwise ~ tgt_pos|block, adjust = "tukey", transform = "response"))
 
+  # See below for plots
+  means<- emm.pos.block$emmeans
+  block_contrasts <- emm.pos.block$contrasts %>%
+    confint() %>%
+    rbind() %>%
+    as.data.frame()
 
+block.only <- emmeans(rt.mod.full.int.fct, specs = pairwise ~ block, adjust = "Tukey", transform = "response")
 
-(within.em <- emmeans(rt.mod.full.int.fct, specs = pairwise ~ tgt_pos|block, adjust = "Tukey", transform = "response"))
-# Drop in RT between 1-2 and 1-3 present in all blocks, 2-3 present in all but 3
-
-
-contrasts1.2 <- within.em$contrasts %>%
-  as.data.frame() %>%
-  filter(contrast=="1 - 2")
-
-
-contrasts1.3 <- within.em$contrasts %>%
-  as.data.frame() %>%
-  filter(contrast=="1 - 3")
-
-
-t.test(contrasts1.2,)
-
-within.em$contrasts %>%
-  as.data.frame() %>%
-  filter(contrast=="2 - 3")
 
 emmeans(rt.mod.full.int.fct, specs = pairwise ~ block|tgt_pos, adjust = "Tukey", transform = "response")
 
+#---------------------------------------------------------
+# Only Blocks 1 & 2
+block12.mod <- glmer(rt_secs ~ 1 + tgt_pos*block + (1 | subject), data = rt_data[which(rt_data$block==1|rt_data$block==2),], family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  Anova(block12.mod)
+  
+emmeans(block12.mod, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response")
+
+b12.m <- emmeans(block12.mod, specs = pairwise ~ block, adjust = "tukey", transform = "response")
+b12.d = as.data.frame(b12.d$contrasts)$estimate / sigmaHat(block12.mod)
+
+emmip(block12.mod, block ~ tgt_pos, xlab = "Target Position", CIs = TRUE) 
+
+# Only Block 1 
+block1.mod <- glmer(rt_secs ~ 1 + tgt_pos + (1 | subject), data = rt_data[which(rt_data$block==1),], family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+summary(block1.mod)
+plot(resid(block1.mod))
+  Anova(block1.mod)
+
+b1.m <-emmeans(block1.mod, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response")
+b1.d = as.data.frame(b1.m$contrasts)$estimate / sigmaHat(block1.mod)
+
+emmip(block1.mod, ~ tgt_pos, xlab = "Target Position", CIs = TRUE) 
+
+
+
+rt_data %>% summarySE(., measurevar = "rt", groupvars = c("block"), na.rm = TRUE)
+rt_data[which(rt_data$block==1|rt_data$block==2),] %>% summarySE(., measurevar = "rt", groupvars = c("tgt_pos"), na.rm = TRUE)
+rt_data[which(rt_data$block==1),] %>% summarySE(., measurevar = "rt", groupvars = c("tgt_pos"), na.rm = TRUE)
+```
+
+
+## Fig. S2. Contrasts: RT ~ Pos x Block
+```{r}
+# plot(emm.pos.block, comparisons = TRUE,
+#      xlab = "estimated marginal means",
+#      ylab = "ordinal position of target syllable") +
+#    theme_bw() 
+# dev.copy(pdf,file.path(res_path,'figures'),'exp3figS2a.pdf'), width = 6, height = 4)
+# dev.off()
+
+png(file = file.path(res_path,'figures','block_interaction_withlegend_inset.png'), width = w, height = h, res = 300, units = "in")
+emmip(rt.mod.full.int.fct, tgt_pos ~ block, CIs = TRUE, xlab = "Block",type = "response") +
+ theme_classic() +
+  scale_y_continuous(name="Estimated marginal means (s)") +
+  scale_color_brewer(name = "Position",palette="Dark2") + 
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15),legend.position = "top")
+dev.off()
+
+png(file = file.path(res_path,'figures','block_interaction2.png'), width = w, height = h, res = 300, units = "in")
+emmip(rt.mod.full.int.fct, block ~ tgt_pos, CIs = TRUE, xlab = "Ordinal Position") +
+  scale_y_continuous(name="Estimated marginal means (s)") +
+    scale_color_manual(name="Block",values=RColorBrewer::brewer.pal(8,"Paired")) +
+   theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15)) 
+dev.off()
+
+#png(file = file.path(res_path,'figures','block_interaction.png'), width = w, height = h, res = 300, units = "in")
+emmip(rt.mod.full.int.fct, ~ block, CIs = TRUE, xlab = "Block") +
+ theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 12)) 
+#dev.off()
 
 
 ```
 
-
+## @ Honey Block Changes
 ```{r}
+# AK;s question: How does the relationship 1-2, 2-3 and 1-3 change over blocks?
+contrasts1.2 <- emm.pos.block$contrasts %>%
+  as.data.frame() %>%
+  filter(contrast=="1 - 2")
 
+contrasts1.3 <- emm.pos.block$contrasts %>%
+  as.data.frame() %>%
+  filter(contrast=="1 - 3")
+
+contrasts2.3 <- emm.pos.block$contrasts %>%
+  as.data.frame() %>%
+  filter(contrast=="2 - 3")
+
+# Creates a data frame where for each subject and each block, we have the difference between RT averages to each of the positions:
 block.matters <- rt_data_sum4 %>%
   dplyr::select(subject, block, tgt_pos, rt_mean) %>%
   spread(tgt_pos, rt_mean) %>% 
   mutate(c1.2 = `1`-`2`,
          c1.3 = `1`-`3`,
-         c2.3 = `2`-`3`)
+         c2.3 = `2`-`3`) %>%
+  gather(key = "pairs", value = "mean_rt_delta",c1.2, c1.3,c2.3)
+block.matters$pairs <- factor(block.matters$pairs,levels = c("c1.2","c2.3","c1.3"))
+# AK: Do the pairings change magnitude between blocks?
+# c1.2.mod <- lm(c1.2 ~ block, block.matters)
+# Anova(c1.2.mod)
+# emmeans(c1.2.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
+# # > mean(1)-mean(2) is not sig. different between blocks 
+# 
+# c1.3.mod <- lm(c1.3 ~ block, block.matters)
+# Anova(c1.3.mod)
+# emmeans(c1.3.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
+# # > none.
+# 
+# c2.3.mod <- lm(c2.3 ~ block, block.matters)
+# Anova(c2.3.mod)
+# emmeans(c2.3.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
+# # > none. 
 
+# Lucia: Does the difference between 1-2 and 2-3 change over blocks? 
+# I'll do a regular ANOVA here because the outcome variable is normally distributed (means)
+pairings.aov <- aov(mean_rt_delta ~ pairs*block,block.matters)
+summary(pairings.aov)
+TukeyHSD(pairings.aov, which = "pairs")
+lsr::cohensD(block.matters$mean_rt_delta[block.matters$pairs=="c1.2"],block.matters$mean_rt_delta[block.matters$pairs=="c2.3"])
 
-# Is 1-2, 1-3, or 2-3 different between blocks? 
+plot(pairings.aov,1)
+car::leveneTest(mean_rt_delta ~ pairs*block,block.matters) # variance across groups is homogenous
+plot(pairings.aov,2)
+shapiro.test(residuals(pairings.aov)) ## oops, residuals not really normal... should I do a glm? or kruskall-wallis?
+(pairings.em <- emmeans(pairings.aov, spec = pairwise ~ pairs, adjust = "Tukey", transform = "response"))
 
-c1.2.mod <- lm(c1.2 ~ block, block.matters)
-Anova(c1.2.mod)
-emmeans(c1.2.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
-# > mean(1)-mean(2) is not sig. different between blocks 
+png(file = file.path(res_path,'figures','pos_interaction.png'), width = w, height = h, res = 300, units = "in")
+emmip(pairings.aov, ~ pairs, CIs=TRUE, type = "response") + 
+  scale_x_discrete(name = "Mean RT differences between ordinal positions", labels=c("1-2","2-3","1-3")) +
+  scale_y_continuous(name="Estimated marginal means (ms)") +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15)) 
+dev.off()
 
-c1.3.mod <- lm(c1.3 ~ block, block.matters)
-Anova(c1.3.mod)
-emmeans(c1.3.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
-# > none.
+png(file = file.path(res_path,'figures','posblock_interaction.png'), width = w, height = h, res = 300, units = "in")
+emmip(pairings.aov, block ~ pairs, CIs=TRUE, type = "response") + 
+  scale_x_discrete(name = "Mean RT differences between ordinal positions", labels=c("1-2","2-3","1-3")) +
+  scale_y_continuous(name="Estimated marginal means (ms)") +
+  scale_color_manual(name="Block",
+                 values=RColorBrewer::brewer.pal(8,"Paired")) +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15)) 
+dev.off()
 
-c2.3.mod <- lm(c2.3 ~ block, block.matters)
-Anova(c2.3.mod)
-emmeans(c2.3.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
-# > none. 
+#-----------------------------
+block.minim <- rt_data %>% summarySE(measurevar = "rt",groupvars = c("subject","block"), na.rm = TRUE) %>% filter(block == 1 | block == 8)
+block.aov<- aov(rt_mean ~ block, block.minim)
+summary(block.aov)
+
+t.test(block.minim$rt_mean[block.minim$block==1],block.minim$rt_mean[block.minim$block==8])
+
+block.mini <- rt_data %>% summarySE(measurevar = "rt",groupvars = c("subject","block"), na.rm = TRUE)
+blockA.aov<- aov(rt_mean ~ block, block.mini)
+summary(block.aov)
+
 
 ```
 
 
-# Regress out syllable effect
-```{r}
-# across all participants, median RTs for each of the syllables
-# rm anova with syllable and position as factors
-subj.mod <- glmer(rt ~ tgt_pos*target + (1 | subject), data = rt_data, family = Gamma("log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
-summary(subj.mod)
-# for each participant, subtracted the residual RT value from observed value for each syllable, co-varying out the effects of physical stimulus factors and yielding corrected RT effect
-
-# Model is rank-deficient
-
-library(broom)
-broom::glance(subj.mod)
-augment(subj.mod)
-rt_data_adj <- data.frame(subject = as.factor(augment(subj.mod)$subject),
-           tgt_pos = as.factor(augment(subj.mod)$tgt_pos),
-           rt_adj = as.numeric(augment(subj.mod)$rt - augment(subj.mod)$.resid))
-         
-rt.mod.less.int.adj <- glmer(rt_adj ~ 1 + tgt_pos + (1 | subject), data = rt_data_adj, family = Gamma(link = "log"))
-  summary(rt.mod.less.int.adj)
-  plot(residuals(rt.mod.less.int.adj))
-  qqnorm(resid(rt.mod.less.int.adj))
-  
-  car::Anova(rt.mod.less.int.adj)
-```
 
 
 
@@ -759,42 +796,43 @@ rt_data %>% summarySE(measurevar = "detect", groupvars = c("target"),na.rm=TRUE)
 
 #---- Position
 # Linear Model
-acc.mod.less <- lm(detect ~ tgt_pos, rt_data)
-summary(acc.mod.less)
-Anova(acc.mod.less)
-# Contrasts
-(em.acc.less <- emmeans(acc.mod.less, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response"))
-# Plot Interactions
-plot(em.acc.less, comparisons = TRUE,
-     xlab = "estimated marginal means (accuracy)",
-     ylab = "ordinal position of target syllable") +
-  theme_bw()
+# acc.mod.less <- lm(detect ~ tgt_pos, rt_data)
+# summary(acc.mod.less)
+# Anova(acc.mod.less)
+# # Contrasts
+# (em.acc.less <- emmeans(acc.mod.less, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response"))
+# # Plot Interactions
+# plot(em.acc.less, comparisons = TRUE,
+#      xlab = "estimated marginal means (accuracy)",
+#      ylab = "ordinal position of target syllable") +
+#   theme_bw()
+# 
+# #---- Word
+# # Linear Model
+# acc.mod.less2 <- lm(detect ~ tgt_word, rt_data)
+# summary(acc.mod.less2)
+# Anova(acc.mod.less2)
+# # Contrasts
+# (em.acc.less2 <- emmeans(acc.mod.less2, specs = pairwise ~ tgt_word, adjust = "tukey", transform = "response"))
+# # Plot Interactions
+# plot(em.acc.less2, comparisons = TRUE,
+#      xlab = "estimated marginal means (accuracy)",
+#      ylab = "word of target syllable") +
+#   theme_bw()
+# 
+# #---- Syllable
+# # Linear Model
+# acc.mod.less3 <- lm(detect ~ target, rt_data)
+# summary(acc.mod.less3)
+# Anova(acc.mod.less3)
+# # Contrasts
+# (em.acc.less3 <- emmeans(acc.mod.less3, specs = pairwise ~ target, adjust = "tukey", transform = "response"))
+# # Plot Interactions
+# plot(em.acc.less3, comparisons = TRUE,
+#      xlab = "estimated marginal means (accuracy)",
+#      ylab = "target syllable") +
+#   theme_bw()
 
-#---- Word
-# Linear Model
-acc.mod.less2 <- lm(detect ~ tgt_word, rt_data)
-summary(acc.mod.less2)
-Anova(acc.mod.less2)
-# Contrasts
-(em.acc.less2 <- emmeans(acc.mod.less2, specs = pairwise ~ tgt_word, adjust = "tukey", transform = "response"))
-# Plot Interactions
-plot(em.acc.less2, comparisons = TRUE,
-     xlab = "estimated marginal means (accuracy)",
-     ylab = "word of target syllable") +
-  theme_bw()
-
-#---- Syllable
-# Linear Model
-acc.mod.less3 <- lm(detect ~ target, rt_data)
-summary(acc.mod.less3)
-Anova(acc.mod.less3)
-# Contrasts
-(em.acc.less3 <- emmeans(acc.mod.less3, specs = pairwise ~ target, adjust = "tukey", transform = "response"))
-# Plot Interactions
-plot(em.acc.less3, comparisons = TRUE,
-     xlab = "estimated marginal means (accuracy)",
-     ylab = "target syllable") +
-  theme_bw()
 
 
 
@@ -815,7 +853,39 @@ pos.lm <- lm(detect_mean ~ tgt_pos, accuracy_data1)
     summary(pos.lm)
     Anova(pos.lm, type = '2')
     (emmeans(pos.lm, specs = pairwise ~ tgt_pos))
+    as.data.frame(emmeans(pos.lm, specs = pairwise ~ tgt_pos)$contrasts)$estimate/sigmaHat(pos.lm)
+    
+# summary(aov(detect_mean ~ tgt_pos, accuracy_data1)) # same thing
 ```
+
+# -> Subsample to show robustness
+```{r}
+# As a result of the difference in accuracy, the N for pos 2 < pos 1 < pos 3
+(lens <- c(length(which(!is.na(rt_data$rt_secs[rt_data$tgt_pos == 1]))),
+length(which(!is.na(rt_data$rt_secs[rt_data$tgt_pos == 2]))),
+length(which(!is.na(rt_data$rt_secs[rt_data$tgt_pos == 3])))))
+# .. so take the smallest N
+new.n <- min(lens)
+
+# Re-run the model with that N, subsampling from the others...
+set.seed(42)
+rt_data.sub <- rbind(rt_data %>% filter(tgt_pos == 1) %>% na.omit() %>% sample_n(size=new.n, replace = FALSE),
+rt_data %>% filter(tgt_pos == 2) %>% na.omit() %>% sample_n(size=new.n, replace = FALSE),
+rt_data %>% filter(tgt_pos == 3) %>% na.omit() %>% sample_n(size=new.n, replace = FALSE)) %>%
+  arrange(subject,block,trial)
+
+subsamp.rt.mod.less.int <- glmer(rt_secs ~ 1 + tgt_pos + (1 | subject), data = rt_data.sub, family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  summary(subsamp.rt.mod.less.int)
+  plot(residuals(subsamp.rt.mod.less.int))
+  qqnorm(resid(subsamp.rt.mod.less.int))
+  Anova(subsamp.rt.mod.less.int,type = 2)
+  
+reg.sub.mod <- (emmeans(subsamp.rt.mod.less.int, specs = pairwise ~ tgt_pos, adjust = "Tukey", transform = "response"))  
+reg.sub.cont <- as.data.frame(reg.sub.mod$contrasts)
+(reg.sub.cont$d <- reg.sub.cont$estimate / sigmaHat(subsamp.rt.mod.less.int)) 
+```
+
+
 
 ## Fig. 4. Accuracy: RT ~ Pos
 ```{r}
@@ -881,7 +951,7 @@ word.lm <- lm(detect_mean ~ tgt_word, accuracy_data5)
 summary(word.lm)
 Anova(word.lm)
 (em.word <- emmeans(word.lm, specs = pairwise ~ tgt_word, adjust = "tukey", transform = "response"))
-
+as.data.frame(em.word$contrasts)$estimate/sigmaHat(word.lm)
 
 ```
 
@@ -921,7 +991,7 @@ dev.off()
 accuracy_data6 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("target","subject", "tgt_pos"),na.rm=TRUE) %>%
   mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
 
-accuracy_data7 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("target"),na.rm=TRUE) %>%
+accuracy_data7 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("target","tgt_pos"),na.rm=TRUE) %>%
   mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
 
 stargazer(accuracy_data7, 
@@ -934,29 +1004,63 @@ summary(syll.lm)
 Anova(syll.lm)
 (syll.em <- emmeans(syll.lm, specs = pairwise ~ target, adjust = "tukey", transform = "response"))
 
-
+as.data.frame(syll.em$contrasts)[which(as.data.frame(syll.em$contrasts)$p.value < 0.05),]
 ```
 
 
 ```{r}
-ggplot(accuracy_data6, aes(x = target, y = detect_mean)) +
-  geom_point(position = position_jitter(width = .07), aes(color = tgt_pos)) +
-  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE,
-                   fill = "gray") + 
-  geom_point(accuracy_data7, mapping = aes(target, detect_mean), position = position_nudge(x = 0.2, y = 0)) +
+ggplot()+
+#  accuracy_data6, aes(x = target, y = detect_mean)) +
+  #geom_point(position = position_jitter(width = .07), aes(color = tgt_pos)) +
+  #geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE,fill = "gray") + 
   geom_errorbar(accuracy_data7, mapping=aes(target, y=detect_mean, ymin=detect_mean-se,
-                                            ymax=detect_mean+se),
-                position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
-  scale_color_brewer(palette="Dark2") + 
-  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
-  scale_x_discrete(name = "Target Syllables") + 
-  guides(fill = FALSE) + labs(color = "Ordinal Position") +
-  theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) +
-  ggsave('fig4c_rt_acc.png',width=9,height=6)
-dev.copy(pdf,file.path(res_path,'/figures/','exp3fig4cacc.pdf'),width=9,height=6)
-dev.off()
+                ymax=detect_mean+se), position = position_nudge(x = 0, y = 0), width = 0.4, size = 1) +
+  geom_point(accuracy_data7, mapping = aes(target, detect_mean, color = tgt_pos), size = 4, position = position_nudge(x = 0, y = 0)) +
+#  scale_color_brewer(palette="Dark2") + 
+  scale_color_manual(values = c("#ABABAB", "#757575", "#454545")) + 
+  scale_y_continuous(limits = c(0,1), name = "Mean detection accuracy") +
+  scale_x_discrete(name = "Target syllables") + 
+  guides(fill = FALSE) + labs(color = "Ordinal position") +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 16),
+        legend.position = "top")+
+  ggsave(file.path(fig_path,'accuracy_syll_greys.png'),width=7,height=6)
 
+# dev.copy(pdf,file.path(res_path,'/figures/','exp3fig4cacc.pdf'),width=9,height=6)
+# dev.off()
+
+```
+
+# -> Regress out syllable effect
+```{r}
+# across all participants, median RTs for each of the syllables
+# rm anova with syllable and position as factors
+subj.mod <- glmer(rt ~ tgt_pos*target + (1 | subject), data = rt_data, family = Gamma("log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+summary(subj.mod)
+### make this rt_secs! 
+
+# for each participant, subtracted the residual RT value from observed value for each syllable, co-varying out the effects of physical stimulus factors and yielding corrected RT effect
+
+# Model is rank-deficient
+library(broom.mixed)
+broom.mixed::glance(subj.mod)
+augment(subj.mod)
+rt_data_adj <- data.frame(subject = as.factor(augment(subj.mod)$subject),
+           tgt_pos = as.factor(augment(subj.mod)$tgt_pos),
+           rt_adj = as.numeric(augment(subj.mod)$rt - augment(subj.mod)$.resid))
+         
+rt.mod.less.int.adj <- glmer(rt_adj ~ 1 + tgt_pos + (1 | subject), data = rt_data_adj, family = Gamma(link = "log"))
+  summary(rt.mod.less.int.adj)
+  plot(residuals(rt.mod.less.int.adj))
+  qqnorm(resid(rt.mod.less.int.adj))
+  
+  car::Anova(rt.mod.less.int.adj)
+  
+  
+reg.syll.mod <- (emmeans(rt.mod.less.int.adj, specs = pairwise ~ tgt_pos, adjust = "Tukey", transform = "response"))  
+reg.mod.cont <- as.data.frame(reg.syll.mod$contrasts)
+(reg.mod.cont$d <- reg.mod.cont$estimate / sigmaHat(rt.mod.less.int.adj))
+  
 ```
 
 
@@ -1004,7 +1108,7 @@ ggplot(wordrec_data_orig, aes(1,prop_word_chosen)) +
   # mean/sd
   geom_point(data = wordrec_data_sum1, 
             mapping = aes(x = 1, y = prop_word_chosen_mean), position = position_nudge(.2), 
-            colour = "BLACK", size = 1) +
+            colour = "BLACK", size = 2) +
   geom_errorbar(data = wordrec_data_sum1, 
             mapping = aes(x = 1, y = prop_word_chosen_mean, ymin = prop_word_chosen_mean-se, 
             ymax = prop_word_chosen_mean+se), position = position_nudge(.2), 
@@ -1012,17 +1116,18 @@ ggplot(wordrec_data_orig, aes(1,prop_word_chosen)) +
   # baseline
   geom_hline(aes(yintercept = 0.5), colour = "red", linetype = "dashed",show.legend = FALSE) +
   # axes
-  scale_x_discrete(name='',breaks=waiver(),limits=c(0,1)) + # scale x 
-  scale_y_continuous(name='P(word chosen over partword)',limits=c(0,1)) + # scale y
+  scale_x_continuous(name='') + # scale x 
+  scale_y_continuous(name='% correct (out of 16)',limits=c(0,1)) + # scale y
+  coord_fixed(ratio=1.3) +
   # theme
-  theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
-  theme(legend.position="none") + 
-  theme(axis.ticks.x = element_blank(), 
-        axis.text.x = element_blank(),legend.position="none") +
-  ggsave('exp3_fig5_wordrec.png', width = w, height = h)
-dev.copy(pdf,file.path(res_path,'/figures/','exp3fig5_wr.pdf'), width = w, height = h)
-dev.off()
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 15),
+        legend.position="none",
+        axis.ticks.x = element_blank(), 
+        axis.text.x = element_blank()) +
+  ggsave(file.path(fig_path,'exp3_fig5_wordrec.png'), width = w, height = h)
+# dev.copy(pdf,file.path(res_path,'/figures/','exp3fig5_wr.pdf'), width = w, height = h)
+# dev.off()
 ```
 
 #### T-Tests
@@ -1073,7 +1178,7 @@ wordrec_data_sum2 <- wordrec_data_wrd %>%
 
 ggplot(wordrec_data_wrd, mapping = aes(x=word,y=n_chosen, fill = word)) +
   geom_point(position = position_jitter(width = .07)) +
-  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1.2, trim = FALSE) + 
+  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1.2, trim = FALSE, fill = "grey") + 
   geom_point(wordrec_data_sum2, mapping = aes(x=word, y=n_chosen_mean),
               position = position_nudge(x = 0.2, y = 0)) +
   geom_errorbar(wordrec_data_sum2, mapping = aes(x=word,y=n_chosen_mean,ymin = n_chosen_mean-se, 
@@ -1084,15 +1189,16 @@ ggplot(wordrec_data_wrd, mapping = aes(x=word,y=n_chosen, fill = word)) +
 
   # axes
   scale_x_discrete(name="Pseudoword", labels = ) +
-  scale_y_continuous(name="N(word chosen over partword)",limits=c(0,4.5)) + 
+  scale_y_continuous(name="Number correct (out of 4)",limits=c(0,4.5)) + 
   # theme
-  scale_fill_manual(values=wes_palette("Zissou1")[c(1,3,4,5)]) +
-  theme_minimal() +
-  theme(text = element_text(family = "LM Roman 10", face="bold")) + 
-  theme(legend.position="none") +
-  ggsave('exp3_fig5b_wr_word.png', width = w, height = h)
-dev.copy(pdf,file.path(res_path,'/figures/','exp3fig5b_wr.pdf'), width = w, height = h)
-dev.off()
+ # scale_fill_brewer(palette="Purples") +
+ # scale_fill_manual(values=wes_palette("Zissou1")[c(1,3,4,5)]) +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=15),
+        legend.position="none") +
+  ggsave(file.path(fig_path,'exp3_fig5b_wr_word.png'), width = w, height = h)
+# dev.copy(pdf,file.path(res_path,'/figures/','exp3fig5b_wr.pdf'), width = w, height = h)
+# dev.off()
 ```
 
 ```{r}
@@ -1234,21 +1340,29 @@ plot.corr <- data.frame(subject = corr1.2$subject,
 ggplot(data = plot.corr, aes(d.med, prop.word, color = d.pos)) + 
   geom_point(size = 2, alpha = 0.8) +
   geom_smooth(method = lm, se = FALSE, size = 1.1) +
-  scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
+  scale_color_manual(values = RColorBrewer::brewer.pal(3,"Dark2"),
+                          #values = c("#7A7F3D", # midway 1-2
+  #                               "#A7685B", # mitdway 2-3
+  #                               "#488795"), # midway 1-3
+                   # values = c("#D44739", "#FAC869", "#3C5E4D"),
                      name = NULL, labels = c("1st - 2nd", "2nd - 3rd", "1st - 3rd")) +
-  xlab("proportional change in median RT") + ylab("P(word chosen over partword)") +
-annotate(geom = "text", x = 1.5, y = 0.5, label = paste0("\u03C1 = ",round(corrtest.1.2$estimate, digits = 2),", p = ",round(corrtest.1.2$p.value, digits = 2)), color = "#D44739") + 
-annotate(geom = "text", x = 1.5, y = 0.45, label = paste0("\u03C1 = ",round(corrtest.2.3$estimate, digits = 2),", p = ",round(corrtest.2.3$p.value, digits = 2)), color = "#FAC869") +   
-annotate(geom = "text", x = 1.49, y = 0.4, label = paste0("\u03C1 = ",round(corrtest.1.3$estimate, digits = 2),", p = ",round(corrtest.1.3$p.value, digits = 2)), color = "#3C5E4D") +   
+  xlab("Scaled median RT differnce") + 
+  ylab("% correct (out of 16))") +
+annotate(geom = "text", x = 1.3, y = 0.45, label = paste0("\u03C1 = ",round(corrtest.1.2$estimate, digits = 2),", p = ",round(corrtest.1.2$p.value, digits = 2)), 
+         size = 4, color = RColorBrewer::brewer.pal(3,"Dark2")[1]) + #"#D44739") + 
+annotate(geom = "text", x = 1.3, y = 0.4, label = paste0("\u03C1 = ",round(corrtest.2.3$estimate, digits = 2),", p = ",round(corrtest.2.3$p.value, digits = 2)), 
+         size = 4, color = RColorBrewer::brewer.pal(3,"Dark2")[2]) + #"#FAC869") +   
+annotate(geom = "text", x = 1.3, y = 0.35, label = paste0("\u03C1 = ",round(corrtest.1.3$estimate, digits = 2),", p = ",round(corrtest.1.3$p.value, digits = 2)), 
+         size = 4, color = RColorBrewer::brewer.pal(3,"Dark2")[3]) + #"#3C5E4D") +   
   geom_vline(xintercept = 0, color = "gray", linetype="dashed") + 
   theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold"), 
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=15), 
         legend.title = element_text(""),  legend.position = "top") +
-  ggsave('fig6_corr_sc.png', width = w, height = h)  
+  ggsave(file.path(fig_path,'fig6_corr_sc_col.png'), width = w, height = h)  
 ```
 
 
-## Corr Mean Delta with Wordrec
+Corr Mean Delta with Wordrec
 
 ```{r}
 # Generate Deltas for Experiment 3 Data... Delta MEDIANS
@@ -1311,7 +1425,7 @@ corrtest.1.3.mu <- cor.test(corr1.3.mu$delta,corr1.3.mu$prop_word_chosen, method
 
 ```
 
-### Fig. 6. Delta Means v. Wordrec
+ Fig. 6. Delta Means v. Wordrec
 ```{r}
 plot.corr.mu <- data.frame(subject = corr1.2.mu$subject, 
                         delta1.2 = corr1.2.mu$delta,
@@ -1394,17 +1508,19 @@ corrtest.batterink2017 <- cor.test(corr.batterink2017$delta,
 
 ggplot(data = corr.batterink2017, aes(delta, prop_word_chosen)) + 
   geom_point(size = 2, alpha = 0.8) +
-  geom_smooth(method = lm, se = FALSE, size = 1.1) +
-  scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
-                     name = NULL, labels = c("1st - 2nd", "2nd - 3rd", "1st - 3rd")) +
-  xlab("RT score (as per Batterink 2017)") + ylab("P(word chosen over partword)") +
-annotate(geom = "text", x = 275, y = 0.2, 
-         label = paste0("\u03C1 = ", round(corrtest.batterink2017$estimate, digits = 2),", p = ",round(corrtest.batterink2017$p.value, digits = 2)), color = "#D44739") +   
+  geom_smooth(method = lm, se = FALSE, size = 1.1, color = "red") +
+ # scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
+#                     name = NULL, labels = c("1st - 2nd", "2nd - 3rd", "1st - 3rd")) +
+  xlab("RT score (as per Batterink & Paller 2017)") + 
+  ylab("% correct (out of 16)") +
+annotate(geom = "text", x = 270, y = 0.2, 
+         label = paste0("\u03C1 = ", round(corrtest.batterink2017$estimate, digits = 2),", p = ",round(corrtest.batterink2017$p.value, digits = 2)), 
+         size = 4, color = "black") +   
   geom_vline(xintercept = 0, color = "gray", linetype="dashed") + 
   theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold"), 
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15), 
         legend.title = element_text(""),  legend.position = "top") +
-   ggsave(file.path(res_path,'figures','batterink_corr.png'), width = w, height = h)
+   ggsave(file.path(fig_path,'batterink_corr.png'), width = w, height = h)
   
 ```
 
@@ -1464,17 +1580,18 @@ corrtest.siegelman2018 <- cor.test(corr.siegelman2018$delta,
 ```{r}
 ggplot(data = corr.siegelman2018, aes(delta, prop_word_chosen)) + 
   geom_point(size = 2, alpha = 0.8) +
-  geom_smooth(method = lm, se = FALSE, size = 1.1) +
+  geom_smooth(method = lm, se = FALSE, size = 1.1, color = "red") +
   scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
                      name = NULL, labels = c("1st - 2nd", "2nd - 3rd", "1st - 3rd")) +
-  xlab("RT score (as per Siegelman 2018)") + ylab("P(word chosen over partword)") +
+  xlab("Online measure of SL") + ylab("% correct (out of 16)") +
 annotate(geom = "text", x = 0.45, y = 0.2, 
-         label = paste0("\u03C1 = ", round(corrtest.siegelman2018$estimate, digits = 2),", p = ",round(corrtest.siegelman2018$p.value, digits = 2)), color = "#D44739") +   
+         label = paste0("\u03C1 = ", round(corrtest.siegelman2018$estimate, digits = 2),", p = ",round(corrtest.siegelman2018$p.value, digits = 2)), 
+         size = 4, color = "black") +   
   geom_vline(xintercept = 0, color = "gray", linetype="dashed") + 
   theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold"), 
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 15), 
         legend.title = element_text(""),  legend.position = "top") +
-  ggsave(file.path(res_path,'figures','siegelman_corr.png'), width = w, height = h)
+  ggsave(file.path(fig_path,'siegelman_corr.png'), width = w, height = h)
 ```
 
 #----------------------------
@@ -1485,26 +1602,21 @@ rt_data <- rt_data %>% mutate(rt_log = log(rt))
 rt_data_log_sum <- rt_data %>%
   summarySE(measurevar="rt_log", groupvars=c("tgt_pos","block"), na.rm=TRUE)
 
-ggplot(data = rt_data_log_sum, aes(x = block, y = rt_log_mean, group = tgt_pos, color = tgt_pos)) + 
-  geom_point(size = 2, alpha = 0.8) +
-  geom_line(size = 1.5, alpha = 0.5) + 
-  geom_smooth(method = "glm", formula = y~x,
-              method.args = list(family = gaussian(link = 'log')), 
-              se = TRUE, size = 1, alpha = 0.2) +
-  scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
-                     name = NULL, labels = c("1st", "2nd", "3rd")) +
-  xlab("Block") + ylab("Mean log(RT)") +
-  theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold"), 
-        legend.title = element_text("Position"),  legend.position = "right") + 
-  ggsave(file.path(res_path,'figures','logRT_block.png'), width = w, height = h)
+# ggplot(data = rt_data_log_sum, aes(x = block, y = rt_log_mean, group = tgt_pos, color = tgt_pos)) + 
+#   geom_point(size = 2, alpha = 0.8) +
+#   geom_line(size = 1.5, alpha = 0.5) + 
+#   geom_smooth(method = "glm", formula = y~x,
+#               method.args = list(family = gaussian(link = 'log')), 
+#               se = TRUE, size = 1, alpha = 0.2) +
+#   scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
+#                      name = NULL, labels = c("1st", "2nd", "3rd")) +
+#   xlab("Block") + ylab("Mean log(RT)") +
+#   theme_classic() +
+#   theme(text = element_text(family = "LM Roman 10", face="bold"), 
+#         legend.title = element_text("Position"),  legend.position = "right") + 
+#   ggsave(file.path(res_path,'figures','logRT_block.png'), width = w, height = h)
 # dev.copy(pdf,file.path(res_path,'figures','fig1artposblock.pdf'), width = 6, height = 4)
 # dev.off()
-
-```
-
-
-```{r}
 
 exp_3_log_traj <- rbind(rt_data_log_sum %>% filter(tgt_pos == 1),
     rt_data %>%
@@ -1526,12 +1638,12 @@ ggplot(data = exp_3_log_traj.siegelman2018, aes(x = block, y = rt_log_mean, grou
   geom_errorbar(mapping = aes(ymin = rt_log_mean-se, ymax = rt_log_mean+se), colour = "BLACK", width = 0.1, size = 0.8) + 
   geom_smooth(method = "glm", formula = y~x,
               method.args = list(family = gaussian(link = 'log')), 
-              se = TRUE, size = 1, alpha = 0.2) +
+              se = TRUE, size = 1, alpha = 0.2, color = "red") +
   xlab("Block") + 
-  ylab("Measure of Online SL") +
+  ylab("Measure of online SL") +
   #ylab(expression(logRT[1]~-~mu(logRT[2]+logRT[3]))) + 
   theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold"), 
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 15), 
         legend.title = element_text("Position"),  legend.position = "right") + 
   ggsave(file.path(res_path,'figures','logRT_block_traj.png'), width = w, height = h)
 
