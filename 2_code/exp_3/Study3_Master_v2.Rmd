@@ -742,6 +742,7 @@ lsr::cohensD(block.matters$mean_rt_delta[block.matters$pairs=="c1.2"],block.matt
 plot(pairings.aov,1)
 car::leveneTest(mean_rt_delta ~ pairs*block,block.matters) # variance across groups is homogenous
 plot(pairings.aov,2)
+ks.test(residuals(pairings.aov),rnorm(length(residuals(pairings.aov))))
 shapiro.test(residuals(pairings.aov)) ## oops, residuals not really normal... should I do a glm? or kruskall-wallis?
 (pairings.em <- emmeans(pairings.aov, spec = pairwise ~ pairs, adjust = "Tukey", transform = "response"))
 
@@ -1320,9 +1321,15 @@ corr1.3 <- merge(exp_3_data_delta %>% filter(delta_rt == "D1-3") %>%  dplyr::sel
 ```
 
 ```{r}
-corrtest.1.2 <- cor.test(corr1.2$delta,corr1.2$prop_word_chosen, method = "pearson")
-corrtest.2.3 <- cor.test(corr2.3$delta,corr2.3$prop_word_chosen, method = "pearson")
-corrtest.1.3 <- cor.test(corr1.3$delta,corr1.3$prop_word_chosen, method = "pearson")
+corrtest.1.2 <- cor.test(corr1.2$delta,corr1.2$prop_word_chosen, method = "pearson", 
+                         alternative = "greater"
+                         )
+corrtest.2.3 <- cor.test(corr2.3$delta,corr2.3$prop_word_chosen, method = "pearson",
+                                                  alternative = "greater"
+                         )
+corrtest.1.3 <- cor.test(corr1.3$delta,corr1.3$prop_word_chosen, method = "pearson",
+                                                 alternative = "greater"
+                         )
 
 ```
 
@@ -1499,7 +1506,8 @@ corr.batterink2017 <- merge(exp_3_data_delta.batterink2017,
 # correlate
 corrtest.batterink2017 <- cor.test(corr.batterink2017$delta,
                                    corr.batterink2017$prop_word_chosen, 
-                                   method = "pearson")
+                                   method = "pearson",
+                                   alternative = "greater")
 
 ```
 
@@ -1571,7 +1579,7 @@ corr.siegelman2018 <- merge(exp_3_data_delta.siegelman2018,
 corrtest.siegelman2018 <- cor.test(corr.siegelman2018$delta,
                                    corr.siegelman2018$prop_word_chosen, 
                                    method = "pearson",
-                                     
+                                   alternative = "greater"  
                                   )
 
 ```

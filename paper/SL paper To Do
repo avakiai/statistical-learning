@@ -5,15 +5,6 @@
 - Abstract
 
 ## Read
-- Frost 2013 paper and two Miyasa... papers
-
-- Turk-Brown Mutual Interference paper for discussion
-- Paper Lucia mentioned
-- visual SL
-- exposure: 3 triplets
-- test phase: sequence of three shapes, so basically a word; 20 items, 17 new
-- For individual performance, return to Splitting the variance - Bogaerts
-
 ## Red Team
 - Show it to Valeria, Valerie
 
@@ -62,6 +53,10 @@ Corrections:
 2- I will use corr or 1-corr. I will only use z(corr or 1-corr) if less than 10% of the data are lost due to the conversion to NA, and it does not affect the distribution (mean and sd) of each group. 
 An issue: z-transformation of Pearson's r is not ideal for 1-r, since it cannot compute values outside the range (0,1). Therefore, all dissimilarity values (negative correlations become > 1 after the 1 minus operation) are actually thrown out (one has to remove NA values to obtain group means). This is why I would prefer to use the non z-transformed data. It does not result in a systematic bias in the results unlike the z-transformed. Otherwise, we can use the z-transformed correlation data. However, the z-transformation is not really necessary. The hypothesis test we use is non-parametric (Wilcoxon), which doesnt require a normally distributed sampling distribution (the whole point of doing the z-transformation). The values are still "comparable" between participants, however, because the correlation itself brings everything to within the same range.  
 
+
+
+
+
 ------------------------
 ###Honest Notes
 1. Reporting age/sex
@@ -96,3 +91,9 @@ Offline: whole word
 Online: not sure what has been learned
 Perruchet: chunk
 TPs
+
+
+----- 
+Analyses: 
+- transitional probability as factor
+- % of participants who had a sig. difference b

@@ -1034,20 +1034,24 @@ summary(corr.table$log.sub.or)
 ```{r}
 (corr.ordp <- cor.test(corr.table$sub[corr.table$test=="ordinal position"],
                      corr.table$prop.word[corr.table$test=="ordinal position"], 
-                     method = "pearson"))
+                     method = "pearson",
+                     alternative = "greater"))
 
 
 (corr.prob <- cor.test(corr.table$sub[corr.table$test=="transitional probability"],
                      corr.table$prop.word[corr.table$test=="transitional probability"], 
-                     method = "pearson"))
+                     method = "pearson",
+                     alternative = "greater"))
 
 (corr.word <- cor.test(corr.table$sub[corr.table$test=="word identity"],
                      corr.table$prop.word[corr.table$test=="word identity"], 
-                     method = "pearson"))
+                     method = "pearson",
+                     alternative = "greater"))
 
 (corr.dups <- cor.test(corr.table$sub[corr.table$test=="duplets"],
                      corr.table$prop.word[corr.table$test=="duplets"], 
-                     method = "pearson"))
+                     method = "pearson",
+                     alternative = "greater"))
 
 ```
 
