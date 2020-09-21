@@ -25,7 +25,11 @@ data_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4
 code_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/exp_4'
 # Results Path
 res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp_4'
-fig_path <- file.path(res_path,'figures')
+```
+
+
+```{r}
+fig_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/final'
 ```
 
 # Load, Init.
@@ -41,6 +45,7 @@ par(family="LM Roman 10")
 library(tidyverse)
 library(ggsignif)
 library(ggpubr)
+library(ggpattern)
 
 # stats
 library(lme4)
@@ -57,6 +62,11 @@ library(RcppRoll) # for rolling means
 # colors
 library("wesanderson")
 
+
+# too comp to explain... 
+setwd("C:/Users/Ava/Documents/R/win-library/4.0/ggpattern-master/R")
+ggpattern.sources = list.files()
+sapply(ggpattern.sources, source)
 
 
 # Some stuffs for summary stats
@@ -499,7 +509,7 @@ emmip(target.lm, sess~target, CIs = TRUE)
 # There's no interaction, which suggests that embedding did not modulate the differences between syllables in the detectability. 
 ```
 
-
+## Fig. S1b. Accuracy ~ Syllable
 ```{r}
 ggplot() + 
   #(accuracy_data5, aes(x = target, y = resp_mean)) +
@@ -508,18 +518,19 @@ ggplot() +
   #                 fill = "gray") + 
   geom_errorbar(accuracy_data6, mapping=aes(target, y=resp_mean, ymin=resp_mean-se,ymax=resp_mean+se),     
                 position = position_nudge(x = 0.0, y = 0), width = 0.5, size = 1) +
-  geom_line(accuracy_data6, mapping = aes(target,resp_mean,group = sess, color = sess),size = 1) +
+  geom_line(accuracy_data6, mapping = aes(target,resp_mean,group = sess, linetype = sess),size = 1) +
   geom_point(accuracy_data6, mapping = aes(target, resp_mean, color = tgt_pos), size = 4, position = position_nudge(x = 0.0, y = 0)) +
   #facet_grid(.~sess) + 
-  #scale_color_brewer(palette="Dark2") + 
+  scale_color_brewer(palette="Dark2") + 
  # scale_color_manual(values = c("#1B9E77","#D95F02","#7570B3","#E41A1C","#377EB8")) +
-  scale_color_manual(values = c("#ABABAB", "#757575", "#454545","#E41A1C","#377EB8")) + # From RColorBrewer::brewer.pal(3,"Set1")[1:2]
+#  scale_color_manual(values = c("#ABABAB", "#757575", "#454545","#E41A1C","#377EB8")) + # From RColorBrewer::brewer.pal(3,"Set1")[1:2]
   scale_y_continuous(limits = c(0,1), name = "Mean detection accuracy") +
   scale_x_discrete(name = "Target syllables") + 
-  guides(fill = FALSE) + labs(color = "Ordinal position") +
+  scale_linetype_manual(name = "Condition", values = c('solid', 'dashed')) + 
+  guides(color = FALSE) + labs(color = "Ordinal position") +
   theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold",size = 16), legend.position = "top") +
-  ggsave(file.path(fig_path,'accuracy_syll_greys.png'),width=7,height=6)
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 22), legend.position = "top") +
+  ggsave(file.path(fig_path,'exp4_accuracy_syll.png'),width=7,height=6)
 ```
 
 ### Regress out syllable effect
@@ -605,7 +616,7 @@ data_RS_sum2 <- data_RS %>%
 
 ```
 
-## Fig. 1a. Plot Struct & Rand
+## Fig. 1a. RT ~ Pos | Sess
 ```{r}
 # Mean +- SD
 # ggplot() +
@@ -629,25 +640,26 @@ data_RS_sum2 <- data_RS %>%
 ggplot() +
   #geom_point(data = data_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(tgt_word)), size = 2) +
   #geom_line(data = data_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = tgt_word, colour = factor(tgt_word)),size = .5) +
-  geom_point(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median, 
-                                             color = sess)) +
-                #color = "black")+
-  geom_errorbar(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci,
-                                                color=sess), 
-                #color = "black",
+  geom_point(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median),
+                #                             color = sess)) +
+                color = "black", size = 2)+
+  geom_errorbar(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci),
+                 #                               color=sess), 
+                color = "black",
                 width = 0.1, size = 0.8) +
-  geom_line(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess, 
-                                            color = sess), 
-            #color = "black",
+  geom_line(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess,
+                                            linetype = sess), 
+            color = "black",
             size = .9) +
   #facet_grid(.~ sess) +
-  scale_colour_brewer(name = "condition",palette = "Set1") +
+ # scale_colour_brewer(name = "condition",palette = "Set1") +
   #labs(colour= "Trial (Word)") + 
   ylab('Median RT (ms)') + 
   xlab('Ordinal postion') +
   scale_x_discrete(limits=c(1:3)) +
+  scale_linetype_manual(name = "condition", values = c('solid', 'dashed')) + 
   theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold",size=16),legend.position=c(0.8,0.9)) +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=22),legend.position=c(0.8,0.9)) +
  #   ggtitle("a.") +  
   ggsave(file.path(fig_path,'targetdetection_overall_median_overlap.png'), width = w, height = h)
 
@@ -655,10 +667,14 @@ ggplot() +
 ```
 
 
-## Fig. 2a-b. Plot Orders
+
 ```{r}
 data_SR_sum1$sess <- factor(data_SR_sum1$sess, levels=c("struct","rand"))
 data_SR_sum2$sess <- factor(data_SR_sum2$sess, levels=c("struct","rand"))
+```
+
+## Fig. S5a. Struct>Rand
+```{r}
 # Mean +- SD
 # ggplot() +
 #   geom_point(data = data_SR_sum1, mapping = aes(x=tgt_pos,y=rt_mean, colour = tgt_word), size = 2) +
@@ -679,22 +695,25 @@ data_SR_sum2$sess <- factor(data_SR_sum2$sess, levels=c("struct","rand"))
 ggplot() +
  # geom_point(data = data_SR_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(tgt_word)), size = 2) +
 #  geom_line(data = data_SR_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = tgt_word, colour = factor(tgt_word)),size = .5) +
-  geom_point(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median, color = sess)) +
-  geom_errorbar(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci, color = sess), width = 0.1, size = 0.8) +
-  geom_line(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess, color = sess), size = .9) +
+  geom_point(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median), size = 2) +
+  geom_errorbar(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci), width = 0.1, size = 0.8) +
+  geom_line(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess, linetype = sess), 
+            color = "black",
+            size = .9) +
  # facet_grid(.~ sess) +
-  scale_colour_brewer(name = "condition",palette = "Set1") +
+ # scale_colour_brewer(name = "condition",palette = "Set1") +
 #  scale_colour_brewer(palette = "Paired") +
  # labs(colour= "Trial (Word)") + 
   ylab('Median RT (ms)') + xlab('Ordinal postion') +
   scale_x_discrete(limits=c(1:3)) +
+  scale_linetype_manual(name = "condition", values = c('dashed', 'solid')) + 
   theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold",size = 16)) +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 22),legend.position=c(0.8,0.9)) +
  # ggtitle("c.") +
   ggsave(file.path(fig_path,'s5_condition_order_StructRand.png'), width = w, height = h)
 
 ```
-
+## Fig. S5b. Rand>Struct
 ```{r}
 # Mean +- SD
 # ggplot() +
@@ -716,17 +735,20 @@ ggplot() +
 ggplot() +
  # geom_point(data = data_RS_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(tgt_word)), size = 2) +
 #  geom_line(data = data_RS_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = tgt_word, colour = factor(tgt_word)),size = .5) +
-  geom_point(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median, color = sess)) +
-  geom_errorbar(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci, color = sess),  width = 0.1, size = 0.8) +
-  geom_line(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess, color = sess), size = .9) +
+  geom_point(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median), size = 2) +
+  geom_errorbar(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci),  width = 0.1, size = 0.8) +
+  geom_line(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess, linetype = sess), 
+            color = "black",
+            size = .9) +
  # facet_grid(.~ sess) +
-  scale_colour_brewer(name = "condition",palette = "Set1") +
+#  scale_colour_brewer(name = "condition",palette = "Set1") +
   #scale_colour_brewer(palette = "Paired") +
   #labs(colour= "Trial (Word)") + 
   ylab('Median RT (ms)') + xlab('Ordinal postion') +
+  scale_linetype_manual(name = "condition", values = c('solid', 'dashed')) + 
   scale_x_discrete(limits=c(1:3)) +
   theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold",size=16)) +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=22),legend.position=c(0.8,0.9)) +
  # ggtitle("d.") +
   ggsave(file.path(fig_path,'s5_condition_order_RandStruct.png'), width = w, height = h)
 
@@ -739,8 +761,8 @@ data_sum1b <- data %>% # target position x subject
     
 ggplot(data_sum1b, aes(x = tgt_pos, y = rt_median, fill = tgt_pos)) +
   geom_point(position = position_jitter(width = .07)) +
-  geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = TRUE) + 
-  geom_boxplot(width = 0.1, alpha = 0.5, position = position_nudge(x=0.2,y=0)) +
+  geom_flat_violin(aes(linetype=sess),position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = TRUE) + 
+  geom_boxplot(aes(linetype=sess),width = 0.1, alpha = 0.5, position = position_nudge(x=0.2,y=0)) +
   facet_grid(.~ sess) +
   #scale_fill_manual(values=wes_palette("Royal2")[c(3,4,5)]) +
   scale_fill_brewer(palette="Dark2") + 
@@ -750,16 +772,19 @@ ggplot(data_sum1b, aes(x = tgt_pos, y = rt_median, fill = tgt_pos)) +
   ylab('Median RT (ms)') + 
   xlab('Ordinal postion') +
   guides(fill = FALSE) + 
+  scale_linetype_manual(name = "cond.", values = c('solid', 'dashed')) + 
   theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold",size=16)) +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=22),legend.position=c(0.93,0.9),
+        strip.background = element_blank(),
+        strip.text.x = element_blank()) +
+#        strip.background = element_rect(linetype = c("dashed"))) +
  # ggtitle("b.") +
   ggsave(file.path(fig_path,'exp4fig1b_rt_pos.png'), width = w, height = h)
-# dev.copy(pdf,file.path(fig_path,'exp4fig1b.pdf'), width = 6, height = 4)
-# dev.off()
+
 ```
 
 
-## Fig. 2. Rolling Means
+## Rolling Means
 ```{r}
 
 
@@ -1252,28 +1277,61 @@ sp.contrasts = summary(pairs(emmeans(glm.less.slope3, ~ sess|tgt_pos)))
 # Cohen's d: divide emmeans estimates by residual sd of generating model:
 sp.contrasts$d = sp.contrasts$estimate / sigmaHat(glm.less.slope3)
 
-em.sess.pos$contrasts %>%
-     summary(infer=TRUE) %>%
-     rbind() %>%
-     as.data.frame()
-
 plot(em.sess.pos, comparisons = TRUE)
-```
-
-## Contrast Plot.
-```{r}
-png(file = file.path(fig_path,'fig6_int_pos_and_session.png'), width = w, height = h, res = 300, units = "in")
-emmip(glm.less.slope3, tgt_pos ~ sess, xlab = "Condition", CIs = TRUE, type = "response") +  
-  scale_y_continuous(name="Estimated marginal means (s)") +
-  scale_x_discrete(labels = c("random","structure")) +
-  scale_color_brewer(name = "Position",palette="Dark2",guide = NULL) + 
-  theme(text = element_text(family = "LM Roman 10", face="bold", size = 16))  
-dev.off()
 
 # --------------------- Uncorrected
 # em.sess.pos.n <- emmeans(glm.less.slope3, specs = pairwise ~ sess|tgt_pos, adjust = "none", transform = "response")
+```
+
+```{r}
+#png(file = file.path(fig_path,'fig6_int_pos_and_session.png'), width = w, height = h, res = 300, units = "in")
+emmip(glm.less.slope3, tgt_pos ~ sess, xlab = "Condition", CIs = TRUE, type = "response") +  
+  scale_y_continuous(name="Est. marginal means (s)") +
+  scale_x_discrete(labels = c("random","structure")) +
+  scale_color_brewer(name = "Position",palette="Dark2",guide = NULL) + 
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 22))  
+#dev.off()
+
 
 ```
+
+## Fig. 3c. RT ~ Pos|Sess EM
+```{r}
+as.data.frame(em.sess.pos$emmeans)
+
+# ggplot(as.data.frame(em.sess.pos$emmeans),aes(x=sess)) + 
+#   geom_boxplot(
+#     aes(y=response,color=tgt_pos,linetype=sess,
+#                    lower = response-SE,
+#                    middle = response,
+#                    upper = response+SE,
+#                    stat = "identity"))
+
+
+ggplot(as.data.frame(em.sess.pos$emmeans),aes(x=sess,y=response)) + 
+  geom_pointrange(aes(ymin = asymp.LCL, ymax = asymp.UCL,color=tgt_pos,linetype=sess), position = position_dodge(width = 0.2)) + 
+  geom_line(aes(group=tgt_pos,color=tgt_pos), position = position_dodge(width = 0.2)) + 
+  scale_color_brewer(palette="Dark2",name="Position") + 
+  scale_linetype_manual(guide = NULL,values = c("solid","dashed")) + 
+  scale_y_continuous(name="Est. marginal means (s)") +
+  scale_x_discrete(labels = c("random","structure"), name = "Condition") +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=22),legend.position="top") +
+  ggsave(file.path(fig_path,'fig3c_estimatedmeans.png'), width = w, height = h)
+
+```
+
+```{r}
+require(ggplot2)
+ggplot(data, aes(sess,rt,color = tgt_pos,linetype = sess)) + 
+  geom_boxplot(outlier.shape = NA,varwidth=FALSE) +
+  scale_color_brewer(palette="Dark2",name="Position") + 
+  scale_linetype_manual(guide = NULL,values = c("solid","dashed"))
+ # geom_line(aes(group = tgt_pos))
+```
+
+
+
 #### control: three-way int
 ```{r}
 (em.test <- emmeans(glm.fuller.int, specs = pairwise ~ cond_order|sess*tgt_pos, adjust = "tukey", transform = "response"))
@@ -1297,8 +1355,52 @@ dev.off()
 
 ```
 
+## Contra Honey: Control
+```{r}
+check.sum.aov <- aov(rt ~ target_num*trial, data = data)
+summary(check.sum.aov)
+#TukeyHSD(check.sum.aov, which = "target_num:trial")
 
-# .
+#emmeans(check.sum.aov, specs = pairwise ~ target_num|trial)
+
+## check variance
+# check normality | normal enough, 0.048
+# shapiro.test(sample(residuals(check.sum.glm),5000)) 
+# plot(check.sum.glm,1)
+# plot(check.sum.glm,2)
+# descdist(rt_data$rt[!is.na(rt_data$rt)])
+# gofstat(list(fitdist(rt_data$rt[!is.na(rt_data$rt)],"norm"),
+#              #fitdist(log(rt_data$rt[!is.na(rt_data$rt)]),"lnorm"),
+#              fitdist(rt_data$rt[!is.na(rt_data$rt)],"gamma")))
+
+
+check.sum2.aov <- aov(rt ~ target_num*trial*tgt_pos, data = rt_data)
+summary(check.sum2.aov)
+
+check.sum3.aov <- aov(rt ~ trial*tgt_pos, data = rt_data)
+summary(check.sum3.aov)
+
+
+#anova(check.sum.aov,check.sum2.aov)
+
+
+
+
+check.4 <- data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","trial"),na.rm = TRUE)
+
+ggplot(check.4) +
+  geom_smooth(aes(target_num,rt_median, group = trial)) +
+  facet_wrap(. ~ trial, nrow = 2)
+
+check.4.2 <- data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","trial","tgt_pos"),na.rm = TRUE)
+
+ggplot(check.4.2) +
+  geom_smooth(aes(target_num,rt_median, group = tgt_pos)) +
+  facet_wrap(. ~ trial, nrow = 2)
+
+
+```
+
 
 ## - Target Position
 ```{r}

@@ -624,8 +624,8 @@ ggplot(WA.wilcox) +
   # annotate(geom = "text", x = 2, y = 0.094, size = 4, label = "p<0.0001\n***") +
   # annotate(geom = "text", x = 4, y = 0.062, size = 4, label = "p<0.0001\n***") +
   theme_classic() + 
-  theme(text = element_text(family = "LM Roman 10", face="bold", size = 13)) +
-  ggsave(file.path(fig_path, paste0('/fig9_',name,'_run_x_stars_col.png')), width = 7, height = 5)  
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15)) +
+  ggsave(file.path(fig_path, paste0('/fig9_',name,'_run_x_stars_col.png')), width = 9, height = 5)  
 
 ```
 
@@ -1080,11 +1080,11 @@ plots.text <- data.frame(test = factor(c("ordinal position","transitional probab
 ```{r warning=FALSE}
 # Let's do the whole thing! 
 ggplot(corr.table, aes(sub, prop.word, color = test)) + 
-  geom_point(size = 2, alpha = 0.8, color = "black") +
-  geom_smooth(method = lm, se = FALSE, size = 1.1,color="red") +
-#  scale_color_manual(values = c("#D95C4E", "#E8B651", "#7BB095", "#5E8FEB"),
-#                     name = NULL) + 
- #                    guide = NULL) +
+  geom_point(size = 2, alpha = 0.8) +
+  geom_smooth(method = lm, se = FALSE, size = 1.1) +
+ scale_color_manual(values = c("#D95C4E", "#E8B651", "#7BB095", "#5E8FEB"),
+                     name = NULL, 
+                     guide = NULL) +
   scale_x_continuous(name="within-across similarity z(Pearson's r)") + 
   scale_y_continuous(name="% correct (out of 16)") +
 # annotate(geom = "text", x = -0.6, y = 1.1, label = paste0("\u03C1 = ",round(corr.ordp$estimate, digits = 2),", p = ",round(corr.ordp$p.value, digits = 2)),
@@ -1096,13 +1096,13 @@ ggplot(corr.table, aes(sub, prop.word, color = test)) +
 # annotate(geom = "text", x = 0.6, y = 1.1, label = paste0("\u03C1 = ",round(corr.dups$estimate, digits = 2),", p = ",round(corr.dups$p.value, digits = 2)),
 #         size = 4, color = "#5E8FEB") +
 #---------------------------------------- if facets, plot on each plot the stats
-  geom_text(data = plots.text, mapping = aes(x = -Inf, y = -Inf, label = label), color = "black", hjust = -0.1, vjust = -1) +
+  geom_text(data = plots.text, mapping = aes(x = -Inf, y = -Inf, label = label), color = "black", hjust = -0.1, vjust = -1, size = 5) +
   facet_wrap(. ~ test,nrow = 2)+ 
   geom_vline(xintercept = 0, color = "gray", linetype="dashed") + 
   theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold",size=14), 
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=20), 
         legend.title = element_text(""),  legend.position = "top") +
-  ggsave(file.path(fig_path,'fig10_corr_sub_final_labels_x_facet2_black.png'),width = 8, height = 7)  
+  ggsave(file.path(fig_path,'fig10_corr_sub_final_labels_x_facet2_col.png'),width = 9, height = 7)  
 
 
 
