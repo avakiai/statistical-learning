@@ -1357,11 +1357,27 @@ dev.off()
 
 ## Contra Honey: Control
 ```{r}
-check.sum.aov <- aov(rt ~ target_num*trial, data = data)
-summary(check.sum.aov)
-#TukeyHSD(check.sum.aov, which = "target_num:trial")
+# library(rstatix)
+# Friedman's test for non-parametric two-way dependent samples
+# # turning into factors, as suggested, and keeping only complete cases returns error that this is not an unreplicated complete block design
+# fried.1 <- friedman.test(rt ~ target_num | subject, (data)[!is.na(data$rt),] %>% mutate(trial = as.factor(trial),target_num = as.factor(target_num)))
+# # # as a matrix, or as db with complete cases doesn't help; says object not a matrix or not unrep comp blk design
+# 
+# fried.1 <- friedman.test(rt_median ~ target_num | trial, as.matrix(check.4[complete.cases(check.4),] %>% mutate(trial = as.factor(trial),target_num = as.factor(target_num))))
 
-#emmeans(check.sum.aov, specs = pairwise ~ target_num|trial)
+data <- data %>% mutate(trial = as.factor(trial),target_num = as.factor(target_num))
+
+check.lm.40 <- lm(rt ~ target_num, data)
+summary(check.lm.40)
+plot(resid(check.lm.40))
+Anova(check.lm.40)
+
+check.lm.4 <- lm(rt ~ target_num*sess, data)
+summary(check.lm.4)
+plot(resid(check.lm.4))
+Anova(check.lm.4)
+
+emmeans(check.lm.4, specs = pairwise ~ target_num*sess, adjust = "Tukey", transform = "response")
 
 ## check variance
 # check normality | normal enough, 0.048
@@ -1374,30 +1390,68 @@ summary(check.sum.aov)
 #              fitdist(rt_data$rt[!is.na(rt_data$rt)],"gamma")))
 
 
-check.sum2.aov <- aov(rt ~ target_num*trial*tgt_pos, data = rt_data)
-summary(check.sum2.aov)
+# check.lm.4.2 <- lm(rt ~ target_num*trial*sess, data = data)
+# summary(check.lm.4.2)
+# plot(resid(check.lm.4.2))
+# Anova(check.lm.4.2)
+# 
+# # Three way between target num, sess and pos
+# check.lm.4.3 <- lm(rt ~ target_num*trial*sess*tgt_pos, data = data)
+# summary(check.lm.4.3)
+# plot(resid(check.lm.4.3))
+# Anova(check.lm.4.3)
+# 
+# # ... so drop trial 
+# check.lm.4.4 <- lm(rt ~ target_num*sess*tgt_pos, data = data)
+# summary(check.lm.4.3)
+# plot(resid(check.lm.4.3))
+# Anova(check.lm.4.4)
+# 
+# anova(check.lm.4.4,check.lm.4.3)
+# # Without trial fits better
+# 
+# 
+# (emmeans(check.lm.4.4, specs = pairwise ~ target_num|sess, adjust = "Tukey", transform = "response"))
+```
 
-check.sum3.aov <- aov(rt ~ trial*tgt_pos, data = rt_data)
-summary(check.sum3.aov)
+## Fig. S2d. Target Num * Sess
+```{r}
 
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median))
 
-#anova(check.sum.aov,check.sum2.aov)
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","sess"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median, group = sess, color = sess))
 
-
-
-
-check.4 <- data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","trial"),na.rm = TRUE)
-
-ggplot(check.4) +
-  geom_smooth(aes(target_num,rt_median, group = trial)) +
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","trial"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median, group = trial)) + 
   facet_wrap(. ~ trial, nrow = 2)
 
-check.4.2 <- data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","trial","tgt_pos"),na.rm = TRUE)
-
-ggplot(check.4.2) +
-  geom_smooth(aes(target_num,rt_median, group = tgt_pos)) +
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","trial","sess"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median, group = sess, linteype = sess)) +
   facet_wrap(. ~ trial, nrow = 2)
 
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","sess","tgt_pos"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median, group = tgt_pos, color = tgt_pos)) +
+  facet_wrap(. ~ sess, nrow = 2)
+
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","trial","tgt_pos", "sess"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median, group = tgt_pos, color = tgt_pos, linetype = sess)) +
+  facet_wrap(. ~ trial, nrow = 2)
+
+
+
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","sess"),na.rm = TRUE)) +
+  geom_point(aes(target_num,rt_mean), size = 2) +
+  geom_line(aes(target_num,rt_mean, group = sess, linetype = sess)) + 
+  geom_smooth(aes(target_num,rt_mean, group = sess, linetype = sess), color = "red") + 
+  scale_y_continuous(name = "Mean RT (ms)") +
+  scale_x_discrete(name = "Target number")  +
+  #scale_color_brewer(palette = "Set1") + 
+  scale_linetype_manual(name = "condition", values = c('solid', 'dashed')) + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 22), legend.position = "top") +
+  ggsave(file.path(fig_path,'figs2c_tgt_num_exp4.png'), width = w, height = h)
 
 ```
 

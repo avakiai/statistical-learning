@@ -672,6 +672,21 @@ emmip(rt.mod.full.int.fct, tgt_pos ~ block, CIs = TRUE, xlab = "Block",type = "r
   scale_color_brewer(name = "Position",palette="Dark2") + 
   theme(text = element_text(family = "LM Roman 10", face="bold", size = 22),legend.position = "top")
 dev.off()
+
+
+ggplot(as.data.frame(emm.pos.block$emmeans),aes(x=block,y=response)) + 
+  geom_pointrange(aes(ymin = asymp.LCL, ymax = asymp.UCL,color=tgt_pos), position = position_dodge(width = 0.2)) + 
+  geom_line(aes(group=tgt_pos,color=tgt_pos), position = position_dodge(width = 0.2)) + 
+  scale_color_brewer(palette="Dark2",name="Position") + 
+  scale_y_continuous(name="Est. marginal means (s)") +
+  scale_x_discrete(name = "Block") +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=22),legend.position="top") +
+  ggsave(file.path(fig_path,'fig1c_estimatedmeans.png'), width = w, height = h)
+
+
+
+
 ```
 
 
@@ -757,6 +772,7 @@ summary(pairings.glm)
 Anova(pairings.glm)
 (pairing.emm <- emmeans(pairings.glm, spec = pairwise ~ pairs, adjust = "Tukey", transform = "response"))
 
+lsr::cohensD(block.matters$mean_rt_delta[block.matters$pairs=="c1.2"],block.matters$mean_rt_delta[block.matters$pairs=="c2.3"])
 
 ```
 
@@ -783,33 +799,49 @@ dev.off()
 
 #### Block 1 vs 8
 ```{r}
-#-----------------------------
+#--------- Block 1 vs 8
 block.minim <- rt_data %>% summarySE(measurevar = "rt",groupvars = c("subject","block"), na.rm = TRUE) %>% filter(block == 1 | block == 8)
-block.aov<- aov(rt_mean ~ block, block.minim)
-summary(block.aov)
-
 t.test(block.minim$rt_mean[block.minim$block==1],block.minim$rt_mean[block.minim$block==8])
 
-block.mini <- rt_data %>% summarySE(measurevar = "rt",groupvars = c("subject","block"), na.rm = TRUE)
-blockA.aov<- aov(rt_mean ~ block, block.mini)
-summary(block.aov)
-
+# All blocks
+block.test <- rt_data %>% summarySE(measurevar = "rt",groupvars = c("subject","block"), na.rm = TRUE)
+block.lm<- lm(rt_mean ~ block, block.test)
+summary(block.lm)
+Anova(block.lm)
 
 ```
 
-#### RT within a Trial 
+## Fig. S2c: RT ~ Target Num 
+```{r}
+check.sum <- rt_data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num"),na.rm = TRUE)
+
+ggplot(check.sum) +
+  geom_point(aes(target_num,rt_mean), size = 2) +
+  geom_line(aes(target_num,rt_mean, group = 1)) + 
+  geom_smooth(aes(target_num,rt_mean, group = 1), color = "red") + 
+  scale_y_continuous(name = "Mean RT (ms)") +
+  scale_x_discrete(name = "Target number")  +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 22)) +
+  ggsave(file.path(fig_path,'figs2c_tgt_num_exp3.png'), width = w, height = h)
+
+```
+
+#### Target Num
 ```{r}
 check.sum <- rt_data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","block"),na.rm = TRUE)
 
 ggplot(check.sum) +
-  geom_smooth(aes(target_num,rt_median, group = block)) +
+  geom_smooth(aes(target_num,rt_mean, group = block)) +
   facet_wrap(. ~ block, nrow = 2)
 
-check.sum2 <- rt_data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","block","tgt_pos"),na.rm = TRUE)
+check.sum2 <- rt_data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","tgt_pos"),na.rm = TRUE)
 
 ggplot(check.sum2) +
+  geom_point(aes(target_num,rt_mean)) +
+  geom_line(aes(target_num,rt_mean, group = tgt_pos)) + 
   geom_smooth(aes(target_num,rt_median, group = tgt_pos)) +
-  facet_wrap(. ~ block, nrow = 2)
+
 
 
 
@@ -818,31 +850,72 @@ ggplot(check.sum2) +
 
 
 ```{r}
-check.sum.glm <- aov(rt ~ target_num*block, data = rt_data)
-summary(check.sum.glm)
-TukeyHSD(check.sum.glm, which = "block")
-
-## check variance
-#car::leveneTest(rt ~ target_num * block,rt_data) # variance across groups is homogenous
-
-# check normality | normal enough, 0.048
-shapiro.test(sample(residuals(check.sum.glm),5000)) 
-plot(check.sum.glm,1)
-plot(check.sum.glm,2)
+# check normality | the data is actually pretty normal, 0.048. Since our target num factor has many levels and glm seemed to have an issue here, we're proceeding with a linear model 
 descdist(rt_data$rt[!is.na(rt_data$rt)])
 gofstat(list(fitdist(rt_data$rt[!is.na(rt_data$rt)],"norm"),
-             #fitdist(log(rt_data$rt[!is.na(rt_data$rt)]),"lnorm"),
+            # fitdist(log(rt_data$rt_secs[!is.na(rt_data$rt)]),"lnorm"),
              fitdist(rt_data$rt[!is.na(rt_data$rt)],"gamma")))
 
 
-check.sum2.glm <- aov(rt ~ target_num*block*tgt_pos, data = rt_data)
+
+# lnrt <- fitdist(log10(rt_data$rt[!is.na(rt_data$rt)]+1),"lnorm")
+# par(mfrow=c(2,2))
+# denscomp(lnrt)
+# cdfcomp(lnrt)
+# qqcomp(lnrt)
+# ppcomp(lnrt)
+# 
+# gofstat(lnrt)
+
+rt_data <- rt_data %>% mutate(trial = as.numeric(trial),target_num = as.numeric(target_num))
+
+# less 1 
+check.sum.glm <- lm(rt_secs ~ target_num*block, data = rt_data)
+summary(check.sum.glm)
+Anova(check.sum.glm)
+plot(check.sum.glm)
+# heteroscedast.
+#leveneTest(check.sum.glm) 
+(emmeans(check.sum.glm, specs = pairwise ~ block, adjust = "Tukey", transform = "response"))
+emmip(check.sum.glm,block~target_num)
+emmip(check.sum.glm,~target_num)
+emmip(check.sum.glm,~block)
+
+# FINAL
+check.sum.glm0 <- lm(rt_secs ~ target_num, data = rt_data)
+summary(check.sum.glm0)
+Anova(check.sum.glm0)
+plot(check.sum.glm0)
+(emmeans(check.sum.glm0, specs = pairwise ~ target_num, adjust = "Tukey", transform = "response"))
+emmip(check.sum.glm0,~target_num)
+
+# full 
+# this takes an inordinate amount of time... 
+# check.sum2.glm <- glmer(rt ~ target_num*block*tgt_pos + (1|subject), data = rt_data, family = Gamma("log"),control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+
+check.sum2.glm <- lm(rt_secs ~ target_num*tgt_pos, data = rt_data)
 summary(check.sum2.glm)
+plot(check.sum2.glm)
+Anova(check.sum2.glm)
+emmip(check.sum2.glm,target_num~tgt_pos)
+emmip(check.sum2.glm,tgt_pos~target_num)
+# 
+# 
+# # less 2 
+# check.sum3.glm <- lm(rt_secs ~ block*tgt_pos, data = rt_data)
+# summary(check.sum3.glm)
+# plot(check.sum3.glm)
+# Anova(check.sum3.glm)
+# 
+# 
+# anova(check.sum.glm,check.sum2.glm,check.sum3.glm)
+# 
+# 
+# # Model full
+# (emmeans(check.sum.glm, specs = pairwise ~ target_num|block))
+# 
+# 
 
-check.sum3.glm <- aov(rt ~ block*tgt_pos, data = rt_data)
-summary(check.sum3.glm)
-
-
-anova(check.sum.glm,check.sum2.glm,check.sum3.glm)
 
 ```
 Adding ordinal position as a predictor significantly improves the fit of the model.
