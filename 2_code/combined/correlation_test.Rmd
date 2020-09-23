@@ -4,6 +4,7 @@ author: "Ava Kiai"
 date: "9/9/2020"
 output: html_document
 ---
+A scipt to compare the effectiveness of different similarity/dissimilarity methods. 
 
 Conclusion: use any method except z scored dissimilarity
 
@@ -158,14 +159,6 @@ ggplot(meta_table%>%filter(data == "diss_z"), aes(test,p)) +
   scale_y_continuous(limits = c(0,0.5)) + 
   theme_classic() + 
   ggtitle("diss z")
-
-```
-
-```{r}
-
-meta_table%>%filter(data == "corr_z")
-
-
 
 ```
 

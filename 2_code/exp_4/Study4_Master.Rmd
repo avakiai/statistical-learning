@@ -1,0 +1,1489 @@
+---
+title: 'Exp. 2: Target Detection task with Structured and Random Streams'
+author: "Ava Kiai"
+date: "23 September, 2020"
+output:
+  html_document:
+  df_print: paged
+  pdf_document: default
+---
+
+Hi! This script generates all models, tables, analyses, and figures pertaining to Experiment 2 in Kiai & Melloni 2020. Models and data tables at choice points have been saved and can be reloaded using this script, without having to re-run the model or re-wrangle the data. 
+
+```{r}
+rm(list=ls()) # clear workspace
+# load(".RData") # load saved workspace image for this file
+
+# Working directory is where this file is
+setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+```
+
+# Paths
+```{r}
+# Data Path
+data_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4'
+# Code Path
+code_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/exp_4'
+# Results Path
+res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp_4'
+# Final fig path
+fig_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/final'
+```
+
+# Packages and Global Params
+```{r message=FALSE}
+# latex font for figures
+library(extrafont)
+loadfonts(device = "win")
+par(family="LM Roman 10")
+
+# plot and basic manips
+library(tidyverse)
+
+# stats
+library(lme4)
+library(emmeans)
+library(car)
+library(broom)
+library(fBasics)
+library(fitdistrplus)
+library(lattice)
+library(data.table)
+
+# save tables
+library(stargazer)
+
+# Some stuffs for summary stats
+source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/summarySE.R')
+source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/R_rainclouds.R')
+
+# Global Params
+w = 7
+h = 5
+theme_set(theme_classic(base_size = 22))
+```
+#----------------------- Preprocessing 
+## Load Files (if running through preprocessing)
+If you want to skip preprocessing, go to Load Saved Data section and proceed from there!
+```{r eval=FALSE, message=FALSE, include=FALSE}
+# Load
+raw_data <- read_csv(file.path(data_path,'ia_incidental_data_v1.csv'))
+
+# Global Vars
+n_subjs_raw <- length(unique(raw_data$subject))
+subj_IDs <- unique(raw_data$subject)
+
+# Settings
+subjs_SR <- c("s1911","n1906","m0207","h0502","h1209","s0310","t0506","b0704","s2205","s1302")
+n_subjs_SR <- length(subjs_SR)
+subjs_RS <- c("a2012","m2208","a2605","m1105","s2609","w2804","b2707","s2502","f0511","s1504")
+n_subjs_RS <- length(subjs_RS)
+    
+# Add RT and Hit column to raw data, to be filled in next... 
+wrangle_data <- raw_data %>%
+    add_column(rt = rep(0,nrow(raw_data)),
+               resp = rep(0,nrow(raw_data)))
+
+```
+## Calculate RT to each target
+Since we loaded the raw data, we need to calculate RTs to target syllables from Presentation-generated log files.
+```{r eval=FALSE, include=FALSE}
+# for each participant
+for (curr_subj_num in 1:n_subjs_raw) {
+  curr_subj <- subj_IDs[curr_subj_num]
+  curr_subj_data <- wrangle_data[which(wrangle_data$subject==curr_subj),]
+    
+  # for each trial 
+  for (curr_trial in unique(curr_subj_data$trial)) {
+  curr_trial_data <- curr_subj_data[which(curr_subj_data$trial==curr_trial),]
+    
+    # for each condition (rand, struct)
+    for (curr_cond in unique(curr_trial_data$sess)) {
+    curr_trial_cond_data <- curr_trial_data[which(curr_trial_data$sess==curr_cond),]
+    curr_target = curr_trial_cond_data$target[1]
+    n_targets <- sum(curr_trial_cond_data$code==curr_target)
+    target_times <- curr_trial_cond_data$time[str_which(curr_trial_cond_data$code,curr_target)]
+    
+# later: confirm that target num max == n_targets | cross-validate with matlab count... 
+
+      for (curr_target_num in 1:length(target_times)) {
+        at_next_target = FALSE
+        counter = 1
+        curr_row = curr_trial_cond_data[which(curr_trial_cond_data$target_num==curr_target_num),]
+        row_num = which(curr_trial_cond_data$target_num==curr_target_num)
+       
+         while (at_next_target == FALSE) {
+          curr_row = curr_trial_cond_data[row_num+counter,] # go to next row
+          if (is.na(curr_row$subject)) {break} # reached end of trial ...
+# later: confirm that two targets don't appear in that window, or else reduce window       
+          else if (curr_row$code==1 & curr_row$time<target_times[curr_target_num]+2000) { # resp in 2 sec window...
+            curr_trial_cond_data$resp[row_num] = 1 # count a hit
+            curr_trial_cond_data$rt[row_num] = curr_row$time-target_times[curr_target_num]} # record RT
+          else if (curr_row$code==curr_target) {at_next_target = TRUE} # if it's a target, break/go to next target
+          
+          counter = counter + 1
+        } # go through targets
+      } # target
+    # add current condition data to table
+    curr_trial_data[which(curr_trial_data$sess==curr_cond),] <- curr_trial_cond_data 
+    } # condition
+    # add current trial data to table
+    curr_subj_data[which(curr_subj_data$trial==curr_trial),] <- curr_trial_data
+  } # trial
+    # add current subject data to complete data table
+    wrangle_data[which(wrangle_data$subject==curr_subj),] <- curr_subj_data
+} # subject
+#view(wrangle_data)
+```
+## Clean
+```{r eval=FALSE, include=FALSE}
+# remove all response rows from data set
+pre_or_data <- wrangle_data[which(wrangle_data$code!=1),]
+
+# make rt rows where there was no response -> NA
+pre_or_data$rt[which(pre_or_data$resp==0)] <- NA
+
+# label condition orders 
+pre_or_data <- pre_or_data %>%
+    mutate(cond_order = 0,
+           cond_ord_n = 0) 
+pre_or_data$cond_order[which(pre_or_data$subject %in% subjs_SR)] = "struct-rand"
+pre_or_data$cond_order[which(pre_or_data$subject %in% subjs_RS)] = "rand-struct"
+pre_or_data$cond_ord_n[which(pre_or_data$subject %in% subjs_SR)] = 1
+pre_or_data$cond_ord_n[which(pre_or_data$subject %in% subjs_RS)] = 2 
+
+# make target word for .... 
+
+# factorize where necessary
+  pre_or_data <- pre_or_data %>%
+    mutate(subject=as_factor(subject),
+           trial=as_factor(trial), # essentially, blocks
+           code=as_factor(code), # target syllable
+           target=as_factor(target), # target syllable
+           sess=as_factor(sess), #struct, rand condition
+           tgt_pos = as_factor(tgt_pos), 
+           tgt_word = as_factor(tgt_word),
+           cond_order = as.factor(cond_order))
+  
+  
+# reorder syllable factors along position lines, so they always show up like pos 1's, pos 2's, pos 3's... 
+pre_or_data <- pre_or_data %>% mutate(target=fct_reorder(target, as.numeric(tgt_pos)))
+    
+  
+```
+## Remove outlier RTs
+```{r eval=FALSE, warning=FALSE, include=FALSE}
+# view
+hist(pre_or_data$rt)
+summary(pre_or_data$rt)
+ggqqplot(pre_or_data$rt,na.action=na.omit)
+sd(pre_or_data$rt,na.rm=TRUE)
+
+#-------------------------------------
+# Outlier Removal Method 1: mean +- 3(sd)
+# upper_bound <- mean(pre_or_data$rt,na.rm=TRUE)+(3*sd(pre_or_data$rt,na.rm=TRUE))
+# lower_bound <- mean(pre_or_data$rt,na.rm=TRUE)-(3*sd(pre_or_data$rt,na.rm=TRUE))
+# 
+# # filter/ outlier removal based on central tendency 
+# or_data1 <- pre_or_data %>%
+#   filter(rt > lower_bound | is.na(rt), # keeps NAs, because these are miss markers
+#          rt < upper_bound | is.na(rt))
+# 
+# hist(or_data1$rt)
+# ggqqplot(or_data1$rt,na.action=na.omit)
+# summary(or_data1$rt)
+# sd(or_data1$rt,na.rm=TRUE)
+# 
+# (data_loss_mean <- 1-length(or_data1$rt)/length(pre_or_data$rt))
+
+#-------------------------------------
+# Outlier Removal Method 2: median +- 3(mad) 
+# --> https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/mad
+    # MAD = b Mi(|xi−Mj(xj)|), where x = n orig. observations; and M is the median of the series
+    # Usually, b = 1.4826, a constant linked to the assumption of
+    # normality of the data, disregarding the abnormality induced by outliers
+    # (Rousseeuw & Croux, 1993).
+    # If another underlying distribution is assumed (which is seldom
+    # the case in the field of psychology), this value changes to b = 1/
+    # Q(0.75), where Q(0.75) is the 0.75 quantile of that underlying distribution.
+    # In case of normality, 1/Q(0.75) = 1.4826 (Huber, 1981). This
+    # multiplication by b is crucial, as otherwise the formula for the MAD
+    # would only estimate the scale up to a multiplicative constant.
+    # Concretely, calculating the MAD implies the following steps:
+    # (a) the series in which the median is subtracted of each observation
+    # becomes the series of absolute values of (1–7), (3–7), (3–7), (6–7),
+    # (8–7), (10–7), (10–7), and (1000–7), that is, 6, 4, 4, 1, 1, 3, 3, and
+    # 993; (b) when ranked, we obtain: 1, 1, 3, 3, 4, 4, 6, and 993; (c) and
+    # (d) the median equals 3.5 and will be multiplied by 1.4826 to find a
+    # MAD of 5.1891.
+mad_norm <- mad(pre_or_data$rt,na.rm=TRUE)
+
+upper_bound_med <- median(pre_or_data$rt,na.rm=TRUE)+(3*mad_norm)
+lower_bound_med <- median(pre_or_data$rt,na.rm=TRUE)-(3*mad_norm)
+
+# filter 
+or_data2 <- pre_or_data %>%
+  dplyr::filter(rt > lower_bound_med | is.na(rt), # keeps NAs, because these are miss markers
+         rt < upper_bound_med | is.na(rt))
+
+hist(or_data2$rt)
+#qqplot(or_data2$rt,na.action=na.omit)
+summary(or_data2$rt)
+sd(or_data2$rt,na.rm=TRUE)
+
+(data_loss_med <- 1-length(or_data2$rt)/length(pre_or_data$rt))
+
+#-------------------------------------
+# Outlier Removal Method 3: median +- 3(mad mult. by 1/Q(0.75)) 
+# mad_75_qnt <- unname(mad(pre_or_data$rt,constant=1/(quantile(pre_or_data$rt,na.rm=TRUE)[4]),na.rm=TRUE)) # does that fact that these are different suggest that, outliers aside, the underlying distribution is still not normal?
+# 
+# upper_bound_med_75 <- median(pre_or_data$rt,na.rm=TRUE)+(3*mad_75_qnt)
+# lower_bound_med_75 <- median(pre_or_data$rt,na.rm=TRUE)-(3*mad_75_qnt)
+# 
+# # filter 
+# or_data3 <- pre_or_data %>%
+#   filter(rt > lower_bound_med_75 | is.na(rt), # keeps NAs, because these are miss markers
+#          rt < upper_bound_med_75 | is.na(rt))
+# 
+# hist(or_data3$rt)
+# ggqqplot(or_data3$rt,na.action=na.omit)
+# summary(or_data3$rt)
+# sd(or_data3$rt,na.rm=TRUE)
+# 
+# (data_loss_med <- 1-length(or_data3$rt)/length(pre_or_data$rt))
+
+# output... Chose the method of median +- 3 mad() based on the assumption of normality and a b of 1.48...
+data <- or_data2
+
+```
+We chose method 2 (median +- 3(median absolute deviation)) as the outlier removal method. This method maintained a fair amount of the data (data loss of 5.79%). The median was roughly unchanged (525.5 to 529.4 ms), while the min/max became more symmetric around the median. 
+While the mean +- 3(sd) method had also preserved much of the data (data loss of 1.93%), it left many extreme values in place, leading to a much more skewed qqplot. -- QQplots tell us about the normality of the underlying distribution. Although RT distributions are skewed, and in fact take the form of an exponential gaussian (gaussian convolved with an exponential function, and captured by parameters mu, sigma, and tau), we hope to remove extreme values at the tails that may not be informative. We do this based on a measure of central tendency not affected by the value of extreme outliers. For ref, see: Leys et al. 2013.
+## Count Hits
+```{r eval=FALSE, include=FALSE}
+n_total_targets <- length(pre_or_data$rt) 
+
+n_missed <- length(which(is.na(pre_or_data$rt))) # the same before and after OR
+
+# Before Outlier Removal  
+n_hits_W.O <- length(which(!is.na(pre_or_data$rt)))
+(hit_rate <- n_hits_W.O/n_total_targets)
+(miss_rate <- n_missed/n_total_targets)
+
+# After Outlier Removal 
+n_targets_OR <- length(data$rt)
+n_hits_O.R <- length(which(!is.na(data$rt))) 
+(hit_rate_O.R <- n_hits_O.R/n_targets_OR)
+(miss_rate <- n_missed/n_targets_OR)
+
+
+
+```
+Outlier removal brought hit rate down from 83.06% to 82.02% - a marginal change.
+There were 1430 NAs or missed targets (miss rate was 16.93%, now 17.97%).
+#----------------------- ANALYSES
+# Load Saved TD
+```{r}
+data <- read_csv("C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4/exp_4_rt_data.csv") %>%
+  mutate(subject = as.factor(subject),
+         target = as.factor(target),
+         sess = as.factor(sess), 
+         tgt_pos = as.factor(tgt_pos), 
+         tgt_word = as.factor(tgt_word),
+         cond_order = as.factor(cond_order))
+```
+
+#1. Accuracy
+## Summarize
+```{r}
+data %>% summarySE(measurevar = "resp",na.rm=TRUE) 
+
+base_acc1 <- data %>% summarySE(measurevar = "resp", groupvars = c("subject"),na.rm=TRUE)
+
+t.test(base_acc1$resp_mean, mu = 0.5, alternative = "greater")
+
+data %>% summarySE(measurevar = "resp", groupvars = c("sess"),na.rm=TRUE) 
+
+base_acc2 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","subject"),na.rm=TRUE) 
+
+t.test(base_acc2$resp_mean[which(base_acc2$sess=="rand")],
+       base_acc2$resp_mean[which(base_acc2$sess=="struct")],
+       alternative = "less") # h1 = y is larger than x
+```
+
+## a. Plot Session x Position 
+```{r}
+accuracy_data1 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_pos","subject"),na.rm=TRUE) 
+accuracy_data2 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_pos"),na.rm=TRUE)
+
+# ---- On averaged across participants
+pos.lm <- lm(resp_mean ~ tgt_pos, data=dplyr::filter(accuracy_data1,sess=="struct"))
+summary(pos.lm)
+Anova(pos.lm, type = '2')
+(emmeans(pos.lm, specs = pairwise ~ tgt_pos))
+ 
+```
+
+
+```{r}
+ggplot(accuracy_data1, aes(x = tgt_pos, y = resp_mean, fill = tgt_pos)) +
+   geom_point(position = position_jitter(width = .07)) +
+   geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 0.8, trim = FALSE) + 
+   geom_point(accuracy_data2, mapping = aes(tgt_pos, resp_mean), position = position_nudge(x = 0.2, y = 0)) +
+   geom_errorbar(accuracy_data2, mapping=aes(tgt_pos, y=resp_mean, ymin=resp_mean-se,
+                                             ymax=resp_mean+se),
+                 position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
+ # geom_col(accuracy_data2, mapping=aes(sess, resp_mean, group=as.factor(tgt_pos), fill=as.factor(tgt_pos)), 
+ #          position = position_dodge(0.5), width=0.5) +
+ # geom_errorbar(accuracy_data2, mapping=aes(sess, y=resp_mean, ymin=resp_mean-se, ymax=resp_mean+se,
+ #          group=tgt_pos,color=as.factor(tgt_pos)), position=position_dodge(0.5), width = 0.3, size = 1) +
+ # geom_signif(comparisons=list(c("rand", "struct")), annotations="***", y_position=0.95, tip_length=0.3) + 
+  facet_grid(.~ sess) +
+  scale_x_discrete(name = "Target Position") +
+  scale_y_continuous(name = "mean detection accuracy [bars = SEM]") +
+  scale_color_brewer(palette="Dark2") +
+  scale_fill_brewer(palette="Pastel2") +
+  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
+  scale_x_discrete(name = "Target Position") +
+  guides(fill = FALSE, color = FALSE) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"))#+
+  #ggsave(file.path(fig_path,'exp4_acc_fig1.png'),width=w,height=h)
+```
+
+Stats
+```{r eval=FALSE, include=FALSE}
+# ANOVA
+# use lm() then car::Anova() to evaluate model (because allows Types I, II & III Sums of squares*)
+acc.mod1 <- lm(resp_mean ~ sess * tgt_pos, data=accuracy_data1)
+Anova(acc.mod1, type = '2')
+  # to investigate your options... 
+  class(acc.mod1)
+  methods(class="lm") # asses available methods to run on lm() output
+
+acc.mod2 <- lm(resp_mean ~ sess + tgt_pos, data=accuracy_data1)
+Anova(acc.mod2, type = '2')
+
+# use stats::anova() to compare models 
+anova(acc.mod1, acc.mod2, test = 'Chisq')
+# -> they are the same, because it seems there's no interaction...
+
+# extract least square mean contrasts
+(em.sess <- emmeans(acc.mod2, specs = pairwise ~ sess)) 
+
+(em.tgtpos.sess <- emmeans(acc.mod2, specs = pairwise ~ sess|tgt_pos)) 
+
+(em.sess.tgtpos <- emmeans(acc.mod2, specs = pairwise ~ tgt_pos|sess)) 
+
+acc.table <- as.data.frame(Anova(acc.mod1, type = '2'))
+
+em.acc <- em.sess.tgtpos$contrasts %>%
+    summary(infer=TRUE) %>%
+     rbind() %>%
+     as.data.frame()
+plot(em.sess, comparisons = TRUE)
+plot(em.sess.tgtpos, comparisons = TRUE)
+
+
+```
+Significant effect of session. 
+No effect of target position. 
+
+## b. Plot Target Word
+```{r}
+accuracy_data3 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_word","subject"),na.rm=TRUE) %>%
+  mutate(tgt_word = case_when(tgt_word==1 ~ "nugadi",
+                         tgt_word==2 ~ "rokise",
+                         tgt_word==3 ~ "mipola",
+                         tgt_word==4 ~ "zabetu"))
+accuracy_data4 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_word"),na.rm=TRUE)
+accuracy_data4$tgt_word <- rep(c("nugadi","rokise","mipola","zabetu"),2)
+stargazer(accuracy_data4, 
+          type = "html", 
+          out = file.path(res_path,'tables','word_accuracy.doc'), summary = FALSE, rownames = FALSE)
+
+# ---- On averaged across participants
+word.lm <- lm(resp_mean ~ tgt_word, data=dplyr::filter(accuracy_data3,sess=="struct"))
+summary(word.lm)
+Anova(word.lm, type = '2')
+(emmeans(word.lm, specs = pairwise ~ tgt_word))
+
+```
+
+
+```{r}
+ggplot(accuracy_data3, aes(x = tgt_word, y = resp_mean, fill = tgt_word)) +
+   geom_point(position = position_jitter(width = .07)) +
+   geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 0.8, trim = FALSE) + 
+   geom_point(accuracy_data4, mapping = aes(tgt_word, resp_mean), position = position_nudge(x = 0.2, y = 0)) +
+   geom_errorbar(accuracy_data4, mapping=aes(tgt_word, y=resp_mean, ymin=resp_mean-se,
+                                             ymax=resp_mean+se),
+                 position = position_nudge(x = 0.2, y = 0), width = 0.05, size = 1) +
+  facet_grid(.~ sess) +
+  scale_fill_manual(values=wes_palette("Zissou1")[c(1,3,4,5)]) +
+  scale_y_continuous(limits = c(0,1), name = "mean detection accuracy [bars = SEM]") +
+  scale_x_discrete(name = "Pseudoword", labels = c("nugadi","rokise","mipola","zabetu")) + 
+  guides(fill = FALSE, color = FALSE) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) #+
+#  ggsave(file.path(fig_path,'exp4_acc_fig2.png'),width=w,height=h)
+```
+
+
+## c. Plot Target Syllable
+```{r}
+accuracy_data5 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","target","subject", "tgt_pos"),na.rm=TRUE) %>%
+  mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+accuracy_data6 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","target","tgt_pos"),na.rm=TRUE) %>%
+  mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+
+stargazer(accuracy_data6, 
+          type = "html", 
+          out = file.path(res_path,'tables','syllable_accuracy.doc'), summary = FALSE, rownames = FALSE)
+
+# ---- On the averaged data
+target.lm <- lm(resp_mean ~ target*sess, data=accuracy_data5)
+summary(target.lm)
+Anova(target.lm)
+# Contrasts & Cohen's d
+(emmeans(target.lm, specs = pairwise ~ sess, adjust = "tukey", transform = "response"))
+(as.data.frame(emmeans(target.lm, specs = pairwise ~ sess, adjust = "tukey", transform = "response")$contrasts)$estimate / sigmaHat(target.lm))
+
+
+(target.emm <- emmeans(target.lm, specs = pairwise ~ target, adjust = "tukey", transform = "response"))
+(as.data.frame(target.emm$contrasts)$estimate / sigmaHat(target.lm))
+
+as.data.frame(target.emm$contrasts)[which(as.data.frame(target.emm$contrasts)$p.value < 0.05),]
+
+
+emmip(target.lm, sess~target, CIs = TRUE)
+
+# There's a main effect of target and session. That means some targets (syllables) were more easy or more difficult to detect. However, we need to account in the model for the fact that identity is confounded with position -- if the variation is entirely due to structure, then we need not worry about identity. 
+# In struct-rand contrasts, only tu and mi were different. 
+# 
+# No pairs were sig. different within levels of session. 
+# 
+# An effect of session suggests that whether those syllables were embedded in words or not had an effect on detectability.
+# 
+# There's no interaction, which suggests that embedding did not modulate the differences between syllables in the detectability. 
+```
+
+## Fig. S1b. Accuracy ~ Syllable
+```{r}
+ggplot() + 
+  #(accuracy_data5, aes(x = target, y = resp_mean)) +
+  #geom_point(position = position_jitter(width = .07), aes(color = tgt_pos)) +
+  #geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = FALSE,
+  #                 fill = "gray") + 
+  geom_errorbar(accuracy_data6, mapping=aes(target, y=resp_mean, ymin=resp_mean-se,ymax=resp_mean+se),     
+                position = position_nudge(x = 0.0, y = 0), width = 0.5, size = 1) +
+  geom_line(accuracy_data6, mapping = aes(target,resp_mean,group = sess, linetype = sess),size = 1) +
+  geom_point(accuracy_data6, mapping = aes(target, resp_mean, color = tgt_pos), size = 4, position = position_nudge(x = 0.0, y = 0)) +
+  #facet_grid(.~sess) + 
+  scale_color_brewer(palette="Dark2") + 
+ # scale_color_manual(values = c("#1B9E77","#D95F02","#7570B3","#E41A1C","#377EB8")) +
+#  scale_color_manual(values = c("#ABABAB", "#757575", "#454545","#E41A1C","#377EB8")) + # From RColorBrewer::brewer.pal(3,"Set1")[1:2]
+  scale_y_continuous(limits = c(0,1), name = "Mean detection accuracy") +
+  scale_x_discrete(name = "Target syllables") + 
+  scale_linetype_manual(name = "Condition", values = c('solid', 'dashed')) + 
+  guides(color = FALSE) + labs(color = "Ordinal position") +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 22), legend.position = "top") +
+  ggsave(file.path(fig_path,'exp4_accuracy_syll.png'),width=7,height=6)
+```
+
+### Regress out syllable effect
+```{r}
+# across all participants, median RTs for each of the syllables
+# rm anova with syllable and position as factors
+subj.mod <- glmer(rt_secs ~ tgt_pos*target + (1 | subject), data = data, family = Gamma("log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+summary(subj.mod)
+### rt_secs!
+
+# for each participant, subtracted the residual RT value from observed value for each syllable, co-varying out the effects of physical stimulus factors and yielding corrected RT effect
+
+# Model is rank-deficient
+
+broom.mixed::glance(subj.mod)
+broom.mixed::augment(subj.mod)
+data_adj <- data.frame(subject = as.factor(augment(subj.mod)$subject),
+           tgt_pos = as.factor(augment(subj.mod)$tgt_pos),
+           rt_adj = as.numeric(augment(subj.mod)$rt_secs - augment(subj.mod)$.resid))
+         
+rt.mod.less.int.adj <- glmer(rt_adj ~ 1 + tgt_pos + (1 | subject), data = data_adj, family = Gamma(link = "log"))
+  summary(rt.mod.less.int.adj)
+  plot(residuals(rt.mod.less.int.adj))
+  qqnorm(resid(rt.mod.less.int.adj))
+  
+  Anova(rt.mod.less.int.adj)
+  
+  
+reg.syll.mod <- (emmeans(rt.mod.less.int.adj, specs = pairwise ~ tgt_pos, adjust = "Tukey", transform = "response"))  
+reg.mod.cont <- as.data.frame(reg.syll.mod$contrasts)
+(reg.mod.cont$d <- reg.mod.cont$estimate / sigmaHat(rt.mod.less.int.adj))
+```
+
+### Prove OR removal didn't change it
+Uncomment and run this only if preprocessing chunks were executed and pre_or_data is in workspace. 
+```{r}
+
+# pre_or_data %>%
+#   summarise(mean = mean(resp),
+#             sd = sd(resp))
+# 
+# after <- data %>% summarySE(measurevar = "resp", groupvars = c("subject"),na.rm=TRUE)
+# before <- pre_or_data %>% summarySE(measurevar = "resp", groupvars = c("subject"),na.rm=TRUE)
+# 
+# t.test(after$resp_mean, before$resp_mean, alternative = "two.sided")
+
+```
+
+
+### RT ~ Position - Individuals
+```{r message=FALSE}
+data_sum7 <- data %>%
+    summarySE(measurevar="rt", groupvars=c("subject","tgt_pos","sess","trial","tgt_word"), na.rm=TRUE)
+data_sum8 <- data %>%
+    summarySE(measurevar="rt", groupvars=c("subject","tgt_pos","sess"), na.rm=TRUE)
+
+subj.labs <- (unique(data$subject)) # what labels should say
+names(subj.labs) <- (c(1:20)) # names are as they appear in the df
+
+# Median +- CI
+ggplot() +
+  geom_point(data = data_sum7, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(tgt_word)), size = 2) +
+  geom_line(data = data_sum7, mapping = aes(x = tgt_pos, y = rt_median, group = tgt_word), colour = "GREY",size = .5) +
+  geom_point(data = data_sum8, mapping = aes(x = tgt_pos, y = rt_median), colour = "BLACK") +
+  geom_errorbar(data = data_sum8, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci), colour = "BLACK", width = 0.1, size = 0.8) +
+  geom_line(data = data_sum8, mapping = aes(x = tgt_pos, y = rt_median, group = 1), colour = "BLACK", size = .9) +
+  facet_grid(sess ~ subject, labeller = labeller(subject = subj.labs),switch = "y") +
+  scale_colour_brewer(palette = "Paired") +
+  labs(colour= "Trials (Word)") + ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') +
+  scale_x_discrete(limits=c(1:3)) +
+  theme_bw() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"))# +
+ # ggsave('targetdetection_facet.png', width = 20, height = 4)
+```
+
+
+# 2. RT Data by Position - Test
+## Summarize
+```{r}
+# Show RT for each position & each trial (in this case the same thing as tgt_word)
+data_sum1 <- data %>%
+    summarySE(measurevar="rt", groupvars=c("tgt_pos","tgt_word","sess"), na.rm=TRUE)
+    data_sum1_struct <- data_sum1 %>% filter(sess == "struct")
+    data_sum1_rand <- data_sum1 %>% filter(sess == "rand")
+    
+# Show RT for each position only
+data_sum2 <- data %>%
+    summarySE(measurevar="rt", groupvars=c("tgt_pos","sess"), na.rm=TRUE)
+    data_sum2_struct <- data_sum2 %>% filter(sess == "struct")
+    data_sum2_rand <- data_sum2 %>% filter(sess == "rand")
+
+# filter
+data_SR <- data %>%
+  filter(data$cond_ord_n==1)
+data_RS <- data %>%
+  filter(data$cond_ord_n==2)
+
+# Show RT for each position & each trial (in this case the same thing as tgt_word)
+data_SR_sum1 <- data_SR %>%
+    summarySE(measurevar = "rt", groupvars = c("tgt_pos","tgt_word","sess"),na.rm=TRUE)
+# Show RT for each position only
+data_SR_sum2 <- data_SR %>%
+    summarySE(measurevar = "rt", groupvars = c("tgt_pos","sess"),na.rm=TRUE)
+
+# Show RT for each position & each trial (in this case the same thing as tgt_word)
+data_RS_sum1 <- data_RS %>%
+    summarySE(measurevar = "rt", groupvars = c("tgt_pos","tgt_word","sess"),na.rm=TRUE)
+# Show RT for each position only
+data_RS_sum2 <- data_RS %>%
+    summarySE(measurevar = "rt", groupvars = c("tgt_pos","sess"),na.rm=TRUE)
+
+
+```
+
+## Fig. 1a. RT ~ Pos | Sess
+```{r}
+# Median +- CI
+ggplot() +
+  #geom_point(data = data_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(tgt_word)), size = 2) +
+  #geom_line(data = data_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = tgt_word, colour = factor(tgt_word)),size = .5) +
+  geom_point(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median),
+                #                             color = sess)) +
+                color = "black", size = 2)+
+  geom_errorbar(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci),
+                 #                               color=sess), 
+                color = "black",
+                width = 0.1, size = 0.8) +
+  geom_line(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess,
+                                            linetype = sess), 
+            color = "black",
+            size = .9) +
+  #facet_grid(.~ sess) +
+ # scale_colour_brewer(name = "condition",palette = "Set1") +
+  #labs(colour= "Trial (Word)") + 
+  ylab('Median RT (ms)') + 
+  xlab('Ordinal postion') +
+  scale_x_discrete(limits=c(1:3)) +
+  scale_linetype_manual(name = "condition", values = c('solid', 'dashed')) + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=22),legend.position=c(0.8,0.9)) +
+  ggsave(file.path(fig_path,'targetdetection_overall_median_overlap.png'), width = w, height = h)
+
+```
+
+
+```{r}
+data_SR_sum1$sess <- factor(data_SR_sum1$sess, levels=c("struct","rand"))
+data_SR_sum2$sess <- factor(data_SR_sum2$sess, levels=c("struct","rand"))
+```
+
+## Fig. S5a. Struct>Rand
+```{r}
+# Median +- CI
+ggplot() +
+ # geom_point(data = data_SR_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(tgt_word)), size = 2) +
+#  geom_line(data = data_SR_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = tgt_word, colour = factor(tgt_word)),size = .5) +
+  geom_point(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median), size = 2) +
+  geom_errorbar(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci), width = 0.1, size = 0.8) +
+  geom_line(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess, linetype = sess), 
+            color = "black",
+            size = .9) +
+ # facet_grid(.~ sess) +
+ # scale_colour_brewer(name = "condition",palette = "Set1") +
+#  scale_colour_brewer(palette = "Paired") +
+ # labs(colour= "Trial (Word)") + 
+  ylab('Median RT (ms)') + xlab('Ordinal postion') +
+  scale_x_discrete(limits=c(1:3)) +
+  scale_linetype_manual(name = "condition", values = c('dashed', 'solid')) + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 22),legend.position=c(0.8,0.9)) +
+  ggsave(file.path(fig_path,'s5_condition_order_StructRand.png'), width = w, height = h)
+
+```
+## Fig. S5b. Rand>Struct
+```{r}
+# Median +- CI
+ggplot() +
+ # geom_point(data = data_RS_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(tgt_word)), size = 2) +
+#  geom_line(data = data_RS_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = tgt_word, colour = factor(tgt_word)),size = .5) +
+  geom_point(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median), size = 2) +
+  geom_errorbar(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci),  width = 0.1, size = 0.8) +
+  geom_line(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess, linetype = sess), 
+            color = "black",
+            size = .9) +
+ # facet_grid(.~ sess) +
+#  scale_colour_brewer(name = "condition",palette = "Set1") +
+  #scale_colour_brewer(palette = "Paired") +
+  #labs(colour= "Trial (Word)") + 
+  ylab('Median RT (ms)') + xlab('Ordinal postion') +
+  scale_linetype_manual(name = "condition", values = c('solid', 'dashed')) + 
+  scale_x_discrete(limits=c(1:3)) +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=22),legend.position=c(0.8,0.9)) +
+  ggsave(file.path(fig_path,'s5_condition_order_RandStruct.png'), width = w, height = h)
+
+```
+
+## Fig. 1b. Rainclouds
+```{r}
+data_sum1b <- data %>% # target position x subject
+    summarySE(measurevar = "rt", groupvars = c("tgt_pos","subject","sess"),na.rm=TRUE)
+    
+ggplot(data_sum1b, aes(x = tgt_pos, y = rt_median, fill = tgt_pos)) +
+  geom_point(position = position_jitter(width = .07)) +
+  geom_flat_violin(aes(linetype=sess),position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = TRUE) + 
+  geom_boxplot(aes(linetype=sess),width = 0.1, alpha = 0.5, position = position_nudge(x=0.2,y=0)) +
+  facet_grid(.~ sess) +
+  #scale_fill_manual(values=wes_palette("Royal2")[c(3,4,5)]) +
+  scale_fill_brewer(palette="Dark2") + 
+#  scale_fill_brewer(palette="Pastel2") +
+#  scale_y_continuous(limits=c(380,580)) +
+#  labs(fill = "position") +
+  ylab('Median RT (ms)') + 
+  xlab('Ordinal postion') +
+  guides(fill = FALSE) + 
+  scale_linetype_manual(name = "cond.", values = c('solid', 'dashed')) + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=22),legend.position=c(0.93,0.9),
+        strip.background = element_blank(),
+        strip.text.x = element_blank()) +
+  ggsave(file.path(fig_path,'exp4fig1b_rt_pos.png'), width = w, height = h)
+
+```
+
+# 3. RT Data by Target - Control
+## Summarize
+```{r warning=FALSE}
+# Show RT for position, syllable, session
+data_sum3 <- data %>%
+    summarySE(measurevar="rt", groupvars=c("tgt_pos","target","sess","subject"), na.rm=TRUE) 
+
+# Show RT for session & syllable
+data_sum4 <- data %>%
+    summarySE(measurevar="rt", groupvars=c("target","sess"), na.rm=TRUE) 
+
+# Show RT for position, syllable, session, condition order
+data_sum5 <- data %>%
+    summarySE(measurevar="rt", groupvars=c("tgt_pos","target","sess","subject","cond_order"), na.rm=TRUE) 
+  
+# Show RT for session & syllable & condition order
+data_sum6 <- data %>%
+    summarySE(measurevar="rt", groupvars=c("target","sess","cond_order"), na.rm=TRUE) 
+
+
+```
+
+## a. Plot Targets
+```{r warning=FALSE}
+ggplot() +
+  geom_point(data = data_sum3, mapping = aes(x=target, y=rt_median, colour = tgt_pos), size = 2) +
+  geom_smooth(data = data_sum4, mapping = aes(x =target, y = rt_median, group=1), ci=TRUE,size=1, colour="BLACK") +
+  facet_grid(.~ sess) +
+  scale_colour_brewer(palette = "Set2") +
+  labs(colour= "Target Position") + ylab('Median Response Time (ms) [bars = CI]') + xlab('Syllable (Target)') +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"))# +
+  #ggsave('targetdetection_syllable.png', width = w, height = h+1)
+```
+  # Note: an effect of session, but not condition order
+
+## b. Overlay Targets in each Condition
+```{r warning=FALSE}
+ggplot(data=data_sum4, mapping=aes(x=target, y=rt_median, color=sess)) +
+  geom_point(size=1.5) +
+  geom_smooth(aes(group=sess, fill=sess), ci=TRUE, size=1) +
+  scale_colour_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(colour= "Condition") + ylab('Median Response Time (ms) [bars = CI]') + xlab('Syllable (Target)') +
+  guides(fill=FALSE) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) #+
+ # ggsave('targetdetection_syllable_overlay.png', width = w, height = h+1)
+
+ggplot(data=data_sum4, mapping=aes(x=target, y=rt_mean, color=sess)) +
+  geom_point(size=1.5) +
+  geom_smooth(aes(group=sess, fill=sess), se=TRUE, size=1) +
+  scale_colour_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(colour= "Condition") + ylab('Mean Response Time (ms) [bars = SEM]') + xlab('Syllable (Target)') +
+  guides(fill=FALSE) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold"))# +
+ # ggsave('targetdetection_syllable_overlay_mean.png', width = w, height = h+1)
+
+```
+
+## c. Plot Targets, Orders
+```{r}
+# Struct -> Rand
+data_sum5 %>%
+  dplyr::filter(cond_order=="struct-rand") %>%
+ggplot() +
+  geom_point(mapping=aes(x=target, y=rt_median, colour = tgt_pos), size = 2) +
+  geom_smooth(data=dplyr::filter(data_sum6,cond_order=="struct-rand"), mapping = aes(x = target, y = rt_median, group=1), ci=TRUE,size=1, colour="BLACK") +
+  facet_grid(.~ fct_rev(sess)) +
+  scale_colour_brewer(palette = "Set2") +
+  labs(colour= "Target Position") + ylab('Median Response Time (ms) [bars = CI]') + xlab('Syllable (Target)') +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggtitle("Struct - Rand") #+ 
+ # ggsave('targetdetection_syllable_SR.png', width = w, height = h+1)
+
+# Rand -> Struct
+data_sum5 %>%
+  dplyr::filter(cond_order=="rand-struct") %>%
+ggplot() +
+  geom_point(mapping=aes(x=target, y=rt_median, colour = tgt_pos), size = 2) +
+  geom_smooth(data=dplyr::filter(data_sum6,cond_order=="rand-struct"), mapping = aes(x = target, y = rt_median, group=1), ci=TRUE,size=1, colour="BLACK") +
+  facet_grid(.~ sess) +
+  scale_colour_brewer(palette = "Set2") +
+  labs(colour= "Target Position") + ylab('Median Response Time (ms) [bars = CI]') + xlab('Syllable (Target)') +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggtitle("B. Rand - Struct")# +
+ # ggsave('targetdetection_syllable_RS.png', width = w, height = h+1)
+
+
+```
+
+## d. Overlay Targets, Orders
+```{r}
+# Struct -> Rand
+ggplot(data=dplyr::filter(data_sum6,cond_order=="struct-rand"), mapping=aes(x=target, y=rt_median, colour=sess)) +
+  geom_point(size=1.5) +
+  geom_smooth(aes(group=sess, fill=sess), ci=TRUE, size=1) +
+  scale_colour_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(colour= "Condition") + ylab('Median Response Time (ms) [bars = CI]') + xlab('Syllable (Target)') +
+  guides(fill=FALSE) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggtitle("Struct - Rand") #+ 
+ # ggsave('targetdetection_syllable_SR_overlay_median.png', width = w, height = h+1)
+
+# Rand -> Struct
+ggplot(data=dplyr::filter(data_sum6,cond_order=="rand-struct"),mapping=aes(x=target, y=rt_median, colour=sess)) +
+  geom_point(size=1.5) +
+  geom_smooth(aes(group=sess, fill=sess), ci=TRUE, size=1) +
+  scale_colour_brewer(palette = "Set1") +
+  scale_fill_brewer(palette = "Pastel1") +
+  labs(colour= "Condition") + ylab('Median Response Time (ms) [bars = CI]') + xlab('Syllable (Target)') +
+  guides(fill=FALSE) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) +
+  ggtitle("Rand - Struct")# +
+  #ggsave('targetdetection_syllable_RS_overlay_median.png', width = w, height = h+1)
+
+```
+
+# 4. GLMMs
+```{r}
+data <- data %>%
+  mutate(rt_secs = rt/1000)
+
+data %>% summarySE(., measurevar = "rt_secs", groupvars = c("sess","tgt_pos"), na.rm = TRUE)
+
+```
+
+Save TD Data
+```{r}
+# write.csv(data,file.path("C:/Users/Ava/Desktop/Experiments/interval_adjust/r_scripts_v1/exp_4_rt_data.csv"), row.names = FALSE)
+```
+
+## Load Winning GLM
+```{r}
+load(file.path(res_path,'models','glm_less_slope_sessrand.Rdata'))
+```
+
+## Normality
+```{r}
+# Normality
+shapiro.test(log10(sample(data$rt_secs[!is.na(data$rt_secs)],size=5000,replace=FALSE)))
+# --> data is not even log normal...
+```
+
+## Dist Fit
+Our RT data is continuous, non-zero, and positively skewed. 
+```{r}
+# Very useful resource!: http://www.di.fc.ul.pt/~jpn/r/distributions/fitting.html
+# Explore
+hist(data$rt, main = "RT Histogram")
+plot(density(data$rt[!is.na(data$rt_secs)]), main = "RT Density Estimates")
+plot(ecdf(data$rt[!is.na(data$rt_secs)]), main = "RT Cumulative Distribution")
+
+
+# Params
+mean <- mean(data$rt[!is.na(data$rt_secs)])
+sd <- sd(data$rt[!is.na(data$rt_secs)])
+rts <- data$rt[!is.na(data$rt_secs)]
+rt.z.norm<-(rts-mean)/sd ## standardized data
+n_dist <- length(rt.z.norm)
+
+skewness(rt.z.norm)
+kurtosis(rt.z.norm)
+
+# Explore Basic Fits using QQ
+# Normal? Nope.
+qqnorm(rt.z.norm, main = "RT QQ for Norm Dist.") ## drawing the QQplot
+abline(0,1) 
+# h<-hist(rts,breaks=15)
+# xhist<-c(min(h$breaks),h$breaks)
+# yhist<-c(0,h$density,0)
+# xfit<-seq(min(rts),max(rts),length=40)
+# yfit<- dnorm(xfit,mean,sd)
+# plot(xhist,yhist,type="s",ylim=c(0,max(yhist,yfit)), main="Normal pdf and histogram")
+# lines(xfit,yfit, col="red")
+
+# Early guess: Gamma? Mhm.
+theo.gamma <-rgamma(n=n_dist, shape=mean, scale=sd) ## theorical quantiles given our m, sd
+hist(theo.gamma, main = "Gamma distribution")
+qqplot(rt.z.norm,theo.gamma, main="RT QQ for Gamma Dist.") 
+
+# Goodness of fit using fitdistr and overlaying hist with pdf of theo.
+
+
+descdist(rts, discrete = FALSE)
+descdist(rts, discrete = FALSE, boot = 500)
+# lognormal, gamma, and weibull are all candidates
+fit.wei  <- fitdist(rts, "weibull")
+fit.gam  <- fitdist(rts, "gamma")
+fit.ln <- fitdist(rts, "lnorm")
+summary(fit.wei)
+summary(fit.gam)
+summary(fit.ln)
+
+par(mfrow=c(2,2))
+plot.legend <- c("Weibull", "lognormal", "gamma")
+denscomp(list(fit.wei, fit.gam, fit.ln), legendtext = plot.legend)
+cdfcomp (list(fit.wei, fit.gam, fit.ln), legendtext = plot.legend)
+qqcomp  (list(fit.wei, fit.gam, fit.ln), legendtext = plot.legend)
+ppcomp  (list(fit.wei, fit.gam, fit.ln), legendtext = plot.legend)
+
+gofstat(list(fit.wei, fit.gam, fit.ln), fitnames = c("weibull", "gamma", "lognorm"))
+```
+Could be described by a lognormal or gamma distribution. 
+
+
+## a. Session * Target Position
+```{r}
+options(contrasts = c("contr.sum", "contr.poly"))
+glm.less.int <- glmer(rt_secs ~ sess * tgt_pos + (1 | cond_order/subject), data = data, family = Gamma(link = "log"))
+  summary(glm.less.int)
+  plot(resid(glm.less.int))
+  qqnorm(resid(glm.less.int))
+  Anova(glm.less.int)
+  save(glm.less.int,file = "e4glm_less_int.Rdata")
+```
+
+## b. Session * Condition Order * Target Position
+```{r}
+glm.fuller.int <- glmer(rt_secs ~ sess * cond_order * tgt_pos + (1 | cond_order/subject), data = data, family = Gamma(link = "log"),
+                        control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  summary(glm.fuller.int) 
+  plot(resid(glm.fuller.int))
+  qqnorm(resid(glm.fuller.int))
+  Anova(glm.fuller.int)
+  save(glm.fuller.int,file = "e4glm_full_int.Rdata")
+
+anova(glm.less.int,glm.fuller.int)
+
+coef(glm.fuller.int)
+```
+
+
+```{r}
+(em.test <- emmeans(glm.fuller.int, specs = pairwise ~ cond_order|tgt_pos*sess, adjust = "tukey", transform = "response"))
+
+em.glm.d.sess.tgt.pairs <- em.glm.d.sess.tgt$contrasts %>%
+     summary(infer=TRUE) %>%
+     rbind() %>%
+     as.data.frame()
+
+
+poslabels <- c(
+  `tgt_pos: 1` = "Pos 1",
+  `tgt_pos: 2` = "Pos 2",
+  `tgt_pos: 3` = "Pos 3")
+  `sess: rand` = "rand",
+  `sess: struct` = "struct")
+
+png(file = 'exp4figS4.png', width = w, height = h, res = 300, units = "in")
+plot(em.test, comparisons = TRUE) +
+  xlab("estimated marginal means") +
+  ylab("session order") + 
+  facet_grid(tgt_pos+sess ~ .) + 
+  theme_bw()
+dev.off()
+
+
+
+
+pwpp(em.test$emmeans, method = "pairwise")
+```
+There's no three way interaction (at least, we dont have the power to detect it), evidenced by the fact that the confidence intervals for estimated marginal means are virtually the same for each condition (tgt pos within a session) between orders (rand-struct and struct-rand). 
+
+## a vs. a': Session * Position x Random Slope
+```{r}
+glm.less.slope <- glmer(rt_secs ~ sess * tgt_pos + 
+                          (tgt_pos + sess | cond_order/subject), # correlated intercepts and slopes for tgt pos and sess
+                        data = data, family = Gamma(link = "log"),
+                        control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  summary(glm.less.slope) 
+  plot(resid(glm.less.slope))
+  qqnorm(resid(glm.less.slope))
+  Anova(glm.less.slope)
+  save(glm.less.slope, file = "glm_less_slope.Rdata")
+```
+Model comparison penalizes the two models with random slopes. But try variants of the random effects model first. Note that it removed the singularity. 
+
+## * RanEf Sess x Pos
+```{r}
+glm.less.slope1 <- glmer(rt_secs ~ sess * tgt_pos + (1 | cond_order/subject) + # intercept
+                          (0 + tgt_pos | cond_order/subject), # uncorrelated slopes
+                        data = data, family = Gamma(link = "log"),
+                        control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  summary(glm.less.slope1) 
+  plot(resid(glm.less.slope1))
+  qqnorm(resid(glm.less.slope1))
+  Anova(glm.less.slope1)
+  
+glm.less.slope2 <- glmer(rt_secs ~ sess * tgt_pos + (1 | cond_order/subject) + # intercept
+                          (0 + tgt_pos | cond_order/subject) +
+                          (0 + sess | cond_order/subject), # uncorrelated slopes
+                        data = data, family = Gamma(link = "log"),
+                        control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  summary(glm.less.slope2) 
+  plot(resid(glm.less.slope2))
+  qqnorm(resid(glm.less.slope2))
+  Anova(glm.less.slope2)
+
+# The winner is here!! 
+glm.less.slope3 <- glmer(rt_secs ~ sess * tgt_pos + (1 | cond_order/subject) + # intercept
+                          (0 + sess | cond_order/subject), # uncorrelated slopes for levels of session
+                        data = data, family = Gamma(link = "log"),
+                        control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+  summary(glm.less.slope3) 
+  plot(resid(glm.less.slope3))
+  qqnorm(resid(glm.less.slope3))
+  Anova(glm.less.slope3)
+  save(glm.less.slope3, file = "glm_less_slope_sessrand.Rdata")
+
+anova(glm.less.int,glm.less.slope,glm.less.slope1,glm.less.slope2,glm.less.slope3)
+
+```
+
+
+```{r}
+ranef(glm.less.slope)
+
+ranef(glm.less.slope1)
+
+ranef(glm.less.slope2)
+
+ranef(glm.less.slope3)
+
+
+
+dotplot(ranef(glm.less.slope))
+
+dotplot(ranef(glm.less.slope1))
+
+dotplot(ranef(glm.less.slope2))
+
+dotplot(ranef(glm.less.slope3))
+
+
+dotplot(glm.less.slope3, scales = list(x = list(relation = 'free')))[["subject:cond_order"]]
+
+```
+
+#### -> Save Regression Table Session x Position + (Session)
+```{r}
+stargazer(glm.less.slope3,
+type="html",
+out="4_td_mod_1.doc",
+intercept.bottom = FALSE,
+intercept.top = TRUE,
+ci = TRUE, 
+digits=2,
+notes = "Fitted using Gamma distribution and log link function.",
+model.names = FALSE,
+object.names = FALSE,
+#column.labels = c("lesser", "lesser (random slopes)","fuller"),
+single.row = T,
+title="Table S2. GLM Results",
+align=TRUE, 
+dep.var.labels=c("reaction time (s)"),
+covariate.labels = c("Intercept(Pos 1/Rand)",
+"Struct",
+"Pos 2",
+"Pos 3", 
+"Struct:Pos 2",
+"Struct:Pos 3"),
+add.lines = list(c("Fixed Effects", "Session Order/Subject + Session"),
+                 c("Fixed Effects Struct.", "Rand. Int. + Rand. Slope")))
+```
+
+### Contrasts
+#### position within session
+```{r}
+# express out to 4 digits
+options("scipen"=100, "digits"=4)
+
+# Anova on model 
+car::Anova(glm.less.slope3, type = 3)
+car::Anova(glm.less.slope3, type = 2)
+
+# Contrasts
+(em.tgt_pos.sess <- emmeans(glm.less.slope3, specs = pairwise ~ tgt_pos|sess, adjust = "tukey", transform = "response"))
+
+ps.contrasts = summary(pairs(emmeans(glm.less.slope3, ~ tgt_pos|sess)))
+
+# Cohen's d: divide emmeans estimates by residual sd of generating model:
+ps.contrasts$d = ps.contrasts$estimate / sigmaHat(glm.less.slope3)
+
+pos.sess.c <- em.tgt_pos.sess$contrasts %>%
+     summary(infer=TRUE) %>%
+     cbind(.,ps.contrasts$d) %>%
+     as.data.frame() 
+
+pos.sess.c_out <- pos.sess.c %>%
+  transmute("ordinal position" = contrast, 
+        session = sess,
+        estimate = round(estimate,digits = 3),
+         SE = round(SE, digits =3),
+        df = df,
+         "lower CI" = round(asymp.LCL, digits = 3),
+         "upper CI" = round(asymp.UCL, digits = 3), 
+         "z ratio" = round(z.ratio, digits = 3),
+         "p value" = round(p.value, digits = 3),
+        "Cohen's d" = round(`ps.contrasts$d`,digits = 3))
+  
+  # add_column("s value" = round(-log2(pos.sess.c$p.value),digits = 3))
+
+
+stargazer(pos.sess.c_out, 
+          type = "html", 
+          out = file.path(res_path,'tables',"4_pos_sess_con.doc"), summary = FALSE, rownames = FALSE)
+
+plot(em.tgt_pos.sess, comparisons = TRUE)
+
+emmip(glm.less.slope3, sess ~ tgt_pos) 
+
+# --------------------- Uncorrected
+# em.tgt_pos.sess.n <- emmeans(glm.less.slope3, specs = pairwise ~ tgt_pos|sess, adjust = "none", transform = "response")
+```
+
+#### session within position
+```{r}
+(em.sess.pos <- emmeans(glm.less.slope3, specs = pairwise ~ sess|tgt_pos, adjust = "tukey", transform = "response"))
+
+sp.contrasts = summary(pairs(emmeans(glm.less.slope3, ~ sess|tgt_pos)))
+
+# Cohen's d: divide emmeans estimates by residual sd of generating model:
+sp.contrasts$d = sp.contrasts$estimate / sigmaHat(glm.less.slope3)
+
+plot(em.sess.pos, comparisons = TRUE)
+
+# --------------------- Uncorrected
+# em.sess.pos.n <- emmeans(glm.less.slope3, specs = pairwise ~ sess|tgt_pos, adjust = "none", transform = "response")
+```
+
+```{r}
+#png(file = file.path(fig_path,'fig6_int_pos_and_session.png'), width = w, height = h, res = 300, units = "in")
+emmip(glm.less.slope3, tgt_pos ~ sess, xlab = "Condition", CIs = TRUE, type = "response") +  
+  scale_y_continuous(name="Est. marginal means (s)") +
+  scale_x_discrete(labels = c("random","structure")) +
+  scale_color_brewer(name = "Position",palette="Dark2",guide = NULL) + 
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 22))  
+#dev.off()
+```
+
+## Fig. 3c. RT ~ Pos|Sess EM
+```{r}
+as.data.frame(em.sess.pos$emmeans)
+
+# ggplot(as.data.frame(em.sess.pos$emmeans),aes(x=sess)) + 
+#   geom_boxplot(
+#     aes(y=response,color=tgt_pos,linetype=sess,
+#                    lower = response-SE,
+#                    middle = response,
+#                    upper = response+SE,
+#                    stat = "identity"))
+
+
+ggplot(as.data.frame(em.sess.pos$emmeans),aes(x=sess,y=response)) + 
+  geom_pointrange(aes(ymin = asymp.LCL, ymax = asymp.UCL,color=tgt_pos,linetype=sess), position = position_dodge(width = 0.2)) + 
+  geom_line(aes(group=tgt_pos,color=tgt_pos), position = position_dodge(width = 0.2)) + 
+  scale_color_brewer(palette="Dark2",name="Position") + 
+  scale_linetype_manual(guide = NULL,values = c("solid","dashed")) + 
+  scale_y_continuous(name="Est. marginal means (s)") +
+  scale_x_discrete(labels = c("random","structure"), name = "Condition") +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=22),legend.position="top") +
+  ggsave(file.path(fig_path,'fig3c_estimatedmeans.png'), width = w, height = h)
+
+```
+
+```{r}
+require(ggplot2)
+ggplot(data, aes(sess,rt,color = tgt_pos,linetype = sess)) + 
+  geom_boxplot(outlier.shape = NA,varwidth=FALSE) +
+  scale_color_brewer(palette="Dark2",name="Position") + 
+  scale_linetype_manual(guide = NULL,values = c("solid","dashed"))
+ # geom_line(aes(group = tgt_pos))
+```
+
+#### control: three-way int
+```{r}
+(em.test <- emmeans(glm.fuller.int, specs = pairwise ~ cond_order|sess*tgt_pos, adjust = "tukey", transform = "response"))
+car::Anova(glm.fuller.int, type = "III")
+em.test$contrasts %>%
+     summary(infer=TRUE) %>%
+     rbind() %>%
+     as.data.frame()
+
+plot(em.test, comparisons = TRUE)
+
+
+#png(file = 'exp4figS2.png', width = w, height = h, res = 300, units = "in")
+emmip(glm.fuller.int, tgt_pos*sess ~ cond_order, xlab = "session order", CIs = TRUE) +
+  labs(color = "position") + 
+  scale_color_brewer(palette = "Dark2") +
+  #scale_color_manual(values = c(RColorBrewer::brewer.pal(3,"Dark2"),RColorBrewer::brewer.pal(3,"Pastel2"))) + 
+  theme(legend.title = element_text(face = "bold")) + 
+  theme_bw()
+#dev.off()
+
+```
+
+## Contra Honey: Control
+```{r}
+data <- data %>% mutate(trial = as.factor(trial),target_num = as.factor(target_num))
+
+check.lm.40 <- lm(rt ~ target_num, data)
+summary(check.lm.40)
+plot(resid(check.lm.40))
+Anova(check.lm.40)
+
+check.lm.4 <- lm(rt ~ target_num*sess, data)
+summary(check.lm.4)
+plot(resid(check.lm.4))
+Anova(check.lm.4)
+
+emmeans(check.lm.4, specs = pairwise ~ target_num*sess, adjust = "Tukey", transform = "response")
+```
+
+## Fig. S2d. Target Num * Sess
+```{r}
+
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median))
+
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","sess"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median, group = sess, color = sess))
+
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","trial"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median, group = trial)) + 
+  facet_wrap(. ~ trial, nrow = 2)
+
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","trial","sess"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median, group = sess, linteype = sess)) +
+  facet_wrap(. ~ trial, nrow = 2)
+
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","sess","tgt_pos"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median, group = tgt_pos, color = tgt_pos)) +
+  facet_wrap(. ~ sess, nrow = 2)
+
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","trial","tgt_pos", "sess"),na.rm = TRUE)) +
+  geom_smooth(aes(target_num,rt_median, group = tgt_pos, color = tgt_pos, linetype = sess)) +
+  facet_wrap(. ~ trial, nrow = 2)
+
+
+
+ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","sess"),na.rm = TRUE)) +
+  geom_point(aes(target_num,rt_mean), size = 2) +
+  geom_line(aes(target_num,rt_mean, group = sess, linetype = sess)) + 
+  geom_smooth(aes(target_num,rt_mean, group = sess, linetype = sess), color = "red") + 
+  scale_y_continuous(name = "Mean RT (ms)") +
+  scale_x_discrete(name = "Target number")  +
+  #scale_color_brewer(palette = "Set1") + 
+  scale_linetype_manual(name = "condition", values = c('solid', 'dashed')) + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 22), legend.position = "top") +
+  ggsave(file.path(fig_path,'figs2c_tgt_num_exp4.png'), width = w, height = h)
+
+```
+
+
+## - Target Position
+```{r}
+# glm.e <- glmer(rt_secs ~ tgt_pos + (1 | cond_order/subject), data = data, family = Gamma)
+#   summary(glm.e)
+#   plot(glm.e)
+#   qqnorm(resid(glm.e))
+#   Anova(glm.e)
+#   
+# anova(glm.less.int,glm.e) # Go with a...
+```
+
+glm.lesser.int (factor session only) appears to win out in all model comparisons. For the sake of pursuing planned analyses, we will look at this one, but also glm.less.int (with session*target position as factors). 
+
+
+
+## - Session
+```{r}
+# glm.lesser.int <- glmer(rt_secs ~ sess + (1 | cond_order/subject), data = data, family = Gamma(link = "log"),
+#                         control = glmerControl(optimizer="bobyqa",
+#                             optCtrl=list(maxfun=2e5)))
+#   summary(glm.lesser.int)
+#   plot(glm.lesser.int)
+#   qqnorm(resid(glm.lesser.int)) # How to properly interpret this? 
+#   Anova(glm.lesser.int)
+# Notes: Fit is singular, session has a very siginficant effect, and subject and condition order account for negligible variance.
+```
+
+Contrasts: rand-struct
+```{r}
+# Source: https://aosmith.rbind.io/2019/03/25/getting-started-with-emmeans/
+# Learn more about contrasts with emmeans.
+# ?contrast.emmGrid
+# ?`emmc-functions`
+# ?`contrast-methods`
+# Note that emmeans also supports glht function in the multcomp package
+
+# (em.glm.lesser.int <- emmeans(glm.lesser.int, specs = pairwise ~ sess, adjust = "tukey", transform = "response"))
+# 
+# # Confidence Intervals
+# em.glm.lesser.int.pairs <- em.glm.lesser.int$contrasts %>%
+#     summary(infer=TRUE) # same as confint() but adds p-value
+#      rbind() %>%
+#      as.data.frame()
+#      
+# # blue bars are CI for emm, red bars are comparisons among them
+# plot(em.glm.lesser.int, comparisons = TRUE)
+# 
+# pwpp(em.glm.lesser.int$emmeans, method = "pairwise")
+# #https://rdrr.io/cran/emmeans/man/pwpp.html
+# 
+# emmip(glm.lesser.int, sess ~ sess, type = "response") 
+# #https://rdrr.io/cran/emmeans/f/vignettes/messy-data.Rmd
+# 
+# # --------------------- Uncorrected
+# 
+# (em.glm.lesser.int_unc <- emmeans(glm.lesser.int, specs = pairwise ~ sess, adjust = "none", transform = "response"))
+# 
+# plot(em.glm.lesser.int_unc, comparisons = TRUE)
+# 
+# pwpp(em.glm.lesser.int_unc$emmeans, method = "pairwise")
+
+```
+
+## - Session * Condition Order
+```{r}
+# glm.b.i <- glmer(rt_secs ~ sess + cond_order + (1 | cond_order/subject), data = data, family = Gamma)
+#   summary(glm.b.i)
+#   plot(glm.b.i)
+#   qqnorm(resid(glm.b.i))
+#   Anova(glm.b.i)
+#   
+# anova(glm.lesser.int,glm.b.i)
+# No true difference between these models... 
+
+# glm.full.int <- glmer(rt_secs ~ sess * cond_order + (1 | cond_order/subject), data = data, family = Gamma(link = "log"))
+#   summary(glm.full.int)
+#   plot(resid(glm.full.int))
+#   qqnorm(resid(glm.full.int))
+#   Anova(glm.full.int)
+#   # Note: an effect of session, but not order nor the interaction
+# 
+# anova(glm.lesser.int,glm.full.int)
+# Again, no true difference...
+```
+
+# 5. Delta RTs
+## Calculate
+```{r}
+# take the diff between median RTs to positions 1,2,3
+# D1-2, D2-3, D1-3
+options(scipen=999)
+data_delta <- data_sum7 %>% 
+  arrange(subject, sess,tgt_word) %>%
+  group_by(subject,sess,tgt_word) %>%
+  mutate(delta = rt_median - lead(rt_median,default=first(rt_median))) %>%
+  mutate(delta = round(delta,digits=5))
+#This works for 1-2 and 2-3, but for 3-1 it pulls the "1" not from the same group, but from the next item in the array. adding order_by as an argument in lead, leads it to pull from the next grouping factor (i.e. 1st item in struct-tgt_word 1 after rand-tgt_word 1)
+data_delta <- data_delta %>%
+    arrange(subject,sess,tgt_word) %>%
+    group_by(subject,sess,tgt_word) %>%
+    mutate(delta1.3 = rt_median - lead(rt_median,n=2)) %>%
+    mutate(delta1.3 = data.table::shift(delta1.3,n=2))
+
+vals.1.3 <- data_delta$delta1.3[which(data_delta$tgt_pos==3)]
+data_delta$delta[which(data_delta$tgt_pos==3)] <- vals.1.3
+
+data_delta <- data_delta[,-13]
+
+data_delta <- data_delta %>%
+ mutate(cond_order = 0) 
+data_delta$cond_order[which(data_delta$subject %in% subjs_SR)] = "struct-rand"
+data_delta$cond_order[which(data_delta$subject %in% subjs_RS)] = "rand-struct"
+
+# Target positions should be recoded to delta 1-2, 2-3, 1-3 to avoid confusion. 
+colnames(data_delta)[2] <- "delta_rt"
+data_delta <- data_delta %>% 
+  mutate(
+    delta_rt = case_when(delta_rt==1 ~ "D1-2",
+                         delta_rt==2 ~ "D2-3",
+                         delta_rt==3 ~ "D1-3"))
+data_delta <- data_delta %>% mutate(delta_rt = as.factor(delta_rt))
+data_delta$delta_rt <- factor(data_delta$delta_rt, levels = c("D1-2", "D2-3", "D1-3"))
+
+
+write.csv(data_delta,file.path(data_path,"exp_4_rt_data_delta.csv"), row.names = FALSE)
+```
+
+## Plot
+Plot the mean of the differences between median RTs...
+```{r}
+data_sum9 <- data_delta %>%
+    summarySE(measurevar="delta", groupvars=c("delta_rt","sess","tgt_word"), na.rm=TRUE)
+data_sum10 <- data_delta %>%
+    summarySE(measurevar="delta", groupvars=c("delta_rt","sess"), na.rm=TRUE)
+
+ggplot() +
+  geom_point(data = data_sum9, mapping = aes(x=delta_rt,y=delta_mean, colour = factor(tgt_word)), size = 2) +
+  geom_line(data = data_sum9, mapping = aes(x = delta_rt, y = delta_mean, group = tgt_word), colour = "GREY",size = .5) +
+  geom_point(data = data_sum10, mapping = aes(x = delta_rt, y = delta_mean), colour = "BLACK") +
+  geom_errorbar(data = data_sum10, mapping = aes(x = delta_rt, y = delta_mean, ymin = delta_mean-se, ymax = delta_mean+se), colour = "BLACK", width = 0.1, size = 0.8) +
+  geom_line(data = data_sum10, mapping = aes(x = delta_rt, y = delta_mean, group = 1), colour = "BLACK", size = .9) +
+  facet_grid(~sess) +
+  scale_colour_brewer(palette = "Paired") +
+  labs(colour= "Trial (Word)") + ylab('Mean of Median Differences (ms) [bars = SEM]') + xlab(expression(Delta*"Target Position")) +
+  scale_x_discrete(labels=c(expression(delta*"1-2"),expression(delta*"2-3"),expression(delta*"1-3"))) +
+  theme_minimal() +
+  theme(text = element_text(family = "LM Roman 10", face="bold")) #+
+ # ggsave('targetdetection_delta_means.png', width = w, height = h)
+
+
+```
+
+## Fit Dist
+```{r}
+deltas <- data_delta$delta[!is.na(data_delta$delta)]
+
+# A
+delta_z<-(deltas-mean(deltas))/sd(deltas) 
+n_dist <- length(deltas)
+qqnorm(delta_z, main = "RT QQ for Norm Dist.") ## drawing the QQplot
+abline(0,1) 
+
+# B
+descdist(deltas, discrete = FALSE)
+fit.norm.delta  <- fitdist(deltas, "norm")
+summary(fit.norm.delta)
+par(mfrow=c(2,2))
+plot.legend <- c("normal")
+denscomp(list(fit.norm.delta), legendtext = plot.legend)
+cdfcomp (list(fit.norm.delta), legendtext = plot.legend)
+qqcomp  (list(fit.norm.delta), legendtext = plot.legend)
+ppcomp  (list(fit.norm.delta), legendtext = plot.legend)
+
+shapiro.test(deltas) # marginally normal! it's fine.
+
+```
+The distribution is roughly normal. Proceed with gaussian fits. 
+
+## Stats
+```{r}
+glm.deltas <- glmer(delta ~ sess * delta_rt + (1 | cond_order/subject), data = data_delta, family = gaussian)
+  summary(glm.deltas)
+  plot(glm.deltas)
+  qqnorm(resid(glm.deltas))
+  Anova(glm.deltas)
+```
+
+### Contrasts
+```{r}
+(em.deltas.sess <- emmeans(glm.deltas, specs = pairwise ~ delta_rt|sess, adjust = "tukey", transform = "response"))
+
+em.deltas <- emmeans(glm.deltas, specs = pairwise ~ sess|delta_rt, adjust = "tukey", transform = "response")
+
+em.deltas$contrasts 
+
+em.deltas$emmeans 
+
+em.deltas.pairs <- em.deltas$contrasts %>%
+     summary(infer=TRUE) %>%
+     rbind() %>%
+     as.data.frame()
+
+em.deltas.pairs$tgt_pos <- c("D1-2","D2-3","D1-3")
+colnames(em.deltas.pairs)[2] <- "delta.rt"
+
+plot(em.deltas, comparisons = TRUE)
+```
+
+
