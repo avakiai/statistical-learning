@@ -1,5 +1,5 @@
 ---
-title: 'Target Detection: Exps 3 & 4'
+title: 'Exploratory Analyses: Exps 3 & 4'
 author: "Ava Kiai"
 output:
   pdf_document: default
@@ -24,7 +24,6 @@ library(wesanderson)
 pal <- wes_palette("Zissou1", 100, type = "continuous")
 
 library(DescTools) # for FisherZ()
-
 library(ggfortify) # for autoplot in PCA plotting
 
 ```
@@ -104,8 +103,6 @@ exp_3_data_delta <- exp_3_data_delta %>%
 exp_3_data_delta$delta_rt <- factor(exp_3_data_delta$delta_rt, levels = c("D1-2", "D2-3", "D1-3"))
 
 ```
-
-
 For the exploratory graphs here, we chose to maintain word as a grouping factor, which may help visualize some of the variance. (In the main analyses for the two studies, we went straight for collapsing these levels.)
 
 ## Plot "delta" RTs
@@ -186,7 +183,7 @@ exp_4_data_s <- dplyr::filter(exp_4_data,sess=="struct")
           summarySE(measurevar = "rt_median",groupvars = c("tgt_pos","tgt_word","sess"), na.rm=TRUE)
 ```
 
-# Data Exploration: Experiments 3 & 4 
+## Data Exploration: Experiments 3 & 4 
 ```{r}
 # Exp 3
 ggplot() +
@@ -222,7 +219,7 @@ ggplot() +
 
 ```
 
-#Combine experiment 3 & 4 data to run another glm... 
+## Combine experiment 3 & 4 data to run another glm... 
 ```{r}
 combined_data <- rbind(
   exp_3_data %>% mutate(exp="exp 3") %>% add_column(cond_order = NA, .after = "subject") %>% add_column(sess = NA, .before = "block"),
@@ -267,6 +264,7 @@ plot(combined.emm2, comparisons = TRUE)
 pwpp(combined.emm2$emmeans, method = "pairwise")
 ```
 But the behavior within experiments is the same. With a larger marginal decrease in RT between 1 and 2,3, and a smaller but still significant decrease between 2 & 3. 
+
 ## Parameter Exploration
 ```{r}
 glance(combined.mod.log)
@@ -605,7 +603,7 @@ coef_plot
 ```
 
 #-------------------------------------------------------------------------------------------
-# Final Version for 
+# Final Version for Exp 3
 ```{r}
 intercept_mod.3.log.block <- glmer(rt_secs ~  tgt_pos*block + (1| subject), data = exp_3_data, family = Gamma(link = "log"))
 summary(intercept_mod.3.log.block)
@@ -864,7 +862,7 @@ More on this package: https://www.datanovia.com/en/blog/cluster-analysis-in-r-si
 Kernel density, see jupyter: https://stats.stackexchange.com/questions/40454/determine-different-clusters-of-1d-data-from-database
 
 
-##v1: against target position
+## v1: against target position
 ```{r}
 # step 1: remove na data
 cluster_3 <- exp_3_data %>% select(tgt_pos,rt) %>% na.omit() %>% mutate(tgt_pos = as.numeric(tgt_pos)) %>%
@@ -904,7 +902,7 @@ k1.cluster_3 <- kmeans(cluster_3, centers = 1, nstart = 25)
 fviz_cluster(k1.cluster_3, data = cluster_3)
 ```
 
-##v2: rt vs. rt
+## v2: rt vs. rt
 I tried also plotting rt against itself, thinking this might let the clustering occur more naturally. 
 ```{r}
 # step 1: remove na data & znorm
@@ -941,11 +939,8 @@ fviz_cluster(k3.cluster_3c, data = cluster_3c)
 ```
 
 
-
 ## v4: rt3 vs. rt4
 So I thought, why not try to make a 2D array that includes data from both sets? Although we'd have to throw out quite a bit of data to make the arrays equal lengths. 
-
-
 ```{r}
 cluster_3.5 <- exp_3_data %>% select(rt) %>% na.omit() %>% scale() %>% 
   sample(size=nrow(exp_4_data %>% select(rt) %>% na.omit())) %>%
@@ -988,6 +983,7 @@ fviz_cluster(k5.cluster_3.5, data = cluster_3.5)
 ```
 Ok, well that seemed to work reasonably well... At least we have well-formed plots.
 So what's the optimal cluster size?
+
 ### Elbow Method
 ```{r}
 set.seed(123)
@@ -1679,7 +1675,7 @@ ggplot(data = subj_avgs_matout.cov.melted, aes(x=Var1, y=Var2, fill=value)) +
 
 
 #-------------------------------------------------------------------------------------------
-# Combined E3 & E4
+# RSA Combined E3 & E4
 ## Cor()
 ```{r}
 exp_4_data_comb <- exp_4_data_s %>%
@@ -2382,10 +2378,5 @@ coef(slope_mod.3.num)
 
 # Variance components for each subject 
 ranef(slope_mod.3.num)
-```
-
-
-```{r}
-
 ```
 

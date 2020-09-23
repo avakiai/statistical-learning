@@ -4,14 +4,14 @@ author: "Ava Kiai"
 date: "9/8/2020"
 output: html_document
 ---
-# Load & Init.
+Code for the final two analyses in Kiai & Melloni 2020: RSA on group-level RTs for each feature, and RSA for individuals, correlated with their word recognition performance. 
 
+## Load & Init.
 ```{r}
 library(tidyverse)
 library(extrafont)
 par(family="LM Roman 10")
 library(DescTools) 
-library(rcompanion)
 ```
 
 ```{r}
@@ -21,7 +21,6 @@ library(rcompanion)
 fig_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/combined'
 res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/combined'
 #source("summarySE.R")
-
 exps.3.4.data <- read_csv('C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/combined/exps_3_4s_data.csv', col_types = "cccdddcddddc") %>% mutate(subject = as.factor(subject),
                   cond_order = as.character(cond_order),
                   sess = as.character(sess), 
@@ -31,8 +30,6 @@ exps.3.4.data <- read_csv('C:/Users/Ava/Desktop/Experiments/statistical_learning
                   exp = as.factor(exp))
 
 ```
-
-
 
 ## Compute Correlation Matrices
 ```{r}
@@ -136,49 +133,22 @@ for (curr_subj in unique(exps.3.4.data$subject)) {
   all.cor.diss.list <- append(all.cor.diss.list, list(curr_data.cor.diss)) # 1-correlations
 }
 
-# avg.z.list <- reduce(all.z.list, `+`, na.rm = TRUE) / length(all.z.list)
-# ^ can't handle NAs
-
-# avg.cor.list <- rowMeans(do.call(cbind, all.cor.list), na.rm = TRUE)
-# ^ doesn't perform intended function (mean matrix), but also, the Inf values generated
-# by the Fisher transform make the outputs Inf. Possible solution is to recode z of Inf
-# for cor of 1 to the z value for a correlation of 0.99...
-
-# But I wonder if it's necesary to perform the z transform. Why not just average the correlation
-# matrices? After all, they are all on the same scale and express relationships between the items, 
-# rather than absolute values, which is what we intended. 
-# So now, just find how to perform matrix average that ignores NAs in the correlation matrix.
 
 # Fisher Z merely makes the sampling distribution more normal to make calculation easier, but
 # it's not required if the computation is performed on a computer that can handle the exact 
 # (however skewed) true distribution: https://stats.stackexchange.com/questions/420142/why-is-fisher-transformation-necessary
 
-# Ok, these work! For the z's, the diag is infinite
+# For the z's, the diag is infinite
 # all.cor <- apply(simplify2array(all.cor.list), 1:2, mean, na.rm= TRUE)
 # all.z <- apply(simplify2array(all.cor.z.list), 1:2, mean, na.rm= TRUE)
 # The results of these two are nearly identical -- identical out to about 3 digits, but indeed the z's are normal-ish
 
-# The problem with all.cor.diss.z.list is that some values are > 1, which is incalculable for the z transformation. Thus, many
+# The problem with all.cor.diss.z.list is that some 1-corr values are > 1, which is incalculable for the z transformation. Thus, many
 # values become NA. 
-
-# > go with z transform of corr()
-  
-# all.diss.z <- FisherZ(all.cor.diss)
-# apply(simplify2array(all.cor.diss),1:2, na.rm = TRUE)
 ```
+To avoid data loss due to particularities of the Fisher Z transformation, and to normalize the distribution of correlation values, we will perform the RSA on z-transformed similarity (corrlation) values. 
 
-## Group-Level Analysis
-```{r}
-# meta_table <- data.frame(data = as.factor(0),
-#                             test = as.factor(0),
-#                             n = as.double(0),
-#                             w = as.double(0),
-#                             CI.low = as.double(0),
-#                             CI.hi = as.double(0),
-#                             p = as.double(0))
-
-```
-
+# Group-Level Analysis
 Procedure: 
 1. Take 1-correlations for each subject, z transform
 #### Set analysis type
@@ -205,9 +175,6 @@ label <- 'similarity z('
 
 ```
 
-
-
-
 2. Sample 200 times with replacement from all participant's matrices for each within vs. across category; subsample arrays to make them equal in length.
 3. Compute wilcoxon
 
@@ -218,7 +185,6 @@ For each test, we look at the correlation between items in each category vs. ite
 ```{r}
 set.seed(42)
 ```
-
 
 ### - Ordinal Position
 Within: 
@@ -261,54 +227,15 @@ across.OP <- across.OP[!is.na(across.OP)] # remove NA
 # compute maximum length
 (n.op <- round(min(length(within.OP),length(across.OP))*(4/5)))
 
-
 # sample & bootstrap to produce a matrix and bootstrapped means
 within.OP.samp <- as.numeric(replicate(200, sample(within.OP, size = n.op, replace = TRUE)))
 within.OP.means <- replicate(200, mean(sample(within.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
-# mean(within.OP.samp, na.rm=TRUE)
-# length(within.OP.samp)
-# within.OP.samp <- double()
-# within.OP.means <- double()
-# for (boot in 1:200) {
-#   aktuel <- as.numeric(replicate(1,sample(within.OP, size = n.op, replace = TRUE)))
-#   aktuel.mittel <- mean(aktuel)
-#   within.OP.samp <- append(within.OP.samp,aktuel)
-#   within.OP.means <- append(within.OP.means,aktuel.mittel)
-# }  
 
 across.OP.samp <- as.numeric(replicate(200, sample(across.OP, size = n.op, replace = TRUE)))
 across.OP.means <- replicate(200, mean(sample(across.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
-# mean(across.OP.samp, na.rm = TRUE)
-#length(across.OP.samp)
-# across.OP.samp <- double()
-# across.OP.means <- double()
-# for (boot in 1:200) {
-#   aktuel <- as.numeric(replicate(1,sample(across.OP, size = n.op, replace = TRUE)))
-#   aktuel.mittel <- mean(aktuel)
-#   across.OP.samp <- append(across.OP.samp,aktuel)
-#   across.OP.means <- append(across.OP.means,aktuel.mittel)
-# } 
 
 
 (wt.OP <- wilcox.test(within.OP.samp,across.OP.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
-
-# Effect size = Z statistic divided by the square root of the sample size (N) (Z/sqrt(N)). The Z value is extracted from either coin::wilcoxsign_test()
- 
-#coin::wilcoxsign_test(within.OP.samp ~ across.OP.samp, distribution = "exact")
-# This took way way too long, had to stop.  
-
-# This throws an error that there are not enough x (finite) observations. I could not figure out how to debug this.  
-#rcompanion::wilcoxonPairedR(within.OP.samp, across.OP.samp)
-#histogram = TRUE, conf = 0.95, type = "perc", R = 1000, cases = TRUE, digits = 3)
-# 
-# meta_table <- rbind(meta_table,
-#                     data.frame(data = name,
-#                     n = n.op,
-#                     test = 'ordinal position',
-#                     w = wt.OP$statistic,
-#                     CI.low = wt.OP$conf.int[1],
-#                     CI.hi = wt.OP$conf.int[2],
-#                     p = wt.OP$p.value))
 ```
 
 
@@ -324,11 +251,6 @@ Across:
 wn.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10)) # low TP
 ac.TP <- list(c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
              c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12))
-
-# wn.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10), # low TP
-#               c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
-#              c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12))
-# ac.TP <- list(c(1,2),c(4,5),c(7,8),c(10,11)) # .33-1 crosses within words
 
 wn.tp.arr <- list()
 for (i in 1:length(wn.TP)) {
@@ -361,38 +283,12 @@ across.TP <- across.TP[!is.na(across.TP)] # remove NA
 
 within.TP.samp <- replicate(200, sample(within.TP, size = n.tp, replace = TRUE)) 
 within.TP.means <- replicate(200, mean(sample(within.TP, size = n.tp, replace = TRUE), na.rm = TRUE)) 
-# mean(within.TP.samp,na.rm = TRUE)
+
 across.TP.samp <- replicate(200, sample(across.TP, size = n.tp, replace = TRUE)) 
 across.TP.means <- replicate(200, mean(sample(across.TP, size = n.tp, replace = TRUE), na.rm = TRUE)) 
-# mean(across.TP.samp)
-# within.TP.samp <- double()
-# within.TP.means <- double()
-# for (boot in 1:200) {
-#   aktuel <- as.numeric(replicate(1,sample(within.TP, size = n.op, replace = TRUE)))
-#   aktuel.mittel <- mean(aktuel)
-#   within.TP.samp <- append(within.TP.samp,aktuel)
-#   within.TP.means <- append(within.TP.means,aktuel.mittel)
-# } 
-# across.TP.samp <- double()
-# across.TP.means <- double()
-# for (boot in 1:200) {
-#   aktuel <- as.numeric(replicate(1,sample(across.TP, size = n.op, replace = TRUE)))
-#   aktuel.mittel <- mean(aktuel)
-#   across.TP.samp <- append(across.TP.samp,aktuel)
-#   across.TP.means <- append(across.TP.means,aktuel.mittel)
-# } 
 
 
 (wt.TP <- wilcox.test(within.TP.samp,across.TP.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
-
-# meta_table <- rbind(meta_table, 
-#                     data.frame(data = name, 
-#                      n = n.tp,
-#                      test = 'transitional probability',
-#                      w = wt.TP$statistic,
-#                      CI.low = wt.TP$conf.int[1],
-#                      CI.hi = wt.TP$conf.int[2],
-#                      p = wt.TP$p.value))
 
 ```
 
@@ -441,43 +337,17 @@ across.WI <- across.WI[!is.na(across.WI)] # remove NA
 
 within.WI.samp <- replicate(200, sample(within.WI, size = n.wi, replace = TRUE)) 
 within.WI.means <- replicate(200, mean(sample(within.WI, size = n.wi, replace = TRUE), na.rm = TRUE)) 
-# mean(within.WI.samp,na.rm=TRUE)
+
 across.WI.samp <- replicate(200, sample(across.WI, size = n.wi, replace = TRUE)) 
 across.WI.means <- replicate(200, mean(sample(across.WI, size = n.wi, replace = TRUE), na.rm = TRUE)) 
-# mean(across.WI.samp, na.rm=TRUE)
-# within.WI.samp <- double()
-# within.WI.means <- double()
-# for (boot in 1:200) {
-#   aktuel <- as.numeric(replicate(1,sample(within.WI, size = n.op, replace = TRUE)))
-#   aktuel.mittel <- mean(aktuel)
-#   within.WI.samp <- append(within.WI.samp,aktuel)
-#   within.WI.means <- append(within.WI.means,aktuel.mittel)
-# } 
-# across.WI.samp <- double()
-# across.WI.means <- double()
-# for (boot in 1:200) {
-#   aktuel <- as.numeric(replicate(1,sample(across.WI, size = n.op, replace = TRUE)))
-#   aktuel.mittel <- mean(aktuel)
-#   across.WI.samp <- append(across.WI.samp,aktuel)
-#   across.WI.means <- append(across.WI.means,aktuel.mittel)
-# } 
-(wt.WI <- wilcox.test(within.WI.samp,across.WI.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
 
-# meta_table <- rbind(meta_table, 
-#                     data.frame(data = name,   
-#                       n = n.wi,
-#                      test = 'word identity',
-#                      w = wt.WI$statistic,
-#                      CI.low = wt.WI$conf.int[1],
-#                      CI.hi = wt.WI$conf.int[2],
-#                      p = wt.WI$p.value))
+(wt.WI <- wilcox.test(within.WI.samp,across.WI.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
 ```
 
 
 ### - Duplet Identity
 Within: All proper duplets, 1-2s, 2-3s
 Across: 1-3's
-
 ```{r}
 wn.di <- list(c(1,2),c(2,3),
               c(4,5),c(5,6),
@@ -516,41 +386,15 @@ across.di <- across.di[!is.na(across.di)] # remove NA
 
 within.di.samp <- replicate(200, sample(within.di, size = n.di, replace = TRUE))
 within.di.means <- replicate(200, mean(sample(within.di, size = n.di, replace = TRUE), na.rm = TRUE))
-# mean(within.di.samp, na.rm = TRUE)
+
 across.di.samp <- replicate(200, sample(across.di, size = n.di, replace = TRUE))
 across.di.means <- replicate(200, mean(sample(across.di, size = n.di, replace = TRUE), na.rm = TRUE))
-# mean(across.di.samp, na.rm =TRUE)
-# within.di.samp <- double()
-# within.di.means <- double()
-# for (boot in 1:200) {
-#   aktuel <- as.numeric(replicate(1,sample(within.di, size = n.op, replace = TRUE)))
-#   aktuel.mittel <- mean(aktuel)
-#   within.di.samp <- append(within.di.samp,aktuel)
-#   within.di.means <- append(within.di.means,aktuel.mittel)
-# } 
-# across.di.samp <- double()
-# across.di.means <- double()
-# for (boot in 1:200) {
-#   aktuel <- as.numeric(replicate(1,sample(across.di, size = n.op, replace = TRUE)))
-#   aktuel.mittel <- mean(aktuel)
-#   across.di.samp <- append(across.di.samp,aktuel)
-#   across.di.means <- append(across.di.means,aktuel.mittel)
-# } 
 
 (wt.DI <- wilcox.test(within.di.samp,across.di.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
 
-
-# meta_table <- rbind(meta_table, 
-#                     data.frame(data = name, 
-#                      n = n.di,  
-#                      test = 'duplet identity',
-#                      w = wt.DI$statistic,
-#                      CI.low = wt.DI$conf.int[1],
-#                      CI.hi = wt.DI$conf.int[2],
-#                      p = wt.DI$p.value))
 ```
 
-This was essentiall 4 Mann-Whitney Tests:  if both x and y are given and paired is FALSE, a Wilcoxon rank sum test (equivalent to the Mann-Whitney test: see the Note) is carried out. In this case, the null hypothesis is that the distributions of x and y differ by a location shift of mu and the alternative is that they differ by some other location shift (and the one-sided alternative "greater" is that x is shifted to the right of y).
+This was essentially 4 Mann-Whitney Tests:  if both x and y are given and paired is FALSE, a Wilcoxon rank sum test (equivalent to the Mann-Whitney test: see the Note) is carried out. In this case, the null hypothesis is that the distributions of x and y differ by a location shift of mu and the alternative is that they differ by some other location shift (and the one-sided alternative "greater" is that x is shifted to the right of y).
 
 P-values computed via normal approximation.
 
@@ -631,7 +475,7 @@ ggplot(WA.wilcox) +
 
 
 
-## Subject-Level Analysis
+# Subject-Level Analysis
 
 ### Recompute Correlation Matrices for Experiment 3 only
 The subjects used in the previous analysis were from both exp's 3 and 4. Here, we want only those from experiment 3, so that we can compare their rt patterns with their offline word recognition performance. We'll re-run the analysis above but separate out the kids from the first experiment first. 
@@ -722,21 +566,18 @@ for (curr_subj in unique(exp.3.only$subject)) {
 
 Procedure: 
 1. Take 1-correlations for each subject, z transform
-#### Set analysis type
+### Set analysis type
 ```{r eval=FALSE, include=FALSE}
-# Group level analysis on this matrix: 
-
-
 # Dissimilarity Matrix
 # single.analysis <- exp3.cor.diss.list
 # single.analysis <- exp3.cor.diss.z.list
+
 # Similarity Matrix
 # single.analysis <- exp3.cor.list
  single.analysis <- exp3.cor.z.list
 
  
 ```
-
 
 ```{r}
 subj_table <- data.frame(subject = as.double(0),
@@ -753,7 +594,7 @@ subj_table <- data.frame(subject = as.double(0),
   # p = as.double(0))
 ```
 
-### Compute
+### Compute RSA for all positions
 ```{r eval=FALSE, include=FALSE}
 
 for (curr.subj in 1:length(single.analysis)) {
@@ -792,12 +633,9 @@ across.OP <- across.OP[!is.na(across.OP)] # remove NA
 #if(n.op < 2*((1/2)^12)) {"OP min p > 0.0004."}
 
 # Bootstrap/permute
-#within.OP.samp <- sample(within.OP, size = n.op, replace = FALSE) 
 within.OP.mean <- mean(within.OP) 
-#across.OP.samp <- sample(across.OP, size = n.op, replace = FALSE) 
 across.OP.mean <- mean(across.OP)
-# Test
-#(wt.OP <- wilcox.test(within.OP.samp,across.OP.samp, conf.int = TRUE, conf.level = 0.95, paired = FALSE))
+
 
 normed.mu <- within.OP.mean/across.OP.mean
 
@@ -888,12 +726,12 @@ across.WI <- across.WI[!is.na(across.WI)] # remove NA
 #(n.wi <- round(min(length(within.WI),length(across.WI))))
 #if(n.wi < 2*((1/2)^12)) {"OP min p > 0.0004."}
 
-#within.WI.samp <- sample(within.WI, size = n.wi, replace = FALSE)
 within.WI.mean <- mean(within.WI)
-#across.WI.samp <- sample(across.WI, size = n.wi, replace = FALSE)
+
 across.WI.mean <- mean(across.WI)
 
 #(wt.WI <- wilcox.test(within.WI.samp,across.WI.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
+
 normed.mu <- within.WI.mean/across.WI.mean
 
 subj_table <- rbind(subj_table, data.frame(subject = curr.subj,
@@ -964,15 +802,18 @@ subj_table <- rbind(subj_table, data.frame(subject = curr.subj,
 subj_table <- subj_table[-1,]
 write_csv(subj_table,file.path(res_path,'wilcoxon_subjects_final.csv'))
 ```
-
+"Normed.mu", or "score", stored in the subj_table matrix is simply the ratio between within and across means. However, this value turned out not to be very useful as a metric, so we did not end up using it. 
 
 
 ## Load WordRec
 ```{r}
-
-subj_table <- read_csv(file.path(res_path,'wilcoxon_subjects_final.csv')) %>% mutate(test = as.factor(test))
-
 if (all(count(subj_table$subject)$freq==4) & last(subj_table$subject)==33) {subj_table$subject <- rep(unique(exp.3.only$subject),each=4)}
+
+# Read in file if starting here. 
+subj_table <- read_csv(file.path(res_path,'wilcoxon_subjects_final.csv')) %>%
+              mutate(subject = as.factor(subject),
+                    test = as.factor(test))
+
 
 data_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_3'
 wordrec_data_orig <- read_csv(file.path(data_path,'wordrec_task_data.csv')) %>%
@@ -989,34 +830,9 @@ length(unique(wordrec_data_corr$subject))
 corr.table <- subj_table_corr %>% add_column(prop.word = rep(wordrec_data_corr$prop_word_chosen,each = 4))
 ```
 
-
-
-```{r}
-# Scaling within - across means doesn't really solve the outlier issue, but perhaps we can just remove those anyway. 
-# If we scale, it should be per participant. 
-
-# Look, these are means of Fisher transforms, so means of zscores. I think we can safely substract them without much fear. 
-# plot(corr.table$mean.with-corr.table$mean.accr)
-# plot(log(corr.table$mean.with-corr.table$mean.accr))
-# 
-# hist((corr.table$mean.with)-(corr.table$mean.accr),breaks = 30)
-# hist(scale(corr.table$mean.with-corr.table$mean.accr), breaks = 30) # z 
-# hist(scale(corr.table$mean.with-corr.table$mean.accr, center = 0),breaks = 30)
-
-
-# ... but the log causes quite a bit of data loss. Not sure why. 
-
-# I considered also using a normalization method such as x1 - x2 / min(x1,x2)-max(x1,x2), but the min/max normalization seems appropriate when you have one sample, not two. Also, it's highly sensitive to outliers, obviously. 
-
-# There remains the z-normalization. 
-
-# Ratio is odd cause it causes errors if mean of across group is zero. 
-```
-
-
 ### Create Score
 ```{r}
-  corr.table$sub <- corr.table$mean.with-corr.table$mean.accr
+corr.table$sub <- corr.table$mean.with-corr.table$mean.accr
 summary(corr.table$sub)
 corr.table$sub.scale <- scale(corr.table$mean.with-corr.table$mean.accr, center = 0)
 summary(corr.table$sub.scale)
@@ -1030,7 +846,7 @@ corr.table$log.sub.or[which(corr.table$log.sub.or>1 | corr.table$log.sub.or < -1
 summary(corr.table$log.sub.or)
 ```
 
-### Correlate
+### -> Correlate
 ```{r}
 (corr.ordp <- cor.test(corr.table$sub[corr.table$test=="ordinal position"],
                      corr.table$prop.word[corr.table$test=="ordinal position"], 
@@ -1055,7 +871,7 @@ summary(corr.table$log.sub.or)
 
 ```
 
-## Plot
+### -> Plot
 ```{r warning=FALSE}
 corr.table$test <- factor(corr.table$test,levels = c("ordinal position","transitional probability","word identity","duplets"))
 
@@ -1065,15 +881,6 @@ plots.text <- data.frame(test = factor(c("ordinal position","transitional probab
              paste0("\u03C1 = ",round(corr.prob$estimate, digits = 2),", p = ",round(corr.prob$p.value, digits = 2)),
              paste0("\u03C1 = ",round(corr.word$estimate, digits = 2),", p = ",round(corr.word$p.value, digits = 2)),
              paste0("\u03C1 = ",round(corr.dups$estimate, digits = 2),", p = ",round(corr.dups$p.value, digits = 2))))
-    
-# rho = c(round(corr.ordp$estimate, digits = 2),
-#   round(corr.prob$estimate, digits = 2),
-#   round(corr.word$estimate, digits = 2),
-#   round(corr.dups$estimate, digits = 2)),
-# p = c(round(corr.ordp$p.value, digits = 2),
-#   round(corr.prob$p.value, digits = 2),
-#   round(corr.word$p.value, digits = 2),
-#   round(corr.dups$p.value, digits = 2))
 ```
 
 

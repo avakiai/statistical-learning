@@ -1,19 +1,20 @@
 ---
-title: 'Interval Adjustment Exp. Pt I: Target Detection Task'
+title: 'Exp. 2: Target Detection task with Structured and Random Streams'
 author: "Ava Kiai"
-date: "4/15/2020"
+date: "23 September, 2020"
 output:
   html_document:
-    df_print: paged
+  df_print: paged
   pdf_document: default
 ---
 
+Hi! This script generates all models, tables, analyses, and figures pertaining to Experiment 2 in Kiai & Melloni 2020. Models and data tables at choice points have been saved and can be reloaded using this script, without having to re-run the model or re-wrangle the data. 
 
 ```{r}
 rm(list=ls()) # clear workspace
 # load(".RData") # load saved workspace image for this file
 
-# Directories
+# Working directory is where this file is
 setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 ```
 
@@ -25,27 +26,19 @@ data_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4
 code_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/exp_4'
 # Results Path
 res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp_4'
-```
-
-
-```{r}
+# Final fig path
 fig_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/final'
 ```
 
-# Load, Init.
+# Packages and Global Params
 ```{r message=FALSE}
-# Init.
-
-# latex font
+# latex font for figures
 library(extrafont)
 loadfonts(device = "win")
 par(family="LM Roman 10")
 
-# basics
+# plot and basic manips
 library(tidyverse)
-library(ggsignif)
-library(ggpubr)
-library(ggpattern)
 
 # stats
 library(lme4)
@@ -59,16 +52,6 @@ library(stargazer)
 # advanced plotting & stats  
 library(RcppRoll) # for rolling means
 
-# colors
-library("wesanderson")
-
-
-# too comp to explain... 
-setwd("C:/Users/Ava/Documents/R/win-library/4.0/ggpattern-master/R")
-ggpattern.sources = list.files()
-sapply(ggpattern.sources, source)
-
-
 # Some stuffs for summary stats
 source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/summarySE.R')
 source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/R_rainclouds.R')
@@ -76,15 +59,13 @@ source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/R_raincloud
 # Global Params
 w = 7
 h = 5
-theme_set(
-    theme_classic(base_size = 12)
-)
+theme_set(theme_classic(base_size = 22))
 ```
 
-
+# Load Files (if running through preprocessing)
+If you want to skip preprocessing, go to Load Saved Data section and proceed from there!
 ```{r eval=FALSE, message=FALSE, include=FALSE}
 # Load
-# data_files <- list.files(pattern = ".csv")
 raw_data <- read_csv(file.path(data_path,'ia_incidental_data_v1.csv'))
 
 # Global Vars
@@ -105,6 +86,7 @@ wrangle_data <- raw_data %>%
 ```
 
 # Calculate RT to each target
+Since we loaded the raw data, we need to calculate RTs to target syllables from Presentation-generated log files.
 ```{r}
 # for each participant
 for (curr_subj_num in 1:n_subjs_raw) {
@@ -153,6 +135,7 @@ for (curr_subj_num in 1:n_subjs_raw) {
 } # subject
 #view(wrangle_data)
 ```
+
 # Clean
 ```{r}
 # remove all response rows from data set

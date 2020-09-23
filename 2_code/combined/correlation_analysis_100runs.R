@@ -1,9 +1,19 @@
-## Group-Level Analysis
+## Group-Level RSA Analysis
+# Ava Kiai
+
+# Aim: To make sure that our method yields reliable results, I wanted to run the RSA analysis 50 times for each feature (ordinal position, transitional probability, 
+# duplet and word identity).
+
+# This code assumes you alreaedy have the script: Study3-4RTCorrAnalysis.Rmd, and have loaded in the workspace the packages in that file and the matrices
+# being called by the thid argument below, "possible.analyses"... 
+
 # Procedure: 
 # 1. Take 1-correlations for each subject, z transform
 # 2. Sample 200 times with replacement from all participant's matrices for each within vs. across category; subsample arrays to make them equal in length.
 # 3. Compute wilcoxon
+
 # For each test, we look at the correlation between items in each category vs. items outside that category.
+
 # I'm a little unsure about the stability of this measure, so do each analysis 100 times and record the results.
 
 
