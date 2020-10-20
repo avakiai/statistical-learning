@@ -1,0 +1,17 @@
+Trial Order Word Partword   ITI    ISI
+1  2 rokise.wav lanuga.wav  1200    400
+2  2 zabetu.wav semipo.wav  1200    400
+3  1 mipola.wav lanuga.wav  1200    400
+4  2 nugadi.wav dizabe.wav  1200    400
+5  2 mipola.wav semipo.wav  1200    400
+6  1 nugadi.wav lanuga.wav  1200    400
+7  2 nugadi.wav turoki.wav  1200    400
+8  1 zabetu.wav dizabe.wav  1200    400
+9  1 nugadi.wav semipo.wav  1200    400
+10  1 rokise.wav turoki.wav  1200    400
+11  2 zabetu.wav lanuga.wav  1200    400
+12  1 zabetu.wav turoki.wav  1200    400
+13  2 mipola.wav turoki.wav  1200    400
+14  2 rokise.wav dizabe.wav  1200    400
+15  1 mipola.wav dizabe.wav  1200    400
+16  1 rokise.wav semipo.wav  1200    400
