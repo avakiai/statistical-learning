@@ -13,7 +13,7 @@ rm(list=ls()) # clear workspace
 # load(".RData") # load saved workspace image for this file
 
 # Directories
-setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+#setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 ```
 
 # Paths
@@ -119,6 +119,7 @@ rt_data_cleaned.1 <- rt_data_clean %>%
 
 
 ```
+
 ```{r Remove data with technical errors, eval=FALSE, include=FALSE}
 rm_subjs <- c("b2308", # Did not respond at all
               "b1912","r1028", "t0204", # Trials were not blocked, so block numbers meaningless.
@@ -562,6 +563,7 @@ emmip(rt.mod.less.int, ~ tgt_pos, xlab = "Target Position", CIs = TRUE) +
 ```
 
 ## Block Contrasts
+#### All Blocks x Pos
 ```{r}
 # Full Model 
 car::Anova(rt.mod.full.int.fct)
@@ -578,9 +580,27 @@ block.only <- emmeans(rt.mod.full.int.fct, specs = pairwise ~ block, adjust = "T
 
 
 emmeans(rt.mod.full.int.fct, specs = pairwise ~ block|tgt_pos, adjust = "Tukey", transform = "response")
+```
 
+### Contra Himbergen et al.: 
+```{r}
 #---------------------------------------------------------
-# Only Blocks 1 & 2
+# AK;s question: How does the relationship 1-2, 2-3 and 1-3 change over blocks?
+contrasts1.2 <- emm.pos.block$contrasts %>%
+  as.data.frame() %>%
+  filter(contrast=="1 - 2")
+
+contrasts1.3 <- emm.pos.block$contrasts %>%
+  as.data.frame() %>%
+  filter(contrast=="1 - 3")
+
+contrasts2.3 <- emm.pos.block$contrasts %>%
+  as.data.frame() %>%
+  filter(contrast=="2 - 3")
+```
+
+#### Only Blocks 1 & 2
+```{r}
 block12.mod <- glmer(rt_secs ~ 1 + tgt_pos*block + (1 | subject), data = rt_data[which(rt_data$block==1|rt_data$block==2),], family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
   Anova(block12.mod)
   
@@ -589,14 +609,19 @@ emmeans(block12.mod, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "
 b12.m <- emmeans(block12.mod, specs = pairwise ~ block, adjust = "tukey", transform = "response")
 b12.d = as.data.frame(b12.d$contrasts)$estimate / sigmaHat(block12.mod)
 
-emmip(block12.mod, block ~ tgt_pos, xlab = "Target Position", CIs = TRUE) 
+emmip(block12.mod, block ~ tgt_pos, xlab = "Target Position", CIs = TRUE)
+```
 
-# Only Block 1 
+#### Only Block 1
+```{r}
 block1.mod <- glmer(rt_secs ~ 1 + tgt_pos + (1 | subject), data = rt_data[which(rt_data$block==1),], family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
 summary(block1.mod)
 plot(resid(block1.mod))
   Anova(block1.mod)
-
+  
+mean(rt_data$rt[which(rt_data$block==1)], na.rm=TRUE)
+sd(rt_data$rt[which(rt_data$block==1)], na.rm=TRUE)
+  
 b1.m <-emmeans(block1.mod, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response")
 b1.d = as.data.frame(b1.m$contrasts)$estimate / sigmaHat(block1.mod)
 
@@ -662,21 +687,8 @@ emmip(rt.mod.full.int.fct, ~ block, CIs = TRUE, xlab = "Block") +
 
 ```
 
-## Contra Honey: Controls
+### Block x Pair Differences
 ```{r}
-# AK;s question: How does the relationship 1-2, 2-3 and 1-3 change over blocks?
-contrasts1.2 <- emm.pos.block$contrasts %>%
-  as.data.frame() %>%
-  filter(contrast=="1 - 2")
-
-contrasts1.3 <- emm.pos.block$contrasts %>%
-  as.data.frame() %>%
-  filter(contrast=="1 - 3")
-
-contrasts2.3 <- emm.pos.block$contrasts %>%
-  as.data.frame() %>%
-  filter(contrast=="2 - 3")
-
 # Creates a data frame where for each subject and each block, we have the difference between RT averages to each of the positions:
 block.matters <- rt_data_sum4 %>%
   dplyr::select(subject, block, tgt_pos, rt_mean) %>%
@@ -704,21 +716,25 @@ block.matters$pairs <- factor(block.matters$pairs,levels = c("c1.2","c2.3","c1.3
 
 # Lucia: Does the difference between 1-2 and 2-3 change over blocks? 
 # I'll do a regular ANOVA here because the outcome variable is normally distributed (means)
-pairings.aov <- aov(mean_rt_delta ~ pairs*block,block.matters)
-summary(pairings.aov)
-TukeyHSD(pairings.aov, which = "pairs")
-lsr::cohensD(block.matters$mean_rt_delta[block.matters$pairs=="c1.2"],block.matters$mean_rt_delta[block.matters$pairs=="c2.3"])
-## check variance
-plot(pairings.aov,1)
-car::leveneTest(mean_rt_delta ~ pairs*block,block.matters) # variance across groups is homogenous
-plot(pairings.aov,2)
-# check normality
-ks.test(residuals(pairings.aov),rnorm(length(residuals(pairings.aov))))
-shapiro.test(residuals(pairings.aov)) ## oops, residuals not really normal... go back and do glmer
-(pairings.em <- emmeans(pairings.aov, spec = pairwise ~ pairs, adjust = "Tukey", transform = "response"))
+# pairings.aov <- aov(mean_rt_delta ~ pairs*block,block.matters)
+# summary(pairings.aov)
+# TukeyHSD(pairings.aov, which = "pairs")
+# lsr::cohensD(block.matters$mean_rt_delta[block.matters$pairs=="c1.2"],block.matters$mean_rt_delta[block.matters$pairs=="c2.3"])
+# ## check variance
+# plot(pairings.aov,1)
+# car::leveneTest(mean_rt_delta ~ pairs*block,block.matters) # variance across groups is homogenous
+# plot(pairings.aov,2)
+# # check normality
+# ks.test(residuals(pairings.aov),rnorm(length(residuals(pairings.aov))))
+# shapiro.test(residuals(pairings.aov)) ## oops, residuals not really normal... go back and do glmer
+# (pairings.em <- emmeans(pairings.aov, spec = pairwise ~ pairs, adjust = "Tukey", transform = "response"))
 
-descdist(block.matters$mean_rt_delta[!is.na(block.matters$mean_rt_delta)])
+# descdist(block.matters$mean_rt_delta[!is.na(block.matters$mean_rt_delta)])
 # ---> the dist is approximately normal, so i'll use a linear model
+
+
+## summary stats
+block.matters %>% summarySE(measurevar = "mean_rt_delta", groupvars = "pairs", na.rm = TRUE)
 
 ## glm
 pairings.glm <- lmer(mean_rt_delta ~  pairs*block + (1 | subject), data = block.matters)
