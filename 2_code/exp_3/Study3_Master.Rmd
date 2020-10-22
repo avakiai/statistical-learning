@@ -121,10 +121,10 @@ rt_data_cleaned.1 <- rt_data_clean %>%
 ```
 
 ```{r Remove data with technical errors, eval=FALSE, include=FALSE}
-rm_subjs <- c("b2308", # Did not respond at all
-              "b1912","r1028", "t0204", # Trials were not blocked, so block numbers meaningless.
-              "d2006", # Blocking messed up and didn't see all sylls; Block 6 = Target Positions 3,2,3; Blocks seen =  1-16, 1-8
-              "i0902") # Blocking technically ok, just didn't see all syllables; Blocks seen = 1-12 x 2
+rm_subjs <- c("b1965", # Did not respond at all
+              "b5269","l3385", "n0178", # Trials were not blocked, so block numbers meaningless.
+              "m8718", # Blocking messed up and didn't see all sylls; Block 6 = Target Positions 3,2,3; Blocks seen =  1-16, 1-8
+              "b7514") # Blocking technically ok, just didn't see all syllables; Blocks seen = 1-12 x 2
 
 rt_data_cleaned.2 <- rt_data_cleaned.1[which(!rt_data_cleaned.1$subject %in% rm_subjs),]
   

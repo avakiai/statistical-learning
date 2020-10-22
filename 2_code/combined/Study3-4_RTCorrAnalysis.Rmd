@@ -55,40 +55,40 @@ for (curr_subj in unique(exps.3.4.data$subject)) {
 # find minimum number of rows, N
   n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
 # exceptions
-  if(curr_subj == "s1911") { # 3/29
+  if(curr_subj == "r4893") { # 3/29
     curr_data <- curr_data %>% 
     mutate(tu = as.numeric(rep(NA,nrow(curr_data))))
     N <- sort(n_rows)[2] # select the second lowest length
-  } else if(curr_subj == "s1107") { # 3/26
+  } else if(curr_subj == "l6988") { # 3/26
     # subject had only 2 entires in tu, so just make the column NA to preserve other data
     curr_data <- curr_data %>% 
     mutate(tu = as.numeric(rep(NA,nrow(curr_data))))
     N <- sort(n_rows)[2] # select the second lowest length
-  } else if (curr_subj == "l2805") { # 3/21
+  } else if (curr_subj == "i3939") { # 3/21
     curr_data <- curr_data %>% 
     mutate(be = as.numeric(rep(NA,nrow(curr_data))))
     N <- sort(n_rows)[2] 
-  } else if (curr_subj == "h0207") { # 3/11
+  } else if (curr_subj == "v7564") { # 3/11
     curr_data <- curr_data %>% 
     add_column(ro = as.numeric(rep(NA,nrow(curr_data))))
     n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
     N <- sort(n_rows)[2]
-  } else if (curr_subj == "g0609") { # 3/8
+  } else if (curr_subj == "s5965") { # 3/8
     curr_data <- curr_data %>% 
     mutate(po = as.numeric(rep(NA,nrow(curr_data))))
     N <- sort(n_rows)[2] # select the second lowest length
     # and maybe also ga? 
-  } else if (curr_subj == "b0207") { # 3/2
+  } else if (curr_subj == "s7540") { # 3/2
     curr_data <- curr_data %>% 
     add_column(be = as.numeric(rep(NA,nrow(curr_data))),.after = "za") %>%
     add_column(ro = as.numeric(rep(NA,nrow(curr_data))),.after = "di")
     n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
     N <- sort(n_rows)[3]
-  } else if (curr_subj == "a0604") { # 3/1
+  } else if (curr_subj == "m0085") { # 3/1
     curr_data <- curr_data %>% 
     mutate(be = as.numeric(rep(NA,nrow(curr_data))))
     N <- sort(n_rows)[2] 
-  } else if (curr_subj == "s2205") { # 4/16    
+  } else if (curr_subj == "h4610") { # 4/16    
     curr_data <- curr_data %>% 
     add_column(be = as.numeric(rep(NA,nrow(curr_data))),.after = "za") %>%
     add_column(se = as.numeric(rep(NA,nrow(curr_data))),.after = "ki") %>%
@@ -96,13 +96,13 @@ for (curr_subj in unique(exps.3.4.data$subject)) {
     mutate(ga = as.numeric(rep(NA,nrow(curr_data))))
     n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
     N <- sort(n_rows)[5]
-  } else if (curr_subj == "s0310") { # 4/12
+  } else if (curr_subj == "x5767") { # 4/12
     # subject is missing be data, so just make it NA, N is the same
     curr_data <- curr_data %>% 
     add_column(be = as.numeric(rep(NA,nrow(curr_data))),.after = "za")
     n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
     N <- sort(n_rows)[2]
-  } else if (curr_subj == "a2605") { # 4/2
+  } else if (curr_subj == "h9453") { # 4/2
     curr_data <- curr_data %>% 
     mutate(be = as.numeric(rep(NA,nrow(curr_data)))) %>%
     mutate(tu = as.numeric(rep(NA,nrow(curr_data))))

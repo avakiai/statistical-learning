@@ -74,16 +74,16 @@ n_subjs_raw <- length(unique(raw_data$subject))
 subj_IDs <- unique(raw_data$subject)
 
 # Settings
-subjs_SR <- c("s1911","n1906","m0207","h0502","h1209","s0310","t0506","b0704","s2205","s1302")
+
+subjs_SR <- c("t0056","r6364","s3165","u0807","x0805","x5767","h5760","q7907","h4610","k5002")
 n_subjs_SR <- length(subjs_SR)
-subjs_RS <- c("a2012","m2208","a2605","m1105","s2609","w2804","b2707","s2502","f0511","s1504")
+subjs_RS <- c("r9747","g9126","h9453","r5762","n4711","d5450","q5570","l6268","l1982","y7212")
 n_subjs_RS <- length(subjs_RS)
     
 # Add RT and Hit column to raw data, to be filled in next... 
 wrangle_data <- raw_data %>%
     add_column(rt = rep(0,nrow(raw_data)),
                resp = rep(0,nrow(raw_data)))
-
 ```
 ## Calculate RT to each target
 Since we loaded the raw data, we need to calculate RTs to target syllables from Presentation-generated log files.
