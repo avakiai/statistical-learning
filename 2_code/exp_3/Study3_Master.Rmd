@@ -125,6 +125,7 @@ rm_subjs <- c("b1965", # Did not respond at all
               "b5269","l3385", "n0178", # Trials were not blocked, so block numbers meaningless.
               "m8718", # Blocking messed up and didn't see all sylls; Block 6 = Target Positions 3,2,3; Blocks seen =  1-16, 1-8
               "b7514") # Blocking technically ok, just didn't see all syllables; Blocks seen = 1-12 x 2
+rm_subj_ID_nums <- unique(rt_data_orig$subject[rt_data_orig$subjID %in% rm_subjs])
 
 rt_data_cleaned.2 <- rt_data_cleaned.1[which(!rt_data_cleaned.1$subject %in% rm_subjs),]
   
@@ -884,8 +885,22 @@ rt_data %>% summarySE(measurevar = "detect", groupvars = c("target"),na.rm=TRUE)
 
 ```
 Now: Accuracy of 0.70 and sd of 0.45.
-Previously: Average accuracy is 0.73 with an SD of 0.26. Precision (true positives/true + false positives) is at 0.80 with an SD of 0.23. 
+Previously: Average accuracy is 0.73 with an SD of 0.26. Sensitivity (true positives/true + false positives) is at 0.80 with an SD of 0.23. 
 
+#### False Positives
+```{r}
+
+rt_data_FP <- read_csv(file.path(data_path,'RT_block_summary_table.csv')) %>%
+  filter(subject == unique(rt_data_FP$subject[!rt_data_FP$subject %in% rm_subj_ID_nums]))
+
+
+# False Positive Rate = FP/FP + TN - but how would we calculate true negatives? all the times there was a different syllable and they didn't respond? I think the true positive rate is simpler - it takes into account false positives, and penalizes for e.g. someone pressing the key repeatedly
+# True Positive Rate = TP/TP+FP, the likelihood that they'll press the space bar given that there was a target
+# Source: https://www.split.io/glossary/false-positive-rate/#:~:text=The%20true%20positive%20rate%20(TPR,actual%20negative%20will%20test%20negative.&text=It's%20calculated%20as%20TP%2FTP%2BFP.
+
+sum(rt_data_FP$hits)/(sum(rt_data_FP$hits)+sum(rt_data_FP$false_positives)) # sensitivity/TPR
+
+```
 
 ### a. Accuracy per position
 ```{r}
