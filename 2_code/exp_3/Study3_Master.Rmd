@@ -27,6 +27,11 @@ res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp
 fig_path <- file.path(res_path,'/figures') # but can also be changed to : 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/final'
 ```
 
+# Relative Paths
+```{r}
+
+```
+
 # Libraries
 ```{r Initialize libraries, message=FALSE, include=FALSE}
 # basics
@@ -67,9 +72,10 @@ theme_set(
 ```{r Load data, message=FALSE, include=FALSE}
 # 1. Online SL: Target Detection Task 
 
-# IF YOU WISH TO PREPROCESS: LOAD THE ORIG FILE AND RUN CHUNKS UNDER
-# 0 - PREPROCESING
+# IF YOU WISH TO PREPROCESS: LOAD THE ORIG FILE AND RUN CHUNKS UNDER : 0 - PREPROCESING
+# and uncomment the following line: 
 # rt_data_orig <- read_csv(file.path(data_path,'RT_response_table.csv'))
+
 # OTHERWISE, LOAD PREPROCESSED DATA: 
 rt_data <- read_csv(file.path(data_path,'exp_3_rt_data.csv')) %>%
       mutate(subject = as.factor(subject),
@@ -88,6 +94,7 @@ wordrec_data_orig <- read_csv(file.path(data_path,'wordrec_task_data.csv')) %>%
 
 # --- Target Detection Task 
 # 0 - PREPROCESSING
+Wrangle data...
 ```{r Clean up data, eval=FALSE, include=FALSE}
 # Add blocks
 rt_data_clean <- rt_data_orig[which(rt_data_orig$code!=0),]
@@ -119,7 +126,7 @@ rt_data_cleaned.1 <- rt_data_clean %>%
 
 
 ```
-
+Remove data with technical or human error...
 ```{r Remove data with technical errors, eval=FALSE, include=FALSE}
 rm_subjs <- c("b1965", # Did not respond at all
               "b5269","l3385", "n0178", # Trials were not blocked, so block numbers meaningless.
@@ -143,6 +150,7 @@ descdist(rts, discrete = FALSE)
 descdist(rts, discrete = FALSE, boot = 500)
 # Distribution is gamma/lognormal.
 ```
+Fit the distribution of the data to determine best family for GLM... 
 ```{r Compare fits to RT data, eval=FALSE, warning=FALSE, include=FALSE}
 fit.gam  <- fitdist(rts, "gamma")
 fit.ln <- fitdist(rts, "lnorm")
@@ -159,6 +167,7 @@ ppcomp  (list(fit.gam, fit.ln), legendtext = plot.legend)
 gofstat(list(fit.gam, fit.ln), fitnames = c("gamma", "lognorm"))
 # Gamma distribution fits best. 
 ```
+Perform outlier removal...
 ```{r Outlier removal, eval=FALSE, warning=FALSE, include=FALSE}
 # Outlier Removal Method: median +- 3(mad) 
 # --> https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/mad
@@ -197,21 +206,25 @@ gofstat(list(fit.norm, fit.gam, fit.ln), fitnames = c("norm","gamma", "lognorm")
 
 print(paste0("The method of removing +- 3 * the median absolute deviation results in a data loss of only ", round(1-length(rt_data$rt)/length(rt_data_cleaned.2$rt), digits = 3), "%. Meanwhile, although outlier removal makes the distribution much more normal (note scaling does not add any further normality), gamma remains the best fit."))
 ```
+Compute summary statistics...
 ```{r Summary statistics before/after outlier removal, eval=FALSE, include=FALSE}
 summary(sort(rts))
 summary(sort(rts.rm))
 ```
+Rescale response variable (RT). This is because if we use miliseconds for GLM, the variances become very small with respect to the scale of the variable, and the models often don't converge,. Use seconds, which retains all the same information and relationships but avoids this problem.
 ```{r Rescale response variable, eval=FALSE, include=FALSE}
 # rescale y var
 rt_data <- rt_data %>%
    mutate(rt_secs = rt/1000)
 ```
+Save preprocessed data.
 ```{r Save data, eval=FALSE, include=FALSE}
-write.csv(rt_data,'exp_3_rt_data.csv', row.names = FALSE)
+# Uncomment if needed
+# write.csv(rt_data,'exp_3_rt_data.csv', row.names = FALSE)
 ```
 
 # 1 - PLOTS
-## Fig. 1a. Plot RT ~ Pos x Block 
+## Fig. 1a. Plot RT ~ Pos
 ```{r message=FALSE, warning=FALSE}
 rt_data_sum1 <- rt_data %>% # target position x block
     summarySE(measurevar = "rt", groupvars = c("block","tgt_pos"),na.rm=TRUE) 
@@ -223,7 +236,7 @@ ggplot() +
   geom_errorbar(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci), colour = "BLACK", width = 0.1, size = 0.8) +
   geom_line(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = 1), colour = "BLACK", size = .9) +
   
-  scale_colour_brewer(palette = "Paired") +
+ # scale_colour_brewer(palette = "Paired") +
   scale_y_continuous(limits=c(380,580)) +
   ylab('Median RT (ms)') + xlab('Ordinal postion') +
   theme_classic() +
@@ -245,10 +258,11 @@ ggplot(rt_data_sum3, aes(x = tgt_pos, y = rt_median, fill = tgt_pos)) +
   guides(fill = FALSE, color = FALSE) + 
   theme_classic() +
   theme(text = element_text(family = "LM Roman 10", face="bold",size=22)) +
-  ggsave(file.path(fig_path,'fig1b_rt_pos_grey.png'), width = w, height = h)
+  ggsave(file.path(fig_path,'fig1b_rt_pos_col.png'), width = w, height = h)
 ```
 
 ## Plot for each Subject: RT ~ Pos x Block
+This plot generates the plot for RT as a function of position and block for all participants individually. 
 ```{r message=FALSE, warning=FALSE}
 rt_data_sum4 <- rt_data %>% # target position x block x subject
     summarySE(measurevar = "rt", groupvars = c("block","tgt_pos","subject"),na.rm=TRUE) 
@@ -269,6 +283,7 @@ ggplot(rt_data_sum4, mapping=aes(x=tgt_pos,y=rt_median,color=as.factor(block))) 
 ```
 
 ## Rolling Average RT
+We wanted to also see how RT evolves over the course of a trial...
 ```{r eval=FALSE, warning=FALSE, include=FALSE}
 # There are 18 targets per block. 3 blocks in each block (set of trials where all 3 positions serve as targets). 
 # We can have a moving average spanning 3 items...
@@ -327,7 +342,7 @@ ggplot(rolled_over_subjs_blocks, mapping=aes(target_num,moving_mean_mean,colour=
 ```
 Impressively, only a few exposures to the words are enough for participants' reaction times to differentiate syllables based on their position.
 
-Plot Blocks as Facets
+Plot Blocks in the rolling RT analysis as Facets...
 ```{r eval=FALSE, include=FALSE}
 rolled_over_subjs <- rt_data_rolled %>%
   filter(!is.na(moving_mean)) %>%
@@ -353,17 +368,16 @@ ggplot(rolled_over_subjs[rolled_over_subjs$target_num %in% seq(1,18,3),], mappin
   theme_minimal() +
   theme(text = element_text(family = "LM Roman 10", face="bold"), legend.position = "top") +
   ggsave(file.path(res_path,'figures','fig3b_rt_rolling_smooth3.png'),width=14,height=10)
-# dev.copy(pdf,file.path(res_path,'figures','exp3fig3brollingsmooth3.pdf'), width = 12, height = 10)
-# dev.off()
-
 ```
 
 # 2 - MODELS
+View some summary stats by ordinal position... 
 ```{r}
 rt_data %>% summarySE(., measurevar = "rt_secs", groupvars = c("tgt_pos"), na.rm = TRUE)
 ```
 
 ## GLMM: RT ~ Pos x Block
+We tried a few models, which we compared, to determine which was the best descriptor of our data. Models have been saved and can be called back, or run from scratch by uncommenting the lines that generate the models. 
 ### Fuller 
 ```{r}
 options(contrasts = c("contr.sum", "contr.poly"))
@@ -383,6 +397,7 @@ load(file.path(res_path,'models','rt_block_full_int.Rdata'))
 ```
 
 ### *Lesser
+This is the model that won out in the end!
 ```{r}
 # Lesser Model | Random Intercept Only | Gamma-log function
 load(file.path(res_path,'models','rt_block_less_int.Rdata'))
@@ -395,11 +410,6 @@ load(file.path(res_path,'models','rt_block_less_int.Rdata'))
  # save(rt.mod.less.int, file = file.path(res_path,'models','rt_block_less_int.Rdata'))
 ```
 
-Effect Size
-```{r}
-#pwr.chisq.test(w =, N = 33, df = 2, sig.level = 0.5, power = )
-```
-
 #### Model Evaluation
 ```{r}
 anova(rt.mod.full.int.fct,rt.mod.less.int) 
@@ -410,14 +420,18 @@ Models with a delta AIC of greater than 10 suggest almost no support for the ful
 
 
 ### Full, Lesser | Random Slopes 
+We wanted to do a model comparison where we also let the random effects term vary in its slope for the factor position. 
 ```{r}
+# Fuller
 load(file.path(res_path,'models','rt_block_full_slope.Rdata'))
+
 #rt.mod.full.int.slope <- glmer(rt_secs ~ 1 + tgt_pos*block + (tgt_pos | subject), data = rt_data, family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
   summary(rt.mod.full.int.slope)
   plot(residuals(rt.mod.full.int.slope))
   qqnorm(resid(rt.mod.full.int.slope))
  #save(rt.mod.full.int.slope, file = file.path(res_path,'models','rt_block_full_slope.Rdata'))
 
+# Lesser
 load(file.path(res_path,'models','rt_block_less_slope.Rdata'))
 #rt.mod.less.int.slope <- glmer(rt_secs ~ 1 + tgt_pos + (tgt_pos | subject), data = rt_data, family = Gamma(link = "log"))
   summary(rt.mod.less.int.slope)
@@ -480,6 +494,7 @@ add.lines = list(c("Fixed Effects", "Subject", "Position | Subject", "Subject"),
 ```
 
 ### Lesser | Random Slopes for both Factors
+Okay, so the lesser model wins in either case above, but can be refine the random effects term within the lesser model to more precisely capture inter-individual differences? Here, we allow random slopes for both target position and block...
 ```{r}
 #load(file.path(res_path,'models','rt_block_less_slope2.Rdata'))
 rt.mod.less.int.slope2 <- glmer(rt_secs ~ 1 + tgt_pos + (tgt_pos | subject) + (block | subject), data = rt_data, family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
@@ -491,9 +506,11 @@ save(rt.mod.less.int.slope2, file = file.path(res_path,'models','rt_block_less_s
 # Model comparison
 anova(rt.mod.less.int,rt.mod.less.int.slope,rt.mod.less.int.slope2)
 ```
-Yet again, go for the simplest model. 
+... but yet again, we must go for the simplest model. Nice!
 
 ## Contrasts 
+Here we take our winning model, the Lesser model with only random intercepts random effects term, and compute our desired contrasts. 
+Since block is not present, we simply have to look at pairwise contrasts between levels of the factor position. Let's do this, plot the results of the estimated marginal means differences, and save the output as a table. 
 ```{r}
 (emm.pos <- emmeans(rt.mod.less.int, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response"))
 
@@ -501,7 +518,6 @@ p.contrasts = summary(pairs(emmeans(rt.mod.less.int, ~ tgt_pos)))
 
 # Cohen's d: divide emmeans estimates by residual sd of generating model:
 p.contrasts$d = p.contrasts$estimate / sigmaHat(rt.mod.less.int)
-
 
 position_contrasts <- emm.pos$contrasts %>%
   rbind() %>%
@@ -526,6 +542,7 @@ stargazer(position_contrasts_out,
           out = file.path(res_path,'tables','td_mod_cont.doc'), summary = FALSE, rownames = FALSE)
 ```
 
+We can also explore the coefficients further if desired... 
 ```{r Explore Coefficients}
 # library(broom)
 # tidy(rt.mod.less.int,conf.int=TRUE) %>% as_tibble()
@@ -564,7 +581,10 @@ emmip(rt.mod.less.int, ~ tgt_pos, xlab = "Target Position", CIs = TRUE) +
 ```
 
 ## Block Contrasts
+Although the model without blocks best captures our data, let's look to see whether learning improved, stayed the same, or otherwise changed in successive blocks. A block is a set of three trials, where a syllable from each of the three positions was tested once in a random order (those syllables could come from any word).
+
 #### All Blocks x Pos
+SO we take our fuller model from earlier, and look at the contrasts for target position within each block.
 ```{r}
 # Full Model 
 car::Anova(rt.mod.full.int.fct)
@@ -579,11 +599,12 @@ car::Anova(rt.mod.full.int.fct)
 
 block.only <- emmeans(rt.mod.full.int.fct, specs = pairwise ~ block, adjust = "Tukey", transform = "response")
 
-
 emmeans(rt.mod.full.int.fct, specs = pairwise ~ block|tgt_pos, adjust = "Tukey", transform = "response")
 ```
 
-### Contra Himbergen et al.: 
+### Contra Himbergen et al.
+This paper suggests the RT effect can happen spuriously. 
+I first wanted to know if the size of the mean difference between positions 1 and 2, 2 and 3, and 1 and 3 changed over blocks. 
 ```{r}
 #---------------------------------------------------------
 # AK;s question: How does the relationship 1-2, 2-3 and 1-3 change over blocks?
@@ -601,6 +622,7 @@ contrasts2.3 <- emm.pos.block$contrasts %>%
 ```
 
 #### Only Blocks 1 & 2
+We found an effect of block, and now narrow the analysis to first 2 blocks. Model and contrasts:
 ```{r}
 block12.mod <- glmer(rt_secs ~ 1 + tgt_pos*block + (1 | subject), data = rt_data[which(rt_data$block==1|rt_data$block==2),], family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
   Anova(block12.mod)
@@ -614,6 +636,7 @@ emmip(block12.mod, block ~ tgt_pos, xlab = "Target Position", CIs = TRUE)
 ```
 
 #### Only Block 1
+Now narrow it to the first block only. 
 ```{r}
 block1.mod <- glmer(rt_secs ~ 1 + tgt_pos + (1 | subject), data = rt_data[which(rt_data$block==1),], family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
 summary(block1.mod)
@@ -628,15 +651,14 @@ b1.d = as.data.frame(b1.m$contrasts)$estimate / sigmaHat(block1.mod)
 
 emmip(block1.mod, ~ tgt_pos, xlab = "Target Position", CIs = TRUE) 
 
-
-
+# Notice that this ^ contrast is the same as just filtering for block 1 and doing summary stats:
 rt_data %>% summarySE(., measurevar = "rt", groupvars = c("block"), na.rm = TRUE)
 rt_data[which(rt_data$block==1|rt_data$block==2),] %>% summarySE(., measurevar = "rt", groupvars = c("tgt_pos"), na.rm = TRUE)
 rt_data[which(rt_data$block==1),] %>% summarySE(., measurevar = "rt", groupvars = c("tgt_pos"), na.rm = TRUE)
 ```
 
-
 ## Fig. 1c. Contrasts: RT ~ Pos | Block
+Plot the contrasts per block...
 ```{r}
 # plot(emm.pos.block, comparisons = TRUE,
 #      xlab = "estimated marginal means",
@@ -663,13 +685,9 @@ ggplot(as.data.frame(emm.pos.block$emmeans),aes(x=block,y=response)) +
   theme_classic() +
   theme(text = element_text(family = "LM Roman 10", face="bold",size=22),legend.position="top") +
   ggsave(file.path(fig_path,'fig1c_estimatedmeans.png'), width = w, height = h)
-
-
-
-
 ```
 
-
+Further block plots..
 ```{r}
 png(file = file.path(res_path,'figures','block_interaction2.png'), width = w, height = h, res = 300, units = "in")
 emmip(rt.mod.full.int.fct, block ~ tgt_pos, CIs = TRUE, xlab = "Ordinal Position") +
@@ -699,40 +717,6 @@ block.matters <- rt_data_sum4 %>%
          c2.3 = `2`-`3`) %>%
   gather(key = "pairs", value = "mean_rt_delta",c1.2, c1.3,c2.3)
 block.matters$pairs <- factor(block.matters$pairs,levels = c("c1.2","c2.3","c1.3"))
-# AK: Do the pairings change magnitude between blocks?
-# c1.2.mod <- lm(c1.2 ~ block, block.matters)
-# Anova(c1.2.mod)
-# emmeans(c1.2.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
-# # > mean(1)-mean(2) is not sig. different between blocks 
-# 
-# c1.3.mod <- lm(c1.3 ~ block, block.matters)
-# Anova(c1.3.mod)
-# emmeans(c1.3.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
-# # > none.
-# 
-# c2.3.mod <- lm(c2.3 ~ block, block.matters)
-# Anova(c2.3.mod)
-# emmeans(c2.3.mod, specs = pairwise ~ block, transform = "response", adjust = "Tukey")
-# # > none. 
-
-# Lucia: Does the difference between 1-2 and 2-3 change over blocks? 
-# I'll do a regular ANOVA here because the outcome variable is normally distributed (means)
-# pairings.aov <- aov(mean_rt_delta ~ pairs*block,block.matters)
-# summary(pairings.aov)
-# TukeyHSD(pairings.aov, which = "pairs")
-# lsr::cohensD(block.matters$mean_rt_delta[block.matters$pairs=="c1.2"],block.matters$mean_rt_delta[block.matters$pairs=="c2.3"])
-# ## check variance
-# plot(pairings.aov,1)
-# car::leveneTest(mean_rt_delta ~ pairs*block,block.matters) # variance across groups is homogenous
-# plot(pairings.aov,2)
-# # check normality
-# ks.test(residuals(pairings.aov),rnorm(length(residuals(pairings.aov))))
-# shapiro.test(residuals(pairings.aov)) ## oops, residuals not really normal... go back and do glmer
-# (pairings.em <- emmeans(pairings.aov, spec = pairwise ~ pairs, adjust = "Tukey", transform = "response"))
-
-# descdist(block.matters$mean_rt_delta[!is.na(block.matters$mean_rt_delta)])
-# ---> the dist is approximately normal, so i'll use a linear model
-
 
 ## summary stats
 block.matters %>% summarySE(measurevar = "mean_rt_delta", groupvars = "pairs", na.rm = TRUE)

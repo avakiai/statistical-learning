@@ -15,7 +15,7 @@ rm(list=ls()) # clear workspace
 # load(".RData") # load saved workspace image for this file
 
 # Working directory is where this file is
-setwd(dirname(rstudioapi::getSourceEditorContext()$path))
+#setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 ```
 
 # Paths
@@ -28,6 +28,11 @@ code_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/exp_4
 res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp_4'
 # Final fig path
 fig_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/final'
+```
+
+# Relative Paths
+```{r}
+
 ```
 
 # Packages and Global Params
@@ -85,6 +90,7 @@ wrangle_data <- raw_data %>%
     add_column(rt = rep(0,nrow(raw_data)),
                resp = rep(0,nrow(raw_data)))
 ```
+
 ## Calculate RT to each target
 Since we loaded the raw data, we need to calculate RTs to target syllables from Presentation-generated log files.
 ```{r eval=FALSE, include=FALSE}
@@ -116,7 +122,10 @@ for (curr_subj_num in 1:n_subjs_raw) {
           curr_row = curr_trial_cond_data[row_num+counter,] # go to next row
           if (is.na(curr_row$subject)) {break} # reached end of trial ...
 # later: confirm that two targets don't appear in that window, or else reduce window       
-          else if (curr_row$code==1 & curr_row$time<target_times[curr_target_num]+2000) { # resp in 2 sec window...
+          else if (curr_row$code==1 & curr_row$time>target_times[curr_target_num]+2000) { # resp > 1300 ms after last tgt
+            curr_trial_cond_data$resp[row_num] = 2 # false alarm
+            curr_trial_cond_data$rt[row_num] = curr_row$time-target_times[curr_target_num]} # record RT
+          else if (curr_row$code==1 & curr_row$time<target_times[curr_target_num]+2000) { # resp < 1300 ms after last tgt
             curr_trial_cond_data$resp[row_num] = 1 # count a hit
             curr_trial_cond_data$rt[row_num] = curr_row$time-target_times[curr_target_num]} # record RT
           else if (curr_row$code==curr_target) {at_next_target = TRUE} # if it's a target, break/go to next target
@@ -179,25 +188,18 @@ summary(pre_or_data$rt)
 ggqqplot(pre_or_data$rt,na.action=na.omit)
 sd(pre_or_data$rt,na.rm=TRUE)
 
-#-------------------------------------
-# Outlier Removal Method 1: mean +- 3(sd)
-# upper_bound <- mean(pre_or_data$rt,na.rm=TRUE)+(3*sd(pre_or_data$rt,na.rm=TRUE))
-# lower_bound <- mean(pre_or_data$rt,na.rm=TRUE)-(3*sd(pre_or_data$rt,na.rm=TRUE))
-# 
-# # filter/ outlier removal based on central tendency 
-# or_data1 <- pre_or_data %>%
-#   filter(rt > lower_bound | is.na(rt), # keeps NAs, because these are miss markers
-#          rt < upper_bound | is.na(rt))
-# 
-# hist(or_data1$rt)
-# ggqqplot(or_data1$rt,na.action=na.omit)
-# summary(or_data1$rt)
-# sd(or_data1$rt,na.rm=TRUE)
-# 
-# (data_loss_mean <- 1-length(or_data1$rt)/length(pre_or_data$rt))
+#summary(pre_OR_2000$rt)
+#summary(pre_OR_1300$rt)
 
-#-------------------------------------
-# Outlier Removal Method 2: median +- 3(mad) 
+sum(pre_or_data$resp==1)/(sum(pre_or_data$resp==1)+sum(pre_or_data$resp==2)) #0.92 with 2000 as limit
+#sum(pre_OR_1300$resp==1)/(sum(pre_OR_1300$resp==1)+sum(pre_OR_1300$resp==2)) #0.90
+
+
+```
+
+
+```{r eval=FALSE, warning=FALSE, include=FALSE}
+# Outlier Removal Method: median +- 3(mad) 
 # --> https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/mad
     # MAD = b Mi(|xi−Mj(xj)|), where x = n orig. observations; and M is the median of the series
     # Usually, b = 1.4826, a constant linked to the assumption of
@@ -216,13 +218,13 @@ sd(pre_or_data$rt,na.rm=TRUE)
     # 993; (b) when ranked, we obtain: 1, 1, 3, 3, 4, 4, 6, and 993; (c) and
     # (d) the median equals 3.5 and will be multiplied by 1.4826 to find a
     # MAD of 5.1891.
-mad_norm <- mad(pre_or_data$rt,na.rm=TRUE)
+mad_norm <- mad(pre_OR_1300$rt,na.rm=TRUE)
 
-upper_bound_med <- median(pre_or_data$rt,na.rm=TRUE)+(3*mad_norm)
-lower_bound_med <- median(pre_or_data$rt,na.rm=TRUE)-(3*mad_norm)
+upper_bound_med <- median(pre_OR_1300$rt,na.rm=TRUE)+(3*mad_norm)
+lower_bound_med <- median(pre_OR_1300$rt,na.rm=TRUE)-(3*mad_norm)
 
 # filter 
-or_data2 <- pre_or_data %>%
+or_data2 <- pre_OR_1300 %>%
   dplyr::filter(rt > lower_bound_med | is.na(rt), # keeps NAs, because these are miss markers
          rt < upper_bound_med | is.na(rt))
 
@@ -231,33 +233,14 @@ hist(or_data2$rt)
 summary(or_data2$rt)
 sd(or_data2$rt,na.rm=TRUE)
 
-(data_loss_med <- 1-length(or_data2$rt)/length(pre_or_data$rt))
+(data_loss_med <- 1-length(or_data2$rt)/length(pre_OR_1300$rt))
 
-#-------------------------------------
-# Outlier Removal Method 3: median +- 3(mad mult. by 1/Q(0.75)) 
-# mad_75_qnt <- unname(mad(pre_or_data$rt,constant=1/(quantile(pre_or_data$rt,na.rm=TRUE)[4]),na.rm=TRUE)) # does that fact that these are different suggest that, outliers aside, the underlying distribution is still not normal?
-# 
-# upper_bound_med_75 <- median(pre_or_data$rt,na.rm=TRUE)+(3*mad_75_qnt)
-# lower_bound_med_75 <- median(pre_or_data$rt,na.rm=TRUE)-(3*mad_75_qnt)
-# 
-# # filter 
-# or_data3 <- pre_or_data %>%
-#   filter(rt > lower_bound_med_75 | is.na(rt), # keeps NAs, because these are miss markers
-#          rt < upper_bound_med_75 | is.na(rt))
-# 
-# hist(or_data3$rt)
-# ggqqplot(or_data3$rt,na.action=na.omit)
-# summary(or_data3$rt)
-# sd(or_data3$rt,na.rm=TRUE)
-# 
-# (data_loss_med <- 1-length(or_data3$rt)/length(pre_or_data$rt))
-
-# output... Chose the method of median +- 3 mad() based on the assumption of normality and a b of 1.48...
 data <- or_data2
 
 ```
 We chose method 2 (median +- 3(median absolute deviation)) as the outlier removal method. This method maintained a fair amount of the data (data loss of 5.79%). The median was roughly unchanged (525.5 to 529.4 ms), while the min/max became more symmetric around the median. 
 While the mean +- 3(sd) method had also preserved much of the data (data loss of 1.93%), it left many extreme values in place, leading to a much more skewed qqplot. -- QQplots tell us about the normality of the underlying distribution. Although RT distributions are skewed, and in fact take the form of an exponential gaussian (gaussian convolved with an exponential function, and captured by parameters mu, sigma, and tau), we hope to remove extreme values at the tails that may not be informative. We do this based on a measure of central tendency not affected by the value of extreme outliers. For ref, see: Leys et al. 2013.
+
 ## Count Hits
 ```{r eval=FALSE, include=FALSE}
 n_total_targets <- length(pre_or_data$rt) 
@@ -274,12 +257,10 @@ n_targets_OR <- length(data$rt)
 n_hits_O.R <- length(which(!is.na(data$rt))) 
 (hit_rate_O.R <- n_hits_O.R/n_targets_OR)
 (miss_rate <- n_missed/n_targets_OR)
-
-
-
 ```
 Outlier removal brought hit rate down from 83.06% to 82.02% - a marginal change.
 There were 1430 NAs or missed targets (miss rate was 16.93%, now 17.97%).
+
 #----------------------- ANALYSES
 # Load Saved TD
 ```{r}
@@ -315,7 +296,7 @@ t.test(base_acc2$resp_mean[which(base_acc2$sess=="rand")],
 accuracy_data1 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_pos","subject"),na.rm=TRUE) 
 accuracy_data2 <- data %>% summarySE(measurevar = "resp", groupvars = c("sess","tgt_pos"),na.rm=TRUE)
 
-# ---- On averaged across participants
+# ---- averaged across participants
 pos.lm <- lm(resp_mean ~ tgt_pos, data=dplyr::filter(accuracy_data1,sess=="struct"))
 summary(pos.lm)
 Anova(pos.lm, type = '2')
@@ -401,7 +382,7 @@ stargazer(accuracy_data4,
           type = "html", 
           out = file.path(res_path,'tables','word_accuracy.doc'), summary = FALSE, rownames = FALSE)
 
-# ---- On averaged across participants
+# ---- veraged across participants
 word.lm <- lm(resp_mean ~ tgt_word, data=dplyr::filter(accuracy_data3,sess=="struct"))
 summary(word.lm)
 Anova(word.lm, type = '2')
@@ -525,7 +506,6 @@ reg.mod.cont <- as.data.frame(reg.syll.mod$contrasts)
 ### Prove OR removal didn't change it
 Uncomment and run this only if preprocessing chunks were executed and pre_or_data is in workspace. 
 ```{r}
-
 # pre_or_data %>%
 #   summarise(mean = mean(resp),
 #             sd = sd(resp))
@@ -1045,7 +1025,6 @@ ranef(glm.less.slope2)
 ranef(glm.less.slope3)
 
 
-
 dotplot(ranef(glm.less.slope))
 
 dotplot(ranef(glm.less.slope1))
@@ -1276,22 +1255,6 @@ ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","sess")
   ggsave(file.path(fig_path,'figs2c_tgt_num_exp4.png'), width = w, height = h)
 
 ```
-
-
-## - Target Position
-```{r}
-# glm.e <- glmer(rt_secs ~ tgt_pos + (1 | cond_order/subject), data = data, family = Gamma)
-#   summary(glm.e)
-#   plot(glm.e)
-#   qqnorm(resid(glm.e))
-#   Anova(glm.e)
-#   
-# anova(glm.less.int,glm.e) # Go with a...
-```
-
-glm.lesser.int (factor session only) appears to win out in all model comparisons. For the sake of pursuing planned analyses, we will look at this one, but also glm.less.int (with session*target position as factors). 
-
-
 
 ## - Session
 ```{r}
