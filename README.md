@@ -1,4 +1,4 @@
-Hi! Here is the data, code, stimuli & presentation scripts, and results from our forthcoming paper on SL. Feel free to look around, and send me an email if you have any questions. 
+Hi! Here is the code, stimuli & presentation scripts, and results from our forthcoming paper on SL. Feel free to look around, and send me an email if you have any questions. The data we will make public as soon as we get confirmation from our local ethics board.
 
 # Online and offline measures of statistical learning reflect sensitivity to pairwise relationships, but not chunking
 ### Abstract
@@ -7,3 +7,5 @@ Statistical learning allows individuals to rapidly extract regularities in the s
 ### Sneak Peak Figs.
 <img src="https://github.com/avakiai/statistical-learning/blob/master/3_results/Fig_1.jpg" width="600" height="500"/>
 Fig. 1. Implicit learning of a pseudo-language leads to rapid reactiom time facilitation for target syllables in predictable locations.
+
+Note that the Experiments 1 and 2 in the manuscript refer to "exp 3" and "exp 4", respectively, in the code. 
