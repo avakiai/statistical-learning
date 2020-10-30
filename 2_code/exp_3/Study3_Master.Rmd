@@ -11,25 +11,19 @@ output:
 ```{r}
 rm(list=ls()) # clear workspace
 # load(".RData") # load saved workspace image for this file
-
-# Directories
-#setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 ```
 
 # Paths
 ```{r}
-# Data Path
-data_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_3'
-# Code Path
-code_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/exp_3'
-# Results Path
-res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp_3'
-fig_path <- file.path(res_path,'/figures') # but can also be changed to : 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/final'
-```
-
 # Relative Paths
-```{r}
-
+# Code Path
+code_path <- getwd()
+# Data Path
+data_path <- file.path(code_path,'../../', '1_data', 'exp_3')
+# Results Path
+res_path <- file.path(code_path,'../../','3_results','exp_3')
+# Final fig path
+fig_path <-  file.path(code_path,'../../','3_results','final')
 ```
 
 # Libraries
@@ -708,6 +702,10 @@ emmip(rt.mod.full.int.fct, ~ block, CIs = TRUE, xlab = "Block") +
 
 ### Block x Pair Differences
 ```{r}
+# A repeat from above: 
+rt_data_sum4 <- rt_data %>% # target position x block x subject
+    summarySE(measurevar = "rt", groupvars = c("block","tgt_pos","subject"),na.rm=TRUE) 
+
 # Creates a data frame where for each subject and each block, we have the difference between RT averages to each of the positions:
 block.matters <- rt_data_sum4 %>%
   dplyr::select(subject, block, tgt_pos, rt_mean) %>%
@@ -818,7 +816,7 @@ gofstat(list(fitdist(rt_data$rt[!is.na(rt_data$rt)],"norm"),
 # 
 # gofstat(lnrt)
 
-rt_data <- rt_data %>% mutate(trial = as.numeric(trial),target_num = as.numeric(target_num))
+rt_data <- rt_data %>% mutate(trial = as.numeric(trial),target_num = as.factor(target_num))
 
 # less 1 
 check.sum.glm <- lm(rt_secs ~ target_num*block, data = rt_data)
@@ -868,8 +866,8 @@ rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_word"),na.rm=TRU
 rt_data %>% summarySE(measurevar = "detect", groupvars = c("target"),na.rm=TRUE) 
 
 ```
-Now: Accuracy of 0.70 and sd of 0.45.
-Previously: Average accuracy is 0.73 with an SD of 0.26. Sensitivity (true positives/true + false positives) is at 0.80 with an SD of 0.23. 
+Accuracy of 0.70 and sd of 0.45.
+
 
 #### False Positives
 ```{r}
@@ -885,15 +883,14 @@ rt_data_FP <- read_csv(file.path(data_path,'RT_block_summary_table.csv')) %>%
 sum(rt_data_FP$hits)/(sum(rt_data_FP$hits)+sum(rt_data_FP$false_positives)) # sensitivity/TPR
 
 ```
+True positive rate of 0.86.
 
 ### a. Accuracy per position
 ```{r}
-#[did i accidentally delete it?]
-
 accuracy_data1 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos","subject"),na.rm=TRUE) 
 accuracy_data2 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("tgt_pos"),na.rm=TRUE)
 
-#------ Averaged Data
+#------ Averaged over subjects
 pos.lm <- lm(detect_mean ~ tgt_pos, accuracy_data1)
     summary(pos.lm)
     Anova(pos.lm, type = '2')
@@ -1000,7 +997,7 @@ ggplot(accuracy_data5, aes(x = tgt_word, y = detect_mean, fill = tgt_word)) +
  # ggsave('fig4b_rt_acc.png',width=w,height=h)
 ```
 
-### c Accuracy per Syllable
+### c. Accuracy per Syllable
 ```{r}
 accuracy_data6 <- rt_data %>% summarySE(measurevar = "detect", groupvars = c("target","subject", "tgt_pos"),na.rm=TRUE) %>%
   mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
@@ -1076,9 +1073,9 @@ reg.mod.cont <- as.data.frame(reg.syll.mod$contrasts)
 ```
 
 
-## Prove it didn't change bc of OR
-Check: some accuracy test... -.-
+## Prove accuracy didn't change bc of outlier removal procedure
 ```{r}
+# note this requires one of the data frames generated from the preprocessing steps
 rt_data_cleaned.2 %>%
   summarise(mean = mean(detect),
             sd = sd(detect))
@@ -1099,13 +1096,10 @@ rt_data_cleaned.2 %>% summarySE(measurevar = "detect", groupvars = c("tgt_word")
 ```
 
 
-# --- Word Recognition
+#4 - WORD RECOGNITION
+In the 2afc task, did they say that pseudowords were words more often than partwords? 
 ### Summarize Data
 ```{r}
-# wordrec_data_sum1 <- wordrec_data %>%
-#   group_by(subject) %>%
-#   summarySE(measurevar = "prop_word_chosen",na.rm=TRUE)
-
 wordrec_data_sum1 <- wordrec_data_orig %>%
   group_by(subject) %>%
   summarySE(measurevar = "prop_word_chosen",na.rm=TRUE)
@@ -1207,7 +1201,7 @@ ggplot(wordrec_data_wrd, mapping = aes(x=word,y=n_chosen, fill = word)) +
   ggsave(file.path(fig_path,'exp3_fig5b_wr_word.png'), width = w, height = h)
 ```
 
-T-test
+#### T-test for each word
 ```{r}
 wordrec_data_sum2
 
@@ -1221,8 +1215,8 @@ p.s.B <- p.adjust(p.s,method = "bonferroni")
 On average, participants were able to discriminate 3 out of 4 words from partwords above chance level (2/4).
 
 
-# ----------------  Corrlations
-## Corr Median Delta with Wordrec
+#5 - Correlate RT and wordrec
+## Our Method: Corr Median Delta with Wordrec
 ```{r}
 # Generate Deltas for Experiment 3 Data... Delta MEDIANS
 rt_data_sum_corr <- rt_data %>% 

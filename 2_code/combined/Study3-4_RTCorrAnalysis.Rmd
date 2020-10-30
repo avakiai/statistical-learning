@@ -14,14 +14,19 @@ par(family="LM Roman 10")
 library(DescTools) 
 ```
 
+#Path
 ```{r}
-#data_path
-#code_path
-#res_path
-fig_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/combined'
-res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/combined'
-#source("summarySE.R")
-exps.3.4.data <- read_csv('C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/combined/exps_3_4s_data.csv', col_types = "cccdddcddddc") %>% mutate(subject = as.factor(subject),
+# Relative Paths
+# Code Path
+code_path <- getwd()
+# Data Path
+data_path <- file.path(code_path,'../../', '1_data', 'combined')
+# Results Path
+res_path <- file.path(code_path,'../../','3_results','combined')
+# Final fig path
+fig_path <-  file.path(code_path,'../../','3_results','final')
+
+exps.3.4.data <- read_csv(file.path(data_path, 'exps_3_4s_data.csv'), col_types = "cccdddcddddc") %>% mutate(subject = as.factor(subject),
                   cond_order = as.character(cond_order),
                   sess = as.character(sess), 
                   target = as.factor(target),
@@ -34,11 +39,12 @@ exps.3.4.data <- read_csv('C:/Users/Ava/Desktop/Experiments/statistical_learning
 ## Compute Correlation Matrices
 ```{r}
 # For each subject, compute a correlation matrix between syllables and then z transform that data. Put matrices into a list, and average them. Then transform back to rho. 
-  all.list  <- list()
-  all.cor.list  <- list()
-  all.cor.z.list  <- list()
-  all.cor.diss.z.list <- list()
-  all.cor.diss.list <- list()
+# We wanted to extract several layers of information here: 
+  all.list  <- list() # each sub's list of RTs
+  all.cor.list  <- list() # corr matrixes
+  all.cor.z.list  <- list() # z-trans corr mat
+  all.cor.diss.z.list <- list() # z-trans dissimilarity matrices (1-corr)
+  all.cor.diss.list <- list() # diss matrices (1-corr)
 
 for (curr_subj in unique(exps.3.4.data$subject)) {
   curr_data <- exps.3.4.data %>% 
@@ -54,7 +60,7 @@ for (curr_subj in unique(exps.3.4.data$subject)) {
   
 # find minimum number of rows, N
   n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
-# exceptions
+# exceptions: some participants had imbalances in the data that need to be fixed for the analysis, e.g. exceptionally few values for a syllable - in this case, remove it so that the field is NA and in the final analysis, it is just skipped
   if(curr_subj == "r4893") { # 3/29
     curr_data <- curr_data %>% 
     mutate(tu = as.numeric(rep(NA,nrow(curr_data))))

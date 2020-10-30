@@ -12,26 +12,21 @@ Hi! This script generates all models, tables, analyses, and figures pertaining t
 
 ```{r}
 rm(list=ls()) # clear workspace
-# load(".RData") # load saved workspace image for this file
+# load(".RData") # load saved workspace image for this file if desired
 
-# Working directory is where this file is
-#setwd(dirname(rstudioapi::getSourceEditorContext()$path))
 ```
 
 # Paths
 ```{r}
-# Data Path
-data_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_4'
-# Code Path
-code_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/exp_4'
-# Results Path
-res_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/exp_4'
-# Final fig path
-fig_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/3_results/final'
-```
-
 # Relative Paths
-```{r}
+# Code Path
+code_path <- getwd()
+# Data Path
+data_path <- file.path(code_path,'../../', '1_data', 'exp_4')
+# Results Path
+res_path <- file.path(code_path,'../../','3_results','exp_4')
+# Final fig path
+fig_path <-  file.path(code_path,'../../','3_results','final')
 
 ```
 
