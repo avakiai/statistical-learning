@@ -545,60 +545,60 @@ ggplot() +
 ```{r}
 # Show RT for each position & each trial (in this case the same thing as tgt_word)
 data_sum1 <- data %>%
-    summarySE(measurevar="rt", groupvars=c("tgt_pos","tgt_word","sess"), na.rm=TRUE)
+    summarySE(measurevar="rt_secs", groupvars=c("tgt_pos","tgt_word","sess"), na.rm=TRUE)
     data_sum1_struct <- data_sum1 %>% filter(sess == "struct")
     data_sum1_rand <- data_sum1 %>% filter(sess == "rand")
     
 # Show RT for each position only
 data_sum2 <- data %>%
-    summarySE(measurevar="rt", groupvars=c("tgt_pos","sess"), na.rm=TRUE)
+    summarySE(measurevar="rt_secs", groupvars=c("tgt_pos","sess"), na.rm=TRUE)
     data_sum2_struct <- data_sum2 %>% filter(sess == "struct")
     data_sum2_rand <- data_sum2 %>% filter(sess == "rand")
 
 # filter
 data_SR <- data %>%
-  filter(data$cond_ord_n==1)
+  dplyr::filter(data$cond_ord_n==1)
 data_RS <- data %>%
-  filter(data$cond_ord_n==2)
+  dplyr::filter(data$cond_ord_n==2)
 
 # Show RT for each position & each trial (in this case the same thing as tgt_word)
 data_SR_sum1 <- data_SR %>%
-    summarySE(measurevar = "rt", groupvars = c("tgt_pos","tgt_word","sess"),na.rm=TRUE)
+    summarySE(measurevar = "rt_secs", groupvars = c("tgt_pos","tgt_word","sess"),na.rm=TRUE)
 # Show RT for each position only
 data_SR_sum2 <- data_SR %>%
-    summarySE(measurevar = "rt", groupvars = c("tgt_pos","sess"),na.rm=TRUE)
+    summarySE(measurevar = "rt_secs", groupvars = c("tgt_pos","sess"),na.rm=TRUE)
 
 # Show RT for each position & each trial (in this case the same thing as tgt_word)
 data_RS_sum1 <- data_RS %>%
-    summarySE(measurevar = "rt", groupvars = c("tgt_pos","tgt_word","sess"),na.rm=TRUE)
+    summarySE(measurevar = "rt_secs", groupvars = c("tgt_pos","tgt_word","sess"),na.rm=TRUE)
 # Show RT for each position only
 data_RS_sum2 <- data_RS %>%
-    summarySE(measurevar = "rt", groupvars = c("tgt_pos","sess"),na.rm=TRUE)
+    summarySE(measurevar = "rt_secs", groupvars = c("tgt_pos","sess"),na.rm=TRUE)
 
 
 ```
 
-## Fig. 1a. RT ~ Pos | Sess
+## Fig. 3a. RT ~ Pos | Sess
 ```{r}
 # Median +- CI
 ggplot() +
   #geom_point(data = data_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(tgt_word)), size = 2) +
   #geom_line(data = data_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = tgt_word, colour = factor(tgt_word)),size = .5) +
-  geom_point(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median),
+  geom_point(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median),
                 #                             color = sess)) +
                 color = "black", size = 2)+
-  geom_errorbar(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci),
+  geom_errorbar(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median, ymin = rt_secs_median-ci, ymax = rt_secs_median+ci),
                  #                               color=sess), 
                 color = "black",
                 width = 0.1, size = 0.8) +
-  geom_line(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess,
+  geom_line(data = data_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median, group = sess,
                                             linetype = sess), 
             color = "black",
             size = .9) +
   #facet_grid(.~ sess) +
  # scale_colour_brewer(name = "condition",palette = "Set1") +
   #labs(colour= "Trial (Word)") + 
-  ylab('Median RT (ms)') + 
+  ylab('Median RT (s)') + 
   xlab('Ordinal postion') +
   scale_x_discrete(limits=c(1:3)) +
   scale_linetype_manual(name = "condition", values = c('solid', 'dashed')) + 
@@ -620,18 +620,19 @@ data_SR_sum2$sess <- factor(data_SR_sum2$sess, levels=c("struct","rand"))
 ggplot() +
  # geom_point(data = data_SR_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(tgt_word)), size = 2) +
 #  geom_line(data = data_SR_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = tgt_word, colour = factor(tgt_word)),size = .5) +
-  geom_point(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median), size = 2) +
-  geom_errorbar(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci), width = 0.1, size = 0.8) +
-  geom_line(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess, linetype = sess), 
+  geom_point(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median), size = 2) +
+  geom_errorbar(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median, ymin = rt_secs_median-ci, ymax = rt_secs_median+ci), width = 0.1, size = 0.8) +
+  geom_line(data = data_SR_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median, group = sess, linetype = sess), 
             color = "black",
             size = .9) +
  # facet_grid(.~ sess) +
  # scale_colour_brewer(name = "condition",palette = "Set1") +
 #  scale_colour_brewer(palette = "Paired") +
  # labs(colour= "Trial (Word)") + 
-  ylab('Median RT (ms)') + xlab('Ordinal postion') +
+  ylab('Median RT (s)') + xlab('Ordinal postion') +
   scale_x_discrete(limits=c(1:3)) +
-  scale_linetype_manual(name = "condition", values = c('dashed', 'solid')) + 
+ # scale_y_continuous(limits=c(0.4,0.57)) +
+  scale_linetype_manual(name = "condition", values = c('solid', 'dashed')) + 
   theme_classic() +
   theme(text = element_text(family = "LM Roman 10", face="bold",size = 22),legend.position=c(0.8,0.9)) +
   ggsave(file.path(fig_path,'s5_condition_order_StructRand.png'), width = w, height = h)
@@ -643,16 +644,16 @@ ggplot() +
 ggplot() +
  # geom_point(data = data_RS_sum1, mapping = aes(x=tgt_pos,y=rt_median, colour = factor(tgt_word)), size = 2) +
 #  geom_line(data = data_RS_sum1, mapping = aes(x = tgt_pos, y = rt_median, group = tgt_word, colour = factor(tgt_word)),size = .5) +
-  geom_point(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median), size = 2) +
-  geom_errorbar(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci),  width = 0.1, size = 0.8) +
-  geom_line(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = sess, linetype = sess), 
+  geom_point(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median), size = 2) +
+  geom_errorbar(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median, ymin = rt_secs_median-ci, ymax = rt_secs_median+ci),  width = 0.1, size = 0.8) +
+  geom_line(data = data_RS_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median, group = sess, linetype = sess), 
             color = "black",
             size = .9) +
  # facet_grid(.~ sess) +
 #  scale_colour_brewer(name = "condition",palette = "Set1") +
   #scale_colour_brewer(palette = "Paired") +
   #labs(colour= "Trial (Word)") + 
-  ylab('Median RT (ms)') + xlab('Ordinal postion') +
+  ylab('Median RT (s)') + xlab('Ordinal postion') +
   scale_linetype_manual(name = "condition", values = c('solid', 'dashed')) + 
   scale_x_discrete(limits=c(1:3)) +
   theme_classic() +
@@ -661,12 +662,12 @@ ggplot() +
 
 ```
 
-## Fig. 1b. Rainclouds
+## Fig. 3b. Rainclouds
 ```{r}
 data_sum1b <- data %>% # target position x subject
-    summarySE(measurevar = "rt", groupvars = c("tgt_pos","subject","sess"),na.rm=TRUE)
+    summarySE(measurevar = "rt_secs", groupvars = c("tgt_pos","subject","sess"),na.rm=TRUE)
     
-ggplot(data_sum1b, aes(x = tgt_pos, y = rt_median, fill = tgt_pos)) +
+ggplot(data_sum1b, aes(x = tgt_pos, y = rt_secs_median, fill = tgt_pos)) +
   geom_point(position = position_jitter(width = .07)) +
   geom_flat_violin(aes(linetype=sess),position = position_nudge(x = 0.2, y = 0), adjust = 1, trim = TRUE) + 
   geom_boxplot(aes(linetype=sess),width = 0.1, alpha = 0.5, position = position_nudge(x=0.2,y=0)) +
@@ -676,7 +677,7 @@ ggplot(data_sum1b, aes(x = tgt_pos, y = rt_median, fill = tgt_pos)) +
 #  scale_fill_brewer(palette="Pastel2") +
 #  scale_y_continuous(limits=c(380,580)) +
 #  labs(fill = "position") +
-  ylab('Median RT (ms)') + 
+  ylab('Median RT (s)') + 
   xlab('Ordinal postion') +
   guides(fill = FALSE) + 
   scale_linetype_manual(name = "cond.", values = c('solid', 'dashed')) + 
@@ -1194,15 +1195,16 @@ emmip(glm.fuller.int, tgt_pos*sess ~ cond_order, xlab = "session order", CIs = T
 ```
 
 ## Contra Honey: Control
+Ensure that RTs do not decrease over the course of repeated targets... 
 ```{r}
 data <- data %>% mutate(trial = as.factor(trial),target_num = as.factor(target_num))
 
-check.lm.40 <- lm(rt ~ target_num, data)
-summary(check.lm.40)
-plot(resid(check.lm.40))
-Anova(check.lm.40)
+# check.lm.40 <- lm(rt_secs ~ target_num, data)
+# summary(check.lm.40)
+# plot(resid(check.lm.40))
+# Anova(check.lm.40)
 
-check.lm.4 <- lm(rt ~ target_num*sess, data)
+check.lm.4 <- lm(rt_secs ~ target_num*sess, data)
 summary(check.lm.4)
 plot(resid(check.lm.4))
 Anova(check.lm.4)
@@ -1237,11 +1239,11 @@ ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","trial"
 
 
 
-ggplot(data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num","sess"),na.rm = TRUE)) +
-  geom_point(aes(target_num,rt_mean), size = 2) +
-  geom_line(aes(target_num,rt_mean, group = sess, linetype = sess)) + 
-  geom_smooth(aes(target_num,rt_mean, group = sess, linetype = sess), color = "red") + 
-  scale_y_continuous(name = "Mean RT (ms)") +
+ggplot(data %>% summarySE(.,measurevar = "rt_secs",groupvars = c("target_num","sess"),na.rm = TRUE)) +
+  geom_point(aes(target_num,rt_secs_mean), size = 2) +
+  geom_line(aes(target_num,rt_secs_mean, group = sess, linetype = sess)) + 
+  geom_smooth(aes(target_num,rt_secs_mean, group = sess, linetype = sess), color = "red") + 
+  scale_y_continuous(name = "Mean RT (s)") +
   scale_x_discrete(name = "Target number")  +
   #scale_color_brewer(palette = "Set1") + 
   scale_linetype_manual(name = "condition", values = c('solid', 'dashed')) + 

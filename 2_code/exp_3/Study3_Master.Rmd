@@ -221,18 +221,18 @@ Save preprocessed data.
 ## Fig. 1a. Plot RT ~ Pos
 ```{r message=FALSE, warning=FALSE}
 rt_data_sum1 <- rt_data %>% # target position x block
-    summarySE(measurevar = "rt", groupvars = c("block","tgt_pos"),na.rm=TRUE) 
+    summarySE(measurevar = "rt_secs", groupvars = c("block","tgt_pos"),na.rm=TRUE) 
 rt_data_sum2 <- rt_data %>% # target position only
-    summarySE(measurevar = "rt", groupvars = c("tgt_pos"),na.rm=TRUE)
+    summarySE(measurevar = "rt_secs", groupvars = c("tgt_pos"),na.rm=TRUE)
   
 ggplot() +
-  geom_point(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_median), colour = "BLACK") +
-  geom_errorbar(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci), colour = "BLACK", width = 0.1, size = 0.8) +
-  geom_line(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_median, group = 1), colour = "BLACK", size = .9) +
+  geom_point(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median), colour = "BLACK") +
+  geom_errorbar(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median, ymin = rt_secs_median-ci, ymax = rt_secs_median+ci), colour = "BLACK", width = 0.1, size = 0.8) +
+  geom_line(data = rt_data_sum2, mapping = aes(x = tgt_pos, y = rt_secs_median, group = 1), colour = "BLACK", size = .9) +
   
  # scale_colour_brewer(palette = "Paired") +
-  scale_y_continuous(limits=c(380,580)) +
-  ylab('Median RT (ms)') + xlab('Ordinal postion') +
+  scale_y_continuous(limits=c(0.380,0.580)) +
+  ylab('Median RT (s)') + xlab('Ordinal postion') +
   theme_classic() +
   theme(text = element_text(family = "LM Roman 10", face="bold",size = 22)) +
   ggsave(file.path(fig_path,'fig1a_rt_pos_avg.png'), width = w, height = h)
@@ -241,14 +241,14 @@ ggplot() +
 ## Fig. 1b. Plot RT ~ Pos (Raincloud)
 ```{r message=FALSE, warning=FALSE}
 rt_data_sum3 <- rt_data %>% # target position x subject
-    summarySE(measurevar = "rt", groupvars = c("tgt_pos","subject"),na.rm=TRUE)
+    summarySE(measurevar = "rt_secs", groupvars = c("tgt_pos","subject"),na.rm=TRUE)
     
-ggplot(rt_data_sum3, aes(x = tgt_pos, y = rt_median, fill = tgt_pos)) +
+ggplot(rt_data_sum3, aes(x = tgt_pos, y = rt_secs_median, fill = tgt_pos)) +
   geom_point(position = position_jitter(width = .07)) +
   geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 0.8, trim = TRUE) + 
   geom_boxplot(width = 0.1, alpha = 0.5, position = position_nudge(x=0.2,y=0)) +
   scale_fill_brewer(palette="Dark2") + 
-  ylab('Median RT (ms)') + xlab('Ordinal postion') +
+  ylab('Median RT (s)') + xlab('Ordinal postion') +
   guides(fill = FALSE, color = FALSE) + 
   theme_classic() +
   theme(text = element_text(family = "LM Roman 10", face="bold",size=22)) +
@@ -729,7 +729,7 @@ lsr::cohensD(block.matters$mean_rt_delta[block.matters$pairs=="c1.2"],block.matt
 
 ```
 
-## Fig. S2. RT Delta ~ ., Block
+## Fig. S2a-b. RT Delta ~ ., Block
 ```{r}
 png(file = file.path(fig_path,'pos_interaction.png'), width = w, height = h, res = 300, units = "in")
 emmip(pairings.aov, ~ pairs, CIs=TRUE, type = "response") + 
@@ -766,13 +766,13 @@ Anova(block.lm)
 
 ## Fig. S2c: RT ~ Target Num 
 ```{r}
-check.sum <- rt_data %>% summarySE(.,measurevar = "rt",groupvars = c("target_num"),na.rm = TRUE)
+check.sum <- rt_data %>% summarySE(.,measurevar = "rt_secs",groupvars = c("target_num"),na.rm = TRUE)
 
 ggplot(check.sum) +
-  geom_point(aes(target_num,rt_mean), size = 2) +
-  geom_line(aes(target_num,rt_mean, group = 1)) + 
-  geom_smooth(aes(target_num,rt_mean, group = 1), color = "red") + 
-  scale_y_continuous(name = "Mean RT (ms)") +
+  geom_point(aes(target_num,rt_secs_mean), size = 2) +
+  geom_line(aes(target_num,rt_secs_mean, group = 1)) + 
+  geom_smooth(aes(target_num,rt_secs_mean, group = 1), color = "red") + 
+  scale_y_continuous(name = "Mean RT (s)") +
   scale_x_discrete(name = "Target number")  +
   theme_classic() +
   theme(text = element_text(family = "LM Roman 10", face="bold",size = 22)) +

@@ -821,7 +821,7 @@ subj_table <- read_csv(file.path(res_path,'wilcoxon_subjects_final.csv')) %>%
                     test = as.factor(test))
 
 
-data_path <- 'C:/Users/Ava/Desktop/Experiments/statistical_learning/1_data/exp_3'
+data_path <- file.path(code_path,'../../','1_data','exp_3')
 wordrec_data_orig <- read_csv(file.path(data_path,'wordrec_task_data.csv')) %>%
     dplyr::select(subj_id:zabetu) %>%
     mutate(subject = as.factor(subj_id), subj_id = NULL) %>% 
@@ -840,16 +840,16 @@ corr.table <- subj_table_corr %>% add_column(prop.word = rep(wordrec_data_corr$p
 ```{r}
 corr.table$sub <- corr.table$mean.with-corr.table$mean.accr
 summary(corr.table$sub)
-corr.table$sub.scale <- scale(corr.table$mean.with-corr.table$mean.accr, center = 0)
-summary(corr.table$sub.scale)
-corr.table <- corr.table %>% mutate(sub.scale.or = sub.scale)
-corr.table$sub.scale.or[which(corr.table$sub.scale.or>1 | corr.table$sub.scale.or < -1)] <- NA
-summary(corr.table$sub.scale.or)
-corr.table <- corr.table %>%mutate(log.sub = log(sub.scale + 3))
-summary(corr.table$log.sub)
-corr.table <- corr.table %>%mutate(log.sub.or = log.sub)
-corr.table$log.sub.or[which(corr.table$log.sub.or>1 | corr.table$log.sub.or < -1)] <- NA 
-summary(corr.table$log.sub.or)
+# corr.table$sub.scale <- scale(corr.table$mean.with-corr.table$mean.accr, center = 0)
+# summary(corr.table$sub.scale)
+# corr.table <- corr.table %>% mutate(sub.scale.or = sub.scale)
+# corr.table$sub.scale.or[which(corr.table$sub.scale.or>1 | corr.table$sub.scale.or < -1)] <- NA
+# summary(corr.table$sub.scale.or)
+# corr.table <- corr.table %>%mutate(log.sub = log(sub.scale + 3))
+# summary(corr.table$log.sub)
+# corr.table <- corr.table %>%mutate(log.sub.or = log.sub)
+# corr.table$log.sub.or[which(corr.table$log.sub.or>1 | corr.table$log.sub.or < -1)] <- NA 
+# summary(corr.table$log.sub.or)
 ```
 
 ### -> Correlate
@@ -858,23 +858,26 @@ summary(corr.table$log.sub.or)
                      corr.table$prop.word[corr.table$test=="ordinal position"], 
                      method = "pearson",
                      alternative = "greater"))
+#                     alternative = "two.sided"))
 
 
 (corr.prob <- cor.test(corr.table$sub[corr.table$test=="transitional probability"],
                      corr.table$prop.word[corr.table$test=="transitional probability"], 
                      method = "pearson",
                      alternative = "greater"))
+#                     alternative = "two.sided"))
 
 (corr.word <- cor.test(corr.table$sub[corr.table$test=="word identity"],
                      corr.table$prop.word[corr.table$test=="word identity"], 
                      method = "pearson",
                      alternative = "greater"))
+#                     alternative = "two.sided"))
 
 (corr.dups <- cor.test(corr.table$sub[corr.table$test=="duplets"],
                      corr.table$prop.word[corr.table$test=="duplets"], 
                      method = "pearson",
                      alternative = "greater"))
-
+#                     alternative = "two.sided"))
 ```
 
 ### -> Plot
