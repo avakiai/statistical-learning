@@ -34,6 +34,9 @@ exps.3.4.data <- read_csv(file.path(data_path, 'exps_3_4s_data.csv'), col_types 
                   tgt_word = as.factor(tgt_word),
                   exp = as.factor(exp))
 
+exps.3.4.data <- exps.3.4.data %>%
+  mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+
 ```
 
 ## Compute Correlation Matrices
@@ -151,6 +154,9 @@ for (curr_subj in unique(exps.3.4.data$subject)) {
 
 # The problem with all.cor.diss.z.list is that some 1-corr values are > 1, which is incalculable for the z transformation. Thus, many
 # values become NA. 
+  
+  
+(all.cor.z.list)  
 ```
 To avoid data loss due to particularities of the Fisher Z transformation, and to normalize the distribution of correlation values, we will perform the RSA on z-transformed similarity (corrlation) values. 
 
@@ -200,8 +206,14 @@ Within:
 ... together 
 
 Across:
-1-2s, 2-3s: (crossed positions within words) nu vs. ga, ga vs. di, nu vs. di | basically, word identity
+1-2s, 1-3s, 2-3s: all crossed positions nu vs. ga, ga vs. di, nu vs. diy
+
+nu 1 ga 2 di 3
+ro 4 ki 5 se 6
+mi 7 po 8 la 9
+za 10 be 11 tu 12
 ```{r}
+
 # indices for each matrix
 wn.OP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10), # 1s
              c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), #2s
@@ -209,7 +221,15 @@ wn.OP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10), # 1s
 ac.OP <- list(c(1,2),c(2,3),c(1,3),
               c(4,5),c(5,6),c(4,6), 
              c(7,8),c(7,9),c(8,9),
-             c(10,11),c(11,12),c(10,12)) 
+             c(10,11),c(11,12),c(10,12),
+             c(1,5),c(1,6),c(1,8),c(1,9),c(1,11),c(1,12),
+             c(2,4),c(3,4),c(4,8),c(4,9),c(4,11),c(4,12),
+             c(2,7),c(3,7),c(5,7),c(6,7),c(7,11),c(7,12),
+             c(2,10),c(3,10),c(5,10),c(6,10),c(8,10),c(9,10),
+             c(2,6),c(2,9),c(2,12),
+             c(3,5),c(5,9),c(5,12),
+             c(3,8),c(6,8),c(8,12),
+             c(3,11),c(6,11),c(9,11)) 
 
 # collect values for each of these boxes from all participants (all matrices in the list)
 # You can check what's happening here like so: group.analysis[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
@@ -234,11 +254,14 @@ across.OP <- across.OP[!is.na(across.OP)] # remove NA
 (n.op <- round(min(length(within.OP),length(across.OP))*(4/5)))
 
 # sample & bootstrap to produce a matrix and bootstrapped means
+set.seed(42)
 within.OP.samp <- as.numeric(replicate(200, sample(within.OP, size = n.op, replace = TRUE)))
-within.OP.means <- replicate(200, mean(sample(within.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
-
+set.seed(42)
+within.OP.medians <- replicate(200, median(sample(within.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
+set.seed(42)
 across.OP.samp <- as.numeric(replicate(200, sample(across.OP, size = n.op, replace = TRUE)))
-across.OP.means <- replicate(200, mean(sample(across.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
+set.seed(42)
+across.OP.medians <- replicate(200, median(sample(across.OP, size = n.op, replace = TRUE), na.rm = TRUE)) 
 
 
 (wt.OP <- wilcox.test(within.OP.samp,across.OP.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
@@ -247,16 +270,26 @@ across.OP.means <- replicate(200, mean(sample(across.OP, size = n.op, replace = 
 
 ### - Transitional Probability
 Within:
-.33's: same as first row for Ordinal Position
+1's: all syllables with TP = 1
+
 
 Across: 
-1's: same as second two rows for Ordinal Position
+.33's: all syllables with TP = 0.33
 
+nu 1 ga 2 di 3
+ro 4 ki 5 se 6
+mi 7 po 8 la 9
+za 10 be 11 tu 12
 ```{r}
 
-wn.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10)) # low TP
-ac.TP <- list(c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
-             c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12))
+wn.TP <- list(c(2,3),c(5,6),c(8,9),c(11,12),
+              c(2,6),c(2,9),c(2,12),
+             c(3,5),c(5,9),c(5,12),
+             c(3,8),c(6,8),c(8,12),
+             c(3,11),c(6,11),c(9,11),
+             c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), #2s
+             c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12)) #3s # high TP
+ac.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10)) # low TP
 
 wn.tp.arr <- list()
 for (i in 1:length(wn.TP)) {
@@ -287,11 +320,14 @@ across.TP <- across.TP[!is.na(across.TP)] # remove NA
 
 (n.tp <- round(min(length(within.TP),length(across.TP))*(4/5)))
 
+set.seed(42)
 within.TP.samp <- replicate(200, sample(within.TP, size = n.tp, replace = TRUE)) 
-within.TP.means <- replicate(200, mean(sample(within.TP, size = n.tp, replace = TRUE), na.rm = TRUE)) 
-
+set.seed(42)
+within.TP.medians <- replicate(200, median(sample(within.TP, size = n.tp, replace = TRUE), na.rm = TRUE)) 
+set.seed(42)
 across.TP.samp <- replicate(200, sample(across.TP, size = n.tp, replace = TRUE)) 
-across.TP.means <- replicate(200, mean(sample(across.TP, size = n.tp, replace = TRUE), na.rm = TRUE)) 
+set.seed(42)
+across.TP.medians <- replicate(200, median(sample(across.TP, size = n.tp, replace = TRUE), na.rm = TRUE)) 
 
 
 (wt.TP <- wilcox.test(within.TP.samp,across.TP.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
@@ -301,17 +337,26 @@ across.TP.means <- replicate(200, mean(sample(across.TP, size = n.tp, replace = 
 ### - Triplet Identity
 Within: all comparisons within a words of the form 1-2, 2-3, 1-3
 nu-ga, ga-di, nu-di
-across: "phantom word" comparisons of the form 1-2,2-3,1-3, but only across words
-nu-ki, nu-se
+across: all "phantom word" comparisons of the form 1-2,2-3,1-3,
+
+nu 1 ga 2 di 3
+ro 4 ki 5 se 6
+mi 7 po 8 la 9
+za 10 be 11 tu 12
 ```{r}
+
 wn.WI <- list(c(1,2),c(2,3),c(1,3),# nugadi
               c(4,5),c(5,6),c(4,6),# rokise
              c(7,8),c(7,9),c(8,9),# mipola
              c(10,11),c(11,12),c(10,12))# zabetu
-ac.WI <- list(c(1,5),c(2,6),c(1,6),c(1,8),c(2,9),c(1,9),c(1,11),c(2,12),c(1,12),# nu-ki, ga-se, nu-se, nu-po, ga-la, nu-la, nu-be, ga-tu, nu-tu 
-              c(4,2),c(5,3),c(4,3),c(4,8),c(5,9),c(4,9),c(4,11),c(5,12),c(4,12), # ro-ga, ki-di, ro-di, ro-po, ki-la, ro-la, ro-be, ki-tu, ro-tu 
-              c(7,2),c(8,3),c(7,3),c(7,5),c(8,6),c(7,6),c(7,11),c(8,12),c(7,12), # mi-ga, po-di, mi-di, mi-ki, po-se, mi-se, mi-be, po-tu, mi-tu
-              c(10,2),c(11,3),c(10,3),c(11,5),c(10,6),c(11,6),c(10,8),c(11,9),c(10,9)) # za-ga, be-di, za-di, za-ki, be-ki, za-se, za-po, be-la, za-la 
+ac.WI <- list(c(1,5),c(1,6),c(1,8),c(1,9),c(1,11),c(1,12),
+             c(2,4),c(3,4),c(4,8),c(4,9),c(4,11),c(4,12),
+             c(2,7),c(3,7),c(5,7),c(6,7),c(7,11),c(7,12),
+             c(2,10),c(3,10),c(5,10),c(6,10),c(8,10),c(9,10),
+              c(2,6),c(2,9),c(2,12),
+             c(3,5),c(5,9),c(5,12),
+             c(3,8),c(6,8),c(8,12),
+             c(3,11),c(6,11),c(9,11))
 
 wn.WI.arr <- list()
 for (i in 1:length(wn.WI)) {
@@ -341,11 +386,14 @@ across.WI <- across.WI[!is.na(across.WI)] # remove NA
 
 (n.wi <- round(min(length(within.WI),length(across.WI))*(4/5)))
 
+set.seed(42)
 within.WI.samp <- replicate(200, sample(within.WI, size = n.wi, replace = TRUE)) 
-within.WI.means <- replicate(200, mean(sample(within.WI, size = n.wi, replace = TRUE), na.rm = TRUE)) 
-
+set.seed(42)
+within.WI.medians <- replicate(200, median(sample(within.WI, size = n.wi, replace = TRUE), na.rm = TRUE)) 
+set.seed(42)
 across.WI.samp <- replicate(200, sample(across.WI, size = n.wi, replace = TRUE)) 
-across.WI.means <- replicate(200, mean(sample(across.WI, size = n.wi, replace = TRUE), na.rm = TRUE)) 
+set.seed(42)
+across.WI.medians <- replicate(200, median(sample(across.WI, size = n.wi, replace = TRUE), na.rm = TRUE)) 
 
 (wt.WI <- wilcox.test(within.WI.samp,across.WI.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
 ```
@@ -353,13 +401,23 @@ across.WI.means <- replicate(200, mean(sample(across.WI, size = n.wi, replace = 
 
 ### - Duplet Identity
 Within: All proper duplets, 1-2s, 2-3s
-Across: 1-3's
+Across: 3-1's
+
+nu 1 ga 2 di 3
+ro 4 ki 5 se 6
+mi 7 po 8 la 9
+za 10 be 11 tu 12
 ```{r}
+set.seed(42)
+
 wn.di <- list(c(1,2),c(2,3),
               c(4,5),c(5,6),
-             c(7,8),c(7,9),
+             c(7,8),c(8,9),
              c(10,11),c(11,12))
-ac.di <- list(c(1,3),c(4,6),c(8,9),c(10,12))
+ac.di <- list(c(3,4),c(3,7),c(3,10),
+              c(1,6),c(6,7),c(6,10),
+              c(1,9),c(4,9),c(9,10),
+              c(1,12),c(4,12),c(7,12))
 
 
 wn.di.arr <- list()
@@ -390,11 +448,14 @@ across.di <- across.di[!is.na(across.di)] # remove NA
 
 (n.di <- round(min(length(within.di),length(across.di))*(4/5)))
 
+set.seed(42)
 within.di.samp <- replicate(200, sample(within.di, size = n.di, replace = TRUE))
-within.di.means <- replicate(200, mean(sample(within.di, size = n.di, replace = TRUE), na.rm = TRUE))
-
+set.seed(42)
+within.di.medians <- replicate(200, median(sample(within.di, size = n.di, replace = TRUE), na.rm = TRUE))
+set.seed(42)
 across.di.samp <- replicate(200, sample(across.di, size = n.di, replace = TRUE))
-across.di.means <- replicate(200, mean(sample(across.di, size = n.di, replace = TRUE), na.rm = TRUE))
+set.seed(42)
+across.di.medians <- replicate(200, median(sample(across.di, size = n.di, replace = TRUE), na.rm = TRUE))
 
 (wt.DI <- wilcox.test(within.di.samp,across.di.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
 
@@ -410,15 +471,15 @@ Note that in the two-sample case the estimator for the difference in location pa
 ```{r}
 
 WA.wilcox <- data.frame(test = factor(c(
-"ordinal position",
+"triplet position",
 "transitional probability",
-"word identity",
-"duplets"), levels = c("ordinal position","transitional probability","word identity","duplets")),
-mean = as.numeric(c(mean(within.OP.means)-mean(across.OP.means),
-mean(within.TP.means)-mean(across.TP.means),
-mean(within.WI.means)-mean(across.WI.means),
-mean(within.di.means)-mean(across.di.means))),
-mean_diff = as.numeric(c(
+"word grouping",
+"duplet pairing"), levels = c("triplet position","transitional probability","word grouping","duplet pairing")),
+median_diff = as.numeric(c(median(within.OP.medians)-median(across.OP.medians),
+median(within.TP.medians)-median(across.TP.medians),
+median(within.WI.medians)-median(across.WI.medians),
+median(within.di.medians)-median(across.di.medians))),
+estimate = as.numeric(c(
 wt.OP$estimate,
 wt.TP$estimate,
 wt.WI$estimate,
@@ -449,33 +510,140 @@ wt.TP$p.value,
 wt.WI$p.value,
 wt.DI$p.value)))
 
-#write.csv(WA.wilcox,file.path(res_path,paste0('/wilcox_',name,'_run_x.csv')), row.names = FALSE)
+
+
+# Bonferroni correction
+WA.wilcox$p.adj <- p.adjust(WA.wilcox$p, method = "bonferroni", n = length(WA.wilcox$p))
+
+
+write.csv(WA.wilcox,file.path(res_path,paste0('/wilcox_',name,'.csv')), row.names = FALSE)
 
 ```
 
 ### -> Plot
 ```{r}
-WA.wilcox <- read_csv(file.path(res_path,paste0('/wilcox_',name,'_run_x.csv'))) %>%
-  mutate(test = factor(test,levels = c("ordinal position","transitional probability","word identity","duplets")))
+WA.wilcox <- read_csv(file.path(res_path,paste0('/wilcox_',name,'.csv'))) %>%
+  mutate(test = factor(test,levels = c("triplet position","transitional probability","word grouping","duplet pairing")))
+```
+Graphical representation
+```{r}
+syllables <- c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")
+triplet <- rbind(
+  data.frame(group = factor(rep("within",length(wn.OP)),levels = c("within","across")),
+             x = sapply(wn.OP, "[[", 1), y = sapply(wn.OP, "[[", 2)),
+  data.frame(group = factor(rep("across",length(ac.OP)),levels = c("within","across")),
+             x = sapply(ac.OP, "[[", 1), y = sapply(ac.OP, "[[", 2))
+  )
+triplet <- triplet %>%
+  mutate(xn = factor(syllables[triplet$x],levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")),
+        yn = factor(syllables[triplet$y],c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+
+trans <- rbind(
+  data.frame(group = factor(rep("within",length(wn.TP)),levels = c("within","across")),
+                            x = sapply(wn.TP, "[[", 1), y = sapply(wn.TP, "[[", 2)),
+  data.frame(group = factor(rep("across",length(ac.TP)),levels = c("within","across")),
+                            x = sapply(ac.TP, "[[", 1), y = sapply(ac.TP, "[[", 2))
+  )
+trans <- trans %>%
+  mutate(xn = factor(syllables[trans$x],c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")),
+         yn = factor(syllables[trans$y],c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+
+word <- rbind(
+  data.frame(group = factor(rep("within",length(wn.WI)),levels = c("within","across")),
+             x = sapply(wn.WI, "[[", 1), y = sapply(wn.WI, "[[", 2)),
+  data.frame(group = factor(rep("across",length(ac.WI)),levels = c("within","across")),
+             x = sapply(ac.WI, "[[", 1), y = sapply(ac.WI, "[[", 2))
+  )
+word <- word %>%
+  mutate(xn = factor(syllables[word$x],c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")),
+         yn = factor(syllables[word$y],c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+
+duplet <- rbind(
+  data.frame(group = factor(rep("within",length(wn.di)),levels = c("within","across")),
+             x = sapply(wn.di, "[[", 1), y = sapply(wn.di, "[[", 2)),
+  data.frame(group = factor(rep("across",length(ac.di)),levels = c("within","across")),
+             x = sapply(ac.di, "[[", 1), y = sapply(ac.di, "[[", 2))
+  )
+duplet <- duplet %>%
+  mutate(xn = factor(syllables[duplet$x],c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")),
+        yn = factor(syllables[duplet$y],c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+
+
+
 ```
 
+Triplet Position
+```{r}
+ggplot(triplet, aes(xn,yn,fill = group)) + 
+  geom_tile() + 
+  scale_fill_manual(values = c("#0d0d0d","#a6a6a6"), name = NULL) + 
+  scale_x_discrete(limits = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                  breaks=c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                   position = "top", name = NULL) +
+  scale_y_discrete(breaks=c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                   limits=rev(c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")), name = NULL) +
+  theme_classic() + 
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15))
+
+```
+Transitional Probability
+```{r}
+ggplot(trans, aes(xn,yn,fill = group)) + 
+  geom_tile() + 
+  scale_fill_manual(values = c("#0d0d0d","#a6a6a6"), name = NULL) + 
+  scale_x_discrete(limits = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                   breaks=c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                   position = "top", name = NULL) +
+  scale_y_discrete(limits = rev(c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")),
+                   breaks=c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                   name = NULL) +
+  theme_classic() + 
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15))
+```
+
+Word Grouping
+```{r}
+ggplot(word, aes(xn,yn,fill = group)) + 
+  geom_tile() + 
+  scale_fill_manual(values = c("#0d0d0d","#a6a6a6"), name = NULL) + 
+  scale_x_discrete(limits = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                  breaks=c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                   position = "top", name = NULL) +
+  scale_y_discrete(breaks=c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                   limits=rev(c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")), name = NULL) +
+  theme_classic() + 
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15))
+```
+Duplet 
+```{r}
+ggplot(duplet, aes(xn,yn,fill = group)) + 
+  geom_tile() + 
+  scale_fill_manual(values = c("#0d0d0d","#a6a6a6"), name = NULL) + 
+  scale_x_discrete(limits = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                  breaks=c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                   position = "top", name = NULL) +
+  scale_y_discrete(breaks=c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu"),
+                   limits=rev(c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")), name = NULL) +
+  theme_classic() + 
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15))
+```
 
 ```{r}
 ggplot(WA.wilcox) + 
-  geom_col(aes(test,mean_diff,fill=test), color = "black") + #, fill = "grey", color = "black") + 
+  geom_col(aes(test,median_diff,fill=test), color = "black") + #, fill = "grey", color = "black") + 
   geom_hline(yintercept = 0, color = "black", linetype="dashed") + 
   scale_x_discrete(name = NULL) + 
   scale_y_continuous(name = paste0("within - across ", label ,"Pearson's r)")) +
   scale_fill_manual(values = c("#D95C4E", "#E8B651", "#7BB095", "#5E8FEB"), guide = NULL) +
-  annotate(geom = "text", x = 1, y = 0.052, size = 4, label = "***") +
-  annotate(geom = "text", x = 2, y = 0.09, size = 4, label = "***") +
-  annotate(geom = "text", x = 4, y = 0.058, size = 4, label = "***") +
+  #annotate(geom = "text", x = 1, y = 0.052, size = 4, label = "***") +
+  #annotate(geom = "text", x = 2, y = 0.09, size = 4, label = "***") +
+  #annotate(geom = "text", x = 4, y = 0.058, size = 4, label = "***") +
   # annotate(geom = "text", x = 1, y = 0.055, size = 4, label = "p<0.0001\n***") +
   # annotate(geom = "text", x = 2, y = 0.094, size = 4, label = "p<0.0001\n***") +
   # annotate(geom = "text", x = 4, y = 0.062, size = 4, label = "p<0.0001\n***") +
   theme_classic() + 
-  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15)) +
-  ggsave(file.path(fig_path, paste0('/fig9_',name,'_run_x_stars_col.png')), width = 9, height = 5)  
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 15)) #+
+  ggsave(file.path(fig_path, paste0('/fig4_',name,'.png')), width = 9, height = 5)  
 
 ```
 
@@ -510,36 +678,36 @@ for (curr_subj in unique(exp.3.only$subject)) {
 # find minimum number of rows, N
   n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
 # exceptions
-  if(curr_subj == "s1911") { # 3/29
+  if(curr_subj == "r4893") { # 3/29
     curr_data <- curr_data %>% 
     mutate(tu = as.numeric(rep(NA,nrow(curr_data))))
     N <- sort(n_rows)[2] # select the second lowest length
-  } else if(curr_subj == "s1107") { # 3/26
+  } else if(curr_subj == "l6988") { # 3/26
     # subject had only 2 entires in tu, so just make the column NA to preserve other data
     curr_data <- curr_data %>% 
     mutate(tu = as.numeric(rep(NA,nrow(curr_data))))
     N <- sort(n_rows)[2] # select the second lowest length
-  } else if (curr_subj == "l2805") { # 3/21
+  } else if (curr_subj == "i3939") { # 3/21
     curr_data <- curr_data %>% 
     mutate(be = as.numeric(rep(NA,nrow(curr_data))))
     N <- sort(n_rows)[2] 
-  } else if (curr_subj == "h0207") { # 3/11
+  } else if (curr_subj == "v7564") { # 3/11
     curr_data <- curr_data %>% 
     add_column(ro = as.numeric(rep(NA,nrow(curr_data))))
     n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
     N <- sort(n_rows)[2]
-  } else if (curr_subj == "g0609") { # 3/8
+  } else if (curr_subj == "s5965") { # 3/8
     curr_data <- curr_data %>% 
     mutate(po = as.numeric(rep(NA,nrow(curr_data))))
     N <- sort(n_rows)[2] # select the second lowest length
     # and maybe also ga? 
-  } else if (curr_subj == "b0207") { # 3/2
+  } else if (curr_subj == "s7540") { # 3/2
     curr_data <- curr_data %>% 
     add_column(be = as.numeric(rep(NA,nrow(curr_data))),.after = "za") %>%
     add_column(ro = as.numeric(rep(NA,nrow(curr_data))),.after = "di")
     n_rows <- curr_data %>% summarise_all(funs(sum(!is.na(.)))) %>% unlist() %>% unname()
     N <- sort(n_rows)[3]
-  } else if (curr_subj == "a0604") { # 3/1
+  } else if (curr_subj == "m0085") { # 3/1
     curr_data <- curr_data %>% 
     mutate(be = as.numeric(rep(NA,nrow(curr_data))))
     N <- sort(n_rows)[2] 
@@ -586,13 +754,13 @@ Procedure:
 ```
 
 ```{r}
-subj_table <- data.frame(subject = as.double(0),
+subj_table <- data.frame(subject = as.factor(0),
   test = as.factor(0),
   n.with = as.double(0),
   n.accr = as.double(0),
-  mean.with = as.double(0),
-  mean.accr = as.double(0),
-  score = as.double(0))#,
+  median.with = as.double(0),
+  median.accr = as.double(0))
+ # score = as.double(0))#,
   # w = as.double(0),
   # CI.low = as.double(0),
   # CI.hi = as.double(0),
@@ -607,15 +775,6 @@ for (curr.subj in 1:length(single.analysis)) {
   curr.subj.mat <- single.analysis[curr.subj][[1]]
 
 # ------ Ordinal Position
-# Determine cells
-wn.OP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10), # 1s
-             c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), #2s
-             c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12)) #3s
-ac.OP <- list(c(1,2),c(2,3),c(1,3),
-              c(4,5),c(5,6),c(4,6), 
-             c(7,8),c(7,9),c(8,9),
-             c(10,11),c(11,12),c(10,12)) 
-#print(paste("TP min p =", 2*((1/2)^12)))
 
 # Collect all possible values
 wn.arr <- list()
@@ -639,29 +798,25 @@ across.OP <- across.OP[!is.na(across.OP)] # remove NA
 #if(n.op < 2*((1/2)^12)) {"OP min p > 0.0004."}
 
 # Bootstrap/permute
-within.OP.mean <- mean(within.OP) 
-across.OP.mean <- mean(across.OP)
+within.OP.median <- median(within.OP) 
+across.OP.median <- median(across.OP)
 
 
-normed.mu <- within.OP.mean/across.OP.mean
+#normed.mu <- within.OP.mean/across.OP.mean
 
-subj_table <- rbind(subj_table, data.frame(subject = curr.subj,
-                                           test = 'ordinal position',
+subj_table <- rbind(subj_table, data.frame(subject = unique(exp.3.only$subject)[curr.subj],
+                                           test = 'triplet position',
                                            n.with = length(within.OP),
                                            n.accr = length(across.OP),
-                                           mean.with = within.OP.mean,
-                                           mean.accr = across.OP.mean,
-                                           score = normed.mu))
+                                           median.with = within.OP.median,
+                                           median.accr = across.OP.median))
+                                           #score = normed.mu))
                                            # w = wt.OP$statistic,
                                            # CI.low = wt.OP$conf.int[1],
                                            # CI.hi = wt.OP$conf.int[2],
                                            # min_p = 2*((1/2)^n.op),
                                            # p = wt.OP$p.value))
 # ---------------- Transitional Probability
-wn.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10)) # low TP
-ac.TP <- list(c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
-             c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12))
-#print(paste("TP min p =", 2*((1/2)^6)))
 
 wn.tp.arr <- list()
 for (i in 1:length(wn.TP)) {wn.tp.arr <- append(wn.tp.arr, curr.subj.mat[unlist(wn.TP[i])[1],unlist(wn.TP[i])][2])} 
@@ -682,21 +837,21 @@ across.TP <- across.TP[!is.na(across.TP)] # remove NA
 #if(n.tp < 2*((1/2)^6)) {"TP min p > 0.03."}
 
 #within.TP.samp <- sample(within.TP, size = n.tp, replace = FALSE)
-within.TP.mean <- mean(within.TP) 
+within.TP.median <- median(within.TP) 
 
 #across.TP.samp <- sample(across.TP, size = n.tp, replace = FALSE)
-across.TP.mean <- mean(across.TP) 
+across.TP.median <- median(across.TP) 
 
 #(wt.TP <- wilcox.test(within.TP.samp,across.TP.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
-normed.mu <- within.TP.mean/across.TP.mean
+#normed.mu <- within.TP.mean/across.TP.mean
 
-subj_table <- rbind(subj_table, data.frame(subject = curr.subj,
+subj_table <- rbind(subj_table, data.frame(subject = unique(exp.3.only$subject)[curr.subj],
                                            test = 'transitional probability',
                                            n.with = length(within.TP),
                                            n.accr = length(across.TP),
-                                           mean.with = within.TP.mean,
-                                           mean.accr = across.TP.mean,
-                                           score = normed.mu))
+                                           median.with = within.TP.median,
+                                           median.accr = across.TP.median))
+                                           #score = normed.mu))
                                            # w = wt.TP$statistic,
                                            # CI.low = wt.TP$conf.int[1],
                                            # CI.hi = wt.TP$conf.int[2],
@@ -704,15 +859,6 @@ subj_table <- rbind(subj_table, data.frame(subject = curr.subj,
                                            # p = wt.TP$p.value))
 
 # ---------------- Word Identity
-wn.WI <- list(c(1,2),c(2,3),c(1,3),# nugadi
-              c(4,5),c(5,6),c(4,6),# rokise
-             c(7,8),c(7,9),c(8,9),# mipola
-             c(10,11),c(11,12),c(10,12))# zabetu
-ac.WI <- list(c(1,5),c(2,6),c(1,6),c(1,8),c(2,9),c(1,9),c(1,11),c(2,12),c(1,12),# nu-ki, ga-se, nu-se, nu-po, ga-la, nu-la, nu-be, ga-tu, nu-tu 
-              c(4,2),c(5,3),c(4,3),c(4,8),c(5,9),c(4,9),c(4,11),c(5,12),c(4,12), # ro-ga, ki-di, ro-di, ro-po, ki-la, ro-la, ro-be, ki-tu, ro-tu 
-              c(7,2),c(8,3),c(7,3),c(7,5),c(8,6),c(7,6),c(7,11),c(8,12),c(7,12), # mi-ga, po-di, mi-di, mi-ki, po-se, mi-se, mi-be, po-tu, mi-tu
-              c(10,2),c(11,3),c(10,3),c(11,5),c(10,6),c(11,6),c(10,8),c(11,9),c(10,9)) # za-ga, be-di, za-di, za-ki, be-ki, za-se, za-po, be-la, za-la 
-#print(paste("WI min p =", 2*((1/2)^12)))
 
 wn.WI.arr <- list()
 for (i in 1:length(wn.WI)) {wn.WI.arr <- append(wn.WI.arr, curr.subj.mat[unlist(wn.WI[i])[1],unlist(wn.WI[i])][2])} 
@@ -732,33 +878,27 @@ across.WI <- across.WI[!is.na(across.WI)] # remove NA
 #(n.wi <- round(min(length(within.WI),length(across.WI))))
 #if(n.wi < 2*((1/2)^12)) {"OP min p > 0.0004."}
 
-within.WI.mean <- mean(within.WI)
+within.WI.median <- median(within.WI)
 
-across.WI.mean <- mean(across.WI)
+across.WI.median <- median(across.WI)
 
 #(wt.WI <- wilcox.test(within.WI.samp,across.WI.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
 
-normed.mu <- within.WI.mean/across.WI.mean
+#normed.mu <- within.WI.mean/across.WI.mean
 
-subj_table <- rbind(subj_table, data.frame(subject = curr.subj,
-                                           test = 'word identity',
+subj_table <- rbind(subj_table, data.frame(subject = unique(exp.3.only$subject)[curr.subj],
+                                           test = 'word grouping',
                                            n.with = length(within.WI),
                                            n.accr = length(across.WI),
-                                           mean.with = within.WI.mean,
-                                           mean.accr = across.WI.mean,
-                                           score = normed.mu))
+                                           median.with = within.WI.median,
+                                           median.accr = across.WI.median))
+                                           #score = normed.mu))
                                            # w = wt.WI$statistic,
                                            # CI.low = wt.WI$conf.int[1],
                                            # CI.hi = wt.WI$conf.int[2],
                                            # min_p = 2*((1/2)^n.wi),
                                            # p = wt.WI$p.value))
 # ------------------- Duplet Identity
-wn.di <- list(c(1,2),c(2,3),
-              c(4,5),c(5,6),
-             c(7,8),c(7,9),
-             c(10,11),c(11,12))
-ac.di <- list(c(1,3),c(4,6),c(8,9),c(10,12))
-#print(paste("DI min p =", 2*((1/2)^4)))
 
 wn.di.arr <- list()
 for (i in 1:length(wn.di)) {wn.di.arr <- append(wn.di.arr, curr.subj.mat[unlist(wn.di[i])[1],unlist(wn.di[i])][2])} 
@@ -781,22 +921,22 @@ across.di <- across.di[!is.na(across.di)] # remove NA
 #if(n.di < 2*((1/2)^6)) {"OP min p > 0.125."}
 
 #within.di.samp <- sample(within.di, size = n.di, replace = FALSE)
-within.di.mean <- mean(within.di)
+within.di.median <- median(within.di)
 
 #across.di.samp <- sample(across.di, size = n.di, replace = FALSE)
-across.di.mean <- mean(across.di)
+across.di.median <- median(across.di)
 
 #(wt.DI <- wilcox.test(within.di.samp,across.di.samp, conf.int = TRUE, conf.level = 0.95, paired = TRUE))
 
-normed.mu <- within.di.mean/across.di.mean
+#normed.mu <- within.di.mean/across.di.mean
 
-subj_table <- rbind(subj_table, data.frame(subject = curr.subj,
-                                           test = 'duplets',
+subj_table <- rbind(subj_table, data.frame(subject = unique(exp.3.only$subject)[curr.subj],
+                                           test = 'duplet pairing',
                                            n.with = length(within.di),
                                            n.accr = length(across.di),
-                                           mean.with = within.di.mean,
-                                           mean.accr = across.di.mean,
-                                           score = normed.mu))
+                                           median.with = within.di.median,
+                                           median.accr = across.di.median))
+                                           # score = normed.mu))
                                            # w = wt.DI$statistic,
                                            # CI.low = wt.DI$conf.int[1],
                                            # CI.hi = wt.DI$conf.int[2],
@@ -806,17 +946,15 @@ subj_table <- rbind(subj_table, data.frame(subject = curr.subj,
 } # subject
 
 subj_table <- subj_table[-1,]
-write_csv(subj_table,file.path(res_path,'wilcoxon_subjects_final.csv'))
+write_csv(subj_table,file.path(res_path,'wilcoxon_subjects-level.csv'))
 ```
-"Normed.mu", or "score", stored in the subj_table matrix is simply the ratio between within and across means. However, this value turned out not to be very useful as a metric, so we did not end up using it. 
+
 
 
 ## Load WordRec
 ```{r}
-if (all(count(subj_table$subject)$freq==4) & last(subj_table$subject)==33) {subj_table$subject <- rep(unique(exp.3.only$subject),each=4)}
-
 # Read in file if starting here. 
-subj_table <- read_csv(file.path(res_path,'wilcoxon_subjects_final.csv')) %>%
+subj_table <- read_csv(file.path(res_path,'wilcoxon_subjects-level.csv')) %>%
               mutate(subject = as.factor(subject),
                     test = as.factor(test))
 
@@ -838,7 +976,7 @@ corr.table <- subj_table_corr %>% add_column(prop.word = rep(wordrec_data_corr$p
 
 ### Create Score
 ```{r}
-corr.table$sub <- corr.table$mean.with-corr.table$mean.accr
+corr.table$sub <- corr.table$median.with-corr.table$median.accr
 summary(corr.table$sub)
 # corr.table$sub.scale <- scale(corr.table$mean.with-corr.table$mean.accr, center = 0)
 # summary(corr.table$sub.scale)
@@ -854,8 +992,8 @@ summary(corr.table$sub)
 
 ### -> Correlate
 ```{r}
-(corr.ordp <- cor.test(corr.table$sub[corr.table$test=="ordinal position"],
-                     corr.table$prop.word[corr.table$test=="ordinal position"], 
+(corr.ordp <- cor.test(corr.table$sub[corr.table$test=="triplet position"],
+                     corr.table$prop.word[corr.table$test=="triplet position"], 
                      method = "pearson",
                      alternative = "greater"))
 #                     alternative = "two.sided"))
@@ -867,14 +1005,14 @@ summary(corr.table$sub)
                      alternative = "greater"))
 #                     alternative = "two.sided"))
 
-(corr.word <- cor.test(corr.table$sub[corr.table$test=="word identity"],
-                     corr.table$prop.word[corr.table$test=="word identity"], 
+(corr.word <- cor.test(corr.table$sub[corr.table$test=="word grouping"],
+                     corr.table$prop.word[corr.table$test=="word grouping"], 
                      method = "pearson",
                      alternative = "greater"))
 #                     alternative = "two.sided"))
 
-(corr.dups <- cor.test(corr.table$sub[corr.table$test=="duplets"],
-                     corr.table$prop.word[corr.table$test=="duplets"], 
+(corr.dups <- cor.test(corr.table$sub[corr.table$test=="duplet pairing"],
+                     corr.table$prop.word[corr.table$test=="duplet pairing"], 
                      method = "pearson",
                      alternative = "greater"))
 #                     alternative = "two.sided"))
@@ -882,10 +1020,10 @@ summary(corr.table$sub)
 
 ### -> Plot
 ```{r warning=FALSE}
-corr.table$test <- factor(corr.table$test,levels = c("ordinal position","transitional probability","word identity","duplets"))
+corr.table$test <- factor(corr.table$test,levels = c("triplet position","transitional probability","word grouping","duplet pairing"))
 
-plots.text <- data.frame(test = factor(c("ordinal position","transitional probability","word identity","duplets"),
-                                       levels = c("ordinal position","transitional probability","word identity","duplets")),
+plots.text <- data.frame(test = factor(c("triplet position","transitional probability","word grouping","duplet pairing"),
+                                       levels =c("triplet position","transitional probability","word grouping","duplet pairing")),
   label = c(paste0("\u03C1 = ",round(corr.ordp$estimate, digits = 2),", p = ",round(corr.ordp$p.value, digits = 2)),
              paste0("\u03C1 = ",round(corr.prob$estimate, digits = 2),", p = ",round(corr.prob$p.value, digits = 2)),
              paste0("\u03C1 = ",round(corr.word$estimate, digits = 2),", p = ",round(corr.word$p.value, digits = 2)),
@@ -917,8 +1055,8 @@ ggplot(corr.table, aes(sub, prop.word, color = test)) +
   geom_vline(xintercept = 0, color = "gray", linetype="dashed") + 
   theme_classic() +
   theme(text = element_text(family = "LM Roman 10", face="bold",size=20), 
-        legend.title = element_text(""),  legend.position = "top") +
-  ggsave(file.path(fig_path,'fig10_corr_sub_final_labels_x_facet2_col.png'),width = 9, height = 7)  
+        legend.title = element_text(""),  legend.position = "top")# +
+  #ggsave(file.path(fig_path,'fig10_corr_sub_final_labels_x_facet2_col.png'),width = 9, height = 7)  
 
 
 

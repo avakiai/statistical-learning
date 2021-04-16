@@ -597,22 +597,8 @@ emmeans(rt.mod.full.int.fct, specs = pairwise ~ block|tgt_pos, adjust = "Tukey",
 ```
 
 ### Contra Himbergen et al.
-This paper suggests the RT effect can happen spuriously. 
-I first wanted to know if the size of the mean difference between positions 1 and 2, 2 and 3, and 1 and 3 changed over blocks. 
 ```{r}
-#---------------------------------------------------------
-# AK;s question: How does the relationship 1-2, 2-3 and 1-3 change over blocks?
-contrasts1.2 <- emm.pos.block$contrasts %>%
-  as.data.frame() %>%
-  filter(contrast=="1 - 2")
 
-contrasts1.3 <- emm.pos.block$contrasts %>%
-  as.data.frame() %>%
-  filter(contrast=="1 - 3")
-
-contrasts2.3 <- emm.pos.block$contrasts %>%
-  as.data.frame() %>%
-  filter(contrast=="2 - 3")
 ```
 
 #### Only Blocks 1 & 2
@@ -620,11 +606,14 @@ We found an effect of block, and now narrow the analysis to first 2 blocks. Mode
 ```{r}
 block12.mod <- glmer(rt_secs ~ 1 + tgt_pos*block + (1 | subject), data = rt_data[which(rt_data$block==1|rt_data$block==2),], family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
   Anova(block12.mod)
-  
-emmeans(block12.mod, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response")
 
-b12.m <- emmeans(block12.mod, specs = pairwise ~ block, adjust = "tukey", transform = "response")
-b12.d = as.data.frame(b12.d$contrasts)$estimate / sigmaHat(block12.mod)
+rt_data[which(rt_data$block==1|rt_data$block==2),] %>% summarySE(., measurevar = "rt", groupvars = c("tgt_pos"), na.rm = TRUE)
+
+b12.pos <- emmeans(block12.mod, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response")
+b12.dpos <- as.data.frame(b12.pos$contrasts)$estimate / sigmaHat(block12.mod)
+
+b12.block <- emmeans(block12.mod, specs = pairwise ~ block, adjust = "tukey", transform = "response")
+b12.d <- as.data.frame(b12.block$contrasts)$estimate / sigmaHat(block12.mod)
 
 emmip(block12.mod, block ~ tgt_pos, xlab = "Target Position", CIs = TRUE)
 ```

@@ -49,23 +49,9 @@ for (a.loop in 2:length(possible.analyses)) {
   for (rep.loop in 1:50) {
     
 ### -------------------------------------- Ordinal Position
-# Within: 
-# 1s: (all ones vs. all other ones) nu vs. ro, nu vs. mi, etc.  
-# 2s: (all 2s vs. all other twos) ga vs. ki, etc. 
-# 3s: (all threes vs. all other threes) di vs. se, etc. 
-# ... together 
-# 
-# Across:
-# 1-2s, 2-3s: (crossed positions within words) nu vs. ga, ga vs. di, nu vs. di | basically, word identity
 
-# indices for each matrix
-wn.OP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10), # 1s
-             c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), #2s
-             c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12)) #3s
-ac.OP <- list(c(1,2),c(2,3),c(1,3),
-              c(4,5),c(5,6),c(4,6), 
-             c(7,8),c(7,9),c(8,9),
-             c(10,11),c(11,12),c(10,12)) 
+
+
 
 # collect values for each of these boxes from all participants (all matrices in the list)
 # You can check what's happening here like so: group.analysis[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
@@ -126,11 +112,6 @@ meta_table <- rbind(meta_table,
 ### ------------------------------------- Transitional Probability
 #.33s vs. 1s...
 
-# indices for each matrix
-wn.TP <- list(c(1,4),c(1,7),c(1,10),c(4,7),c(4,10),c(7,10)) # low TP
-ac.TP <- list(c(2,5),c(2,8),c(2,11),c(5,8),c(5,11),c(8,11), # high TP
-             c(3,6),c(3,9),c(3,12),c(6,9),c(6,12),c(9,12))
-
 wn.tp.arr <- list()
 for (i in 1:length(wn.TP)) {
   # group.analysis[[1]][wn.OP[[i]][1],wn.OP[[i]][2]]
@@ -189,19 +170,6 @@ meta_table <- rbind(meta_table,
                      p = wt.TP$p.value))
 
 ### -------------------------------------------- Triplet Identity
-# Within: all comparisons within a words of the form 1-2, 2-3, 1-3
-# nu-ga, ga-di, nu-di
-# across: "phantom word" comparisons of the form 1-2,2-3,1-3, but only across words
-# nu-ki, nu-se
-
-wn.WI <- list(c(1,2),c(2,3),c(1,3),# nugadi
-              c(4,5),c(5,6),c(4,6),# rokise
-             c(7,8),c(7,9),c(8,9),# mipola
-             c(10,11),c(11,12),c(10,12))# zabetu
-ac.WI <- list(c(1,5),c(2,6),c(1,6),c(1,8),c(2,9),c(1,9),c(1,11),c(2,12),c(1,12),# nu-ki, ga-se, nu-se, nu-po, ga-la, nu-la, nu-be, ga-tu, nu-tu 
-              c(4,2),c(5,3),c(4,3),c(4,8),c(5,9),c(4,9),c(4,11),c(5,12),c(4,12), # ro-ga, ki-di, ro-di, ro-po, ki-la, ro-la, ro-be, ki-tu, ro-tu 
-              c(7,2),c(8,3),c(7,3),c(7,5),c(8,6),c(7,6),c(7,11),c(8,12),c(7,12), # mi-ga, po-di, mi-di, mi-ki, po-se, mi-se, mi-be, po-tu, mi-tu
-              c(10,2),c(11,3),c(10,3),c(11,5),c(10,6),c(11,6),c(10,8),c(11,9),c(10,9)) # za-ga, be-di, za-di, za-ki, be-ki, za-se, za-po, be-la, za-la 
 
 wn.WI.arr <- list()
 for (i in 1:length(wn.WI)) {
@@ -260,14 +228,6 @@ meta_table <- rbind(meta_table,
 
 
 ### -------------------------------------------- Duplet Identity
-# Within: All proper duplets, 1-2s, 2-3s
-# Across: 1-3's
-
-wn.di <- list(c(1,2),c(2,3),
-              c(4,5),c(5,6),
-              c(7,8),c(7,9),
-              c(10,11),c(11,12))
-ac.di <- list(c(1,3),c(4,6),c(8,9),c(10,12))
 
 
 wn.di.arr <- list()
