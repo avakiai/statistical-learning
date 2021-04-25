@@ -1,7 +1,7 @@
 ---
 title: 'Exp. 1: Target Detection Task and Word Recognition for SL Study'
 author: "Ava Kiai"
-date: "23 September, 2020"
+date: "17 April, 2021"
 output:
   pdf_document: default
   html_document:
@@ -31,8 +31,8 @@ fig_path <-  file.path(code_path,'../../','3_results','final')
 # basics
 library(tidyverse)
 library(fitdistrplus)
-source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/summarySE.R')
-source('C:/Users/Ava/Desktop/Experiments/statistical_learning/2_code/R_rainclouds.R')
+source(file.path(code_path,'../../', '2_code', 'summarySE.R'))
+source(file.path(code_path,'../../', '2_code','R_rainclouds.R'))
   
 # stats
 library(lme4)
@@ -70,6 +70,9 @@ theme_set(
 # and uncomment the following line: 
 # rt_data_orig <- read_csv(file.path(data_path,'RT_response_table.csv'))
 
+# Following Reviewer Comments, we added stream position to the log files: 
+# rt_data_orig <- read_csv(file.path(data_path,'RT_response_table_R1.csv'))
+
 # OTHERWISE, LOAD PREPROCESSED DATA: 
 rt_data <- read_csv(file.path(data_path,'exp_3_rt_data.csv')) %>%
       mutate(subject = as.factor(subject),
@@ -77,6 +80,14 @@ rt_data <- read_csv(file.path(data_path,'exp_3_rt_data.csv')) %>%
            target = as.factor(target),
            tgt_pos = as.factor(tgt_pos),
            tgt_word = as.factor(tgt_word))
+# Edited: Featuring the stream position info:
+# Use this to examine the chunk "Reviewer suggested model for stream position confound"
+# rt_data <- read_csv(file.path(data_path,'exp_3_rt_data_R1.csv')) %>%
+#       mutate(subject = as.factor(subject),
+#            block = as.factor(block),
+#            target =  factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")),
+#            tgt_pos = as.factor(tgt_pos),
+#            tgt_word = as.factor(tgt_word))
 
 # 2. Offline SL: Word Recognition Task
 wordrec_data_orig <- read_csv(file.path(data_path,'wordrec_task_data.csv')) %>%
@@ -106,20 +117,19 @@ rt_data_clean <- rt_data_orig[which(rt_data_orig$code!=0),]
   
 # Rename & factorize columns
 rt_data_cleaned.1 <- rt_data_clean %>% 
-                     dplyr::select(2:6,8:11) %>%
+                     dplyr::select(-c("subject","sequence_file")) %>%
                      dplyr::rename(subject = subjID, trial = block, block = meta_blocks, target_num = code, target = target_syll) %>%
                      mutate(subject = as.factor(subject),
                             block = as.factor(block),
                             target = as.factor(target), 
                             tgt_pos = as.factor(tgt_pos), 
                             tgt_word = as.factor(tgt_word),
-                           # detect = case_when(detect==1 ~ 0,
-                           #           detect==2 ~ 1),
                             detect = as.numeric(detect))
 
 
 
 ```
+
 Remove data with technical or human error...
 ```{r Remove data with technical errors, eval=FALSE, include=FALSE}
 rm_subjs <- c("b1965", # Did not respond at all
@@ -133,6 +143,8 @@ rt_data_cleaned.2 <- rt_data_cleaned.1[which(!rt_data_cleaned.1$subject %in% rm_
 print(paste0("Of the original ", length(unique(rt_data_cleaned.1$subject)), " subjects, ", length(unique(rt_data_cleaned.2$subject)), " remain after removing participants with technical errors."))
   
 ```
+
+Visuzalise RTs
 ```{r Visualize RT distributions/histograms, eval=FALSE, warning=FALSE, include=FALSE}
 # view
 hist(rt_data_cleaned.2$rt)
@@ -144,6 +156,7 @@ descdist(rts, discrete = FALSE)
 descdist(rts, discrete = FALSE, boot = 500)
 # Distribution is gamma/lognormal.
 ```
+
 Fit the distribution of the data to determine best family for GLM... 
 ```{r Compare fits to RT data, eval=FALSE, warning=FALSE, include=FALSE}
 fit.gam  <- fitdist(rts, "gamma")
@@ -161,6 +174,7 @@ ppcomp  (list(fit.gam, fit.ln), legendtext = plot.legend)
 gofstat(list(fit.gam, fit.ln), fitnames = c("gamma", "lognorm"))
 # Gamma distribution fits best. 
 ```
+
 Perform outlier removal...
 ```{r Outlier removal, eval=FALSE, warning=FALSE, include=FALSE}
 # Outlier Removal Method: median +- 3(mad) 
@@ -200,25 +214,28 @@ gofstat(list(fit.norm, fit.gam, fit.ln), fitnames = c("norm","gamma", "lognorm")
 
 print(paste0("The method of removing +- 3 * the median absolute deviation results in a data loss of only ", round(1-length(rt_data$rt)/length(rt_data_cleaned.2$rt), digits = 3), "%. Meanwhile, although outlier removal makes the distribution much more normal (note scaling does not add any further normality), gamma remains the best fit."))
 ```
+
 Compute summary statistics...
 ```{r Summary statistics before/after outlier removal, eval=FALSE, include=FALSE}
 summary(sort(rts))
 summary(sort(rts.rm))
 ```
+
 Rescale response variable (RT). This is because if we use miliseconds for GLM, the variances become very small with respect to the scale of the variable, and the models often don't converge,. Use seconds, which retains all the same information and relationships but avoids this problem.
 ```{r Rescale response variable, eval=FALSE, include=FALSE}
 # rescale y var
 rt_data <- rt_data %>%
    mutate(rt_secs = rt/1000)
 ```
+
 Save preprocessed data.
 ```{r Save data, eval=FALSE, include=FALSE}
-# Uncomment if needed
-# write.csv(rt_data,'exp_3_rt_data.csv', row.names = FALSE)
+# write.csv(rt_data,file.path(data_path,'exp_3_rt_data_R1.csv'), row.names = FALSE)
 ```
 
 # 1 - PLOTS
-## Fig. 1a. Plot RT ~ Pos
+## RT is predicted by triplet (target) position
+### Fig. 1a. Plot RT ~ Pos
 ```{r message=FALSE, warning=FALSE}
 rt_data_sum1 <- rt_data %>% # target position x block
     summarySE(measurevar = "rt_secs", groupvars = c("block","tgt_pos"),na.rm=TRUE) 
@@ -232,13 +249,13 @@ ggplot() +
   
  # scale_colour_brewer(palette = "Paired") +
   scale_y_continuous(limits=c(0.380,0.580)) +
-  ylab('Median RT (s)') + xlab('Ordinal postion') +
+  ylab('Median RT (s)') + xlab('Triplet position') +
   theme_classic() +
   theme(text = element_text(family = "LM Roman 10", face="bold",size = 22)) +
   ggsave(file.path(fig_path,'fig1a_rt_pos_avg.png'), width = w, height = h)
 ```
 
-## Fig. 1b. Plot RT ~ Pos (Raincloud)
+### Fig. 1b. Plot RT ~ Pos (Raincloud)
 ```{r message=FALSE, warning=FALSE}
 rt_data_sum3 <- rt_data %>% # target position x subject
     summarySE(measurevar = "rt_secs", groupvars = c("tgt_pos","subject"),na.rm=TRUE)
@@ -248,35 +265,41 @@ ggplot(rt_data_sum3, aes(x = tgt_pos, y = rt_secs_median, fill = tgt_pos)) +
   geom_flat_violin(position = position_nudge(x = 0.2, y = 0), adjust = 0.8, trim = TRUE) + 
   geom_boxplot(width = 0.1, alpha = 0.5, position = position_nudge(x=0.2,y=0)) +
   scale_fill_brewer(palette="Dark2") + 
-  ylab('Median RT (s)') + xlab('Ordinal postion') +
+  ylab('Median RT (s)') + xlab('Triplet position') +
   guides(fill = FALSE, color = FALSE) + 
   theme_classic() +
   theme(text = element_text(family = "LM Roman 10", face="bold",size=22)) +
   ggsave(file.path(fig_path,'fig1b_rt_pos_col.png'), width = w, height = h)
 ```
 
-## Plot for each Subject: RT ~ Pos x Block
-This plot generates the plot for RT as a function of position and block for all participants individually. 
+### Plot RT ~ Syllable
 ```{r message=FALSE, warning=FALSE}
-rt_data_sum4 <- rt_data %>% # target position x block x subject
-    summarySE(measurevar = "rt", groupvars = c("block","tgt_pos","subject"),na.rm=TRUE) 
+rt_data_sum.ex <- rt_data %>% # target position x subject
+    summarySE(measurevar = "rt", groupvars = c("tgt_pos","subject","target"),na.rm=TRUE) %>%
+  mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
+rt_data_sum.ex2 <- rt_data %>% # target position x subject
+    summarySE(measurevar = "rt", groupvars = c("tgt_pos","target"),na.rm=TRUE) %>%
+  mutate(target = factor(target, levels = c("nu","ga","di","ro","ki","se","mi","po","la","za","be","tu")))
 
-ggplot(rt_data_sum4, mapping=aes(x=tgt_pos,y=rt_median,color=as.factor(block))) + 
-  geom_point(size=1) +
-  geom_line(aes(group=block), size=.5) +
-  geom_point(rt_data_sum3, mapping=aes(x=tgt_pos,y=rt_median), color="BLACK") +
-  geom_line(rt_data_sum3, mapping=aes(x=tgt_pos,y=rt_median,group=1), color="BLACK") +
-  geom_errorbar(rt_data_sum3, mapping=aes(x=tgt_pos,y=rt_median,ymin=rt_median-ci,ymax=rt_median+ci), color="BLACK",width=.3) +
-  
-  ylab('Median Response Time (ms) [bars = CI]') + xlab('Target Postion') + labs(color="Block") +
-  scale_color_brewer(palette="Paired") + 
-  facet_wrap(. ~ subject, ncol=7) +
-  theme_bw() +
-  theme(text = element_text(family = "LM Roman 10", face="bold"))# +
- # ggsave(file.path(res_path,'figures','fig2_rt_pos_block_subj.png'),width=18,height=14)
+ggplot(rt_data_sum.ex) +
+  geom_point(mapping = aes(x = target, y = rt_median, color = tgt_pos)) +
+    geom_smooth(data = rt_data_sum.ex2, mapping = aes(x =target, y = rt_median, group=1), ci=TRUE,size=1, colour="BLACK") +
+  #geom_errorbar(rt_data_sum.ex2, mapping = aes(x = target, y = rt_median, ymin = rt_median-ci, ymax = rt_median+ci), colour = "BLACK", width = 0.1, size = 0.8) +
+  #geom_line(data = rt_data_sum.ex2, mapping = aes(x = target, y = rt_median, group = 1), color = "Black", size = .9) +
+  scale_colour_brewer(palette = "Dark2") +
+  labs(colour= "Triplet position") + ylab('Median RT (ms)') + xlab('Target syllables') +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 22), legend.position = "top") +
+  ggsave(file.path(fig_path,'SM_SyllVar3.png'), width = w, height = h)
 ```
 
-## Rolling Average RT
+### Plot for each Subject: RT ~ Pos x Block - See Chunk 45
+This plot generates the plot for RT as a function of position and block for all participants individually. 
+```{r message=FALSE, warning=FALSE}
+
+```
+
+### Rolling Average RT
 We wanted to also see how RT evolves over the course of a trial...
 ```{r eval=FALSE, warning=FALSE, include=FALSE}
 # There are 18 targets per block. 3 blocks in each block (set of trials where all 3 positions serve as targets). 
@@ -376,7 +399,7 @@ We tried a few models, which we compared, to determine which was the best descri
 ```{r}
 options(contrasts = c("contr.sum", "contr.poly"))
 
-# LOAD THE MODEL ALREADY RUN
+# LOAD THE MODEL ALREADY COMPUTED
 load(file.path(res_path,'models','rt_block_full_int.Rdata'))
 
 # Full Model | Random Intercept Only | Block as Factor | Gamma-log function
@@ -395,7 +418,8 @@ This is the model that won out in the end!
 ```{r}
 # Lesser Model | Random Intercept Only | Gamma-log function
 load(file.path(res_path,'models','rt_block_less_int.Rdata'))
- # rt.mod.less.int <- glmer(rt_secs ~ 1 + tgt_pos + (1 | subject), data = rt_data, family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+
+# rt.mod.less.int <- glmer(rt_secs ~ 1 + tgt_pos + (1 | subject), data = rt_data, family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
   summary(rt.mod.less.int)
   plot(residuals(rt.mod.less.int))
   qqnorm(resid(rt.mod.less.int))
@@ -411,7 +435,6 @@ anova(rt.mod.full.int.fct,rt.mod.less.int)
 There is a small but significant difference in the fit of the two models. The lesser model is the one we'll continue with, but we will still explore the effect of block. 
 
 Models with a delta AIC of greater than 10 suggest almost no support for the fuller model. For more info, see here: https://stats.stackexchange.com/questions/232465/how-to-compare-models-on-the-basis-of-aic
-
 
 ### Full, Lesser | Random Slopes 
 We wanted to do a model comparison where we also let the random effects term vary in its slope for the factor position. 
@@ -440,7 +463,7 @@ Again, the lesser, random intercepts model is a better description of the data, 
 
 A final comparison, by testing if allowing random slopes for both position and block per subject is a better reflector than only for target position. 
 
-#### Write Regression Table
+Write Regression Table
 ```{r Output regression table., eval=FALSE, include=FALSE}
 stargazer(rt.mod.less.int, rt.mod.less.int.slope, rt.mod.full.int.fct,
 type="html",
@@ -502,7 +525,7 @@ anova(rt.mod.less.int,rt.mod.less.int.slope,rt.mod.less.int.slope2)
 ```
 ... but yet again, we must go for the simplest model. Nice!
 
-## Contrasts 
+### Contrasts 
 Here we take our winning model, the Lesser model with only random intercepts random effects term, and compute our desired contrasts. 
 Since block is not present, we simply have to look at pairwise contrasts between levels of the factor position. Let's do this, plot the results of the estimated marginal means differences, and save the output as a table. 
 ```{r}
@@ -556,7 +579,7 @@ We can also explore the coefficients further if desired...
 #   geom_smooth()  
 ```
 
-## Plot Contrasts: RT ~ Pos
+Plot Contrasts: RT ~ Pos
 ```{r}
 # Predicted Contrasts
 #png(file = file.path(res_path,'figures','fig1c.png'), width = w, height = h, res = 300, units = "in")
@@ -574,11 +597,10 @@ emmip(rt.mod.less.int, ~ tgt_pos, xlab = "Target Position", CIs = TRUE) +
 
 ```
 
-## Block Contrasts
+## Evaluating the effect of blocks
 Although the model without blocks best captures our data, let's look to see whether learning improved, stayed the same, or otherwise changed in successive blocks. A block is a set of three trials, where a syllable from each of the three positions was tested once in a random order (those syllables could come from any word).
-
-#### All Blocks x Pos
-SO we take our fuller model from earlier, and look at the contrasts for target position within each block.
+### All Blocks x Pos
+So we take our fuller model from earlier, and look at the contrasts for target position within each block.
 ```{r}
 # Full Model 
 car::Anova(rt.mod.full.int.fct)
@@ -596,17 +618,12 @@ block.only <- emmeans(rt.mod.full.int.fct, specs = pairwise ~ block, adjust = "T
 emmeans(rt.mod.full.int.fct, specs = pairwise ~ block|tgt_pos, adjust = "Tukey", transform = "response")
 ```
 
-### Contra Himbergen et al.
-```{r}
-
-```
-
-#### Only Blocks 1 & 2
+### Only Blocks 1 & 2
 We found an effect of block, and now narrow the analysis to first 2 blocks. Model and contrasts:
 ```{r}
 block12.mod <- glmer(rt_secs ~ 1 + tgt_pos*block + (1 | subject), data = rt_data[which(rt_data$block==1|rt_data$block==2),], family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
   Anova(block12.mod)
-
+  
 rt_data[which(rt_data$block==1|rt_data$block==2),] %>% summarySE(., measurevar = "rt", groupvars = c("tgt_pos"), na.rm = TRUE)
 
 b12.pos <- emmeans(block12.mod, specs = pairwise ~ tgt_pos, adjust = "tukey", transform = "response")
@@ -618,7 +635,7 @@ b12.d <- as.data.frame(b12.block$contrasts)$estimate / sigmaHat(block12.mod)
 emmip(block12.mod, block ~ tgt_pos, xlab = "Target Position", CIs = TRUE)
 ```
 
-#### Only Block 1
+### Only Block 1
 Now narrow it to the first block only. 
 ```{r}
 block1.mod <- glmer(rt_secs ~ 1 + tgt_pos + (1 | subject), data = rt_data[which(rt_data$block==1),], family = Gamma(link = "log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
@@ -640,7 +657,7 @@ rt_data[which(rt_data$block==1|rt_data$block==2),] %>% summarySE(., measurevar =
 rt_data[which(rt_data$block==1),] %>% summarySE(., measurevar = "rt", groupvars = c("tgt_pos"), na.rm = TRUE)
 ```
 
-## Fig. 1c. Contrasts: RT ~ Pos | Block
+#### Fig. 1c. Contrasts: RT ~ Pos | Block
 Plot the contrasts per block...
 ```{r}
 # plot(emm.pos.block, comparisons = TRUE,
@@ -686,12 +703,105 @@ emmip(rt.mod.full.int.fct, ~ block, CIs = TRUE, xlab = "Block") +
   theme(text = element_text(family = "LM Roman 10", face="bold", size = 12)) 
 #dev.off()
 
+```
+
+
+### Siegelman Analyses: Online Measure of SL
+```{r}
+rt_data <- rt_data %>% mutate(rt_log = log(rt))
+
+rt_data_log_sum <- rt_data %>%
+  summarySE(measurevar="rt_log", groupvars=c("tgt_pos","block"), na.rm=TRUE)
+
+# ggplot(data = rt_data_log_sum, aes(x = block, y = rt_log_mean, group = tgt_pos, color = tgt_pos)) + 
+#   geom_point(size = 2, alpha = 0.8) +
+#   geom_line(size = 1.5, alpha = 0.5) + 
+#   geom_smooth(method = "glm", formula = y~x,
+#               method.args = list(family = gaussian(link = 'log')), 
+#               se = TRUE, size = 1, alpha = 0.2) +
+#   scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
+#                      name = NULL, labels = c("1st", "2nd", "3rd")) +
+#   xlab("Block") + ylab("Mean log(RT)") +
+#   theme_classic() +
+#   theme(text = element_text(family = "LM Roman 10", face="bold"), 
+#         legend.title = element_text("Position"),  legend.position = "right") + 
+#   ggsave(file.path(res_path,'figures','logRT_block.png'), width = w, height = h)
+# dev.copy(pdf,file.path(res_path,'figures','fig1artposblock.pdf'), width = 6, height = 4)
+# dev.off()
+
+exp_3_log_traj <- rbind(rt_data_log_sum %>% filter(tgt_pos == 1),
+    rt_data %>%
+    filter(tgt_pos == 2 || 3) %>%
+    summarySE(measurevar="rt_log", groupvars=c("block"), na.rm=TRUE) %>%
+    add_column(tgt_pos = as.factor("2-3"), .before = "block"))
+
+exp_3_log_traj.siegelman2018 <- exp_3_log_traj %>% 
+  arrange(block) %>%
+  mutate(delta = rt_log_mean - lead(rt_log_mean)) %>%
+  mutate(delta = round(delta,digits=5)) %>%
+  dplyr::select(tgt_pos:rt_log_median,delta,sd:ci) %>%
+  filter(tgt_pos == 1)
+```
+
+#### Fig. 1d: Online measure of SL
+```{r}
+ggplot(data = exp_3_log_traj.siegelman2018, aes(x = block, y = rt_log_mean, group = 1)) + 
+  geom_point(size = 2, alpha = 0.8) +
+  geom_line(size = 1.5, alpha = 0.5) +
+  geom_errorbar(mapping = aes(ymin = rt_log_mean-se, ymax = rt_log_mean+se), colour = "BLACK", width = 0.1, size = 0.8) + 
+  geom_smooth(method = "glm", formula = y~x,
+              method.args = list(family = gaussian(link = 'log')), 
+              se = TRUE, size = 1, alpha = 0.2, color = "red") +
+  xlab("Block") + 
+  ylab("Measure of online SL") +
+  #ylab(expression(logRT[1]~-~mu(logRT[2]+logRT[3]))) + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 22), 
+        legend.title = element_text("Position"),  legend.position = "right") + 
+  ggsave(file.path(fig_path,'logRT_block_traj.png'), width = w, height = h)
+
 
 ```
 
-### Block x Pair Differences
+Log
 ```{r}
-# A repeat from above: 
+exp_3_log_traj_ind <- rbind(rt_data %>% 
+  summarySE(measurevar="rt_log", groupvars=c("subject","tgt_pos","block"), na.rm=TRUE) %>%
+  filter(tgt_pos == 1),
+ rt_data %>%
+    filter(tgt_pos == 2 || 3) %>%
+    summarySE(measurevar="rt_log", groupvars=c("subject","block"), na.rm=TRUE) %>%
+    add_column(tgt_pos = as.factor("2-3"), .before = "block")) %>%
+  arrange(block,subject)
+
+exp_3_log_traj_ind.siegelman2018 <- exp_3_log_traj_ind %>% 
+  mutate(delta = rt_log_mean - lead(rt_log_mean)) %>%
+  mutate(delta = round(delta,digits=5)) %>%
+  dplyr::select(subject:rt_log_median,delta,sd:ci) %>%
+  filter(tgt_pos == 1)
+
+emm_options(lmer.df = "satterth")
+traj.mod1 <- lmer(delta ~ 1 + block + (1|subject), data = exp_3_log_traj_ind.siegelman2018)
+#, family = gaussian(link="log"))
+
+summary(traj.mod1)
+Anova(traj.mod1)
+emmeans(traj.mod1, specs = pairwise ~ block, adjust = "Tukey",  transform = "response")
+
+# http://www.alexanderdemos.org/ANOVA6.html
+
+# cont <- emmeans(traj.mod1, ~ block) #we already created this
+# pairs(cont, adjust='tukey')
+
+descdist(exp_3_log_traj_ind.siegelman2018$rt_log_mean[!is.na(exp_3_log_traj_ind.siegelman2018$rt_log_mean)])
+gofstat(fitdist(exp_3_log_traj_ind.siegelman2018$rt_log_mean[!is.na(exp_3_log_traj_ind.siegelman2018$rt_log_mean)],"lnorm"))
+denscomp(fitdist(exp_3_log_traj_ind.siegelman2018$rt_log_mean[!is.na(exp_3_log_traj_ind.siegelman2018$rt_log_mean)],"lnorm"))
+```
+So, nothing new is gained in the above analysis. Using logRT, we find again that there's no effect of block on reaction times, again likely because the learning is happening in the first few presentations in each block.  
+
+
+### Block x Pair Differences: Contra Himbergen et al. 
+```{r}
 rt_data_sum4 <- rt_data %>% # target position x block x subject
     summarySE(measurevar = "rt", groupvars = c("block","tgt_pos","subject"),na.rm=TRUE) 
 
@@ -718,10 +828,10 @@ lsr::cohensD(block.matters$mean_rt_delta[block.matters$pairs=="c1.2"],block.matt
 
 ```
 
-## Fig. S2a-b. RT Delta ~ ., Block
+#### Fig. S2a-b. RT Delta ~ ., Block
 ```{r}
 png(file = file.path(fig_path,'pos_interaction.png'), width = w, height = h, res = 300, units = "in")
-emmip(pairings.aov, ~ pairs, CIs=TRUE, type = "response") + 
+emmip(pairings.glm, ~ pairs, CIs=TRUE, type = "response") + 
   scale_x_discrete(name = "Mean RT diff. between positions", labels=c("1-2","2-3","1-3")) +
   scale_y_continuous(name="Est. marginal means (ms)") +
   theme_classic() +
@@ -729,7 +839,7 @@ emmip(pairings.aov, ~ pairs, CIs=TRUE, type = "response") +
 dev.off()
 
 png(file = file.path(fig_path,'posblock_interaction.png'), width = w, height = h, res = 300, units = "in")
-emmip(pairings.aov, block ~ pairs, CIs=TRUE, type = "response") + 
+emmip(pairings.glm, block ~ pairs, CIs=TRUE, type = "response") + 
   scale_x_discrete(name = "Mean RT diff. between positions", labels=c("1-2","2-3","1-3")) +
   scale_y_continuous(name="Est. marginal means (ms)") +
   scale_color_manual(name="Block",
@@ -739,7 +849,7 @@ emmip(pairings.aov, block ~ pairs, CIs=TRUE, type = "response") +
 dev.off()
 ```
 
-#### Block 1 vs 8
+### Block 1 vs 8
 ```{r}
 #--------- Block 1 vs 8
 block.minim <- rt_data %>% summarySE(measurevar = "rt",groupvars = c("subject","block"), na.rm = TRUE) %>% filter(block == 1 | block == 8)
@@ -753,7 +863,7 @@ Anova(block.lm)
 
 ```
 
-## Fig. S2c: RT ~ Target Num 
+#### Fig. S2c: RT ~ Target Num 
 ```{r}
 check.sum <- rt_data %>% summarySE(.,measurevar = "rt_secs",groupvars = c("target_num"),na.rm = TRUE)
 
@@ -764,10 +874,108 @@ ggplot(check.sum) +
   scale_y_continuous(name = "Mean RT (s)") +
   scale_x_discrete(name = "Target number")  +
   theme_classic() +
+  
   theme(text = element_text(family = "LM Roman 10", face="bold",size = 22)) +
   ggsave(file.path(fig_path,'figs2c_tgt_num_exp3.png'), width = w, height = h)
 
 ```
+
+### Edit: Reviewer suggested model for stream position
+"An additional step that the authors could carry out to confirm that stream position does not account for the effect is to run a mixed effects model for their analysis of reaction times that include factors of triplet position, as well as stream position, and possibly block (if desired)."
+```{r}
+# Suggested model
+reviewer2.mod <- glmer(rt_secs ~ 1 + tgt_pos + stream_pos + (1 | subject), data = rt_data, 
+                        family = Gamma(link = "log"),
+                       control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+summary(reviewer2.mod)
+Anova(reviewer2.mod)
+
+
+nrow(rt_data)
+length(getME(reviewer2.mod,"theta"))
+length(fixef(reviewer2.mod))
+# Check Singularity
+# If the fit is singular or near-singular, there might be a higher chance of a false positive (we’re not necessarily screening out gradient and Hessian checking on singular directions properly); a higher chance that the model has actually misconverged (because the optimization problem is difficult on the boundary); and a reasonable argument that the random effects model should be simplified.
+# The definition of singularity is that some of the constrained parameters of the random effects theta parameters are on the boundary (equal to zero, or very very close to zero, say <10−6):
+tt <- getME(reviewer2.mod,"theta")
+ll <- getME(reviewer2.mod,"lower")
+min(tt[ll==0])
+# Not a problem!
+
+# Check gradient calculations
+# Compare absolute and scaled gradient; compare gradient and Hessian with numDeriv equivalents.
+derivs1 <- reviewer2.mod@optinfo$derivs
+sc_grad1 <- with(derivs1,solve(Hessian,gradient))
+max(abs(sc_grad1))
+
+# This is smaller, although still larger than the tolerance we typically set (0.001).
+ss <- getME(reviewer2.mod,c("theta","fixef"))
+reviewer2.mod2 <- update(reviewer2.mod,start=ss,control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)))
+
+reviewer2.mod3 <- update(reviewer2.mod3,start=ss,control=glmerControl(optimizer="bobyqa",
+                            optCtrl=list(maxfun=2e5)))
+derivs1 <- reviewer2.mod3@optinfo$derivs
+sc_grad1 <- with(derivs1,solve(Hessian,gradient))
+max(abs(sc_grad1))
+reviewer2.mod4 <- update(reviewer2.mod3,start=ss,control=glmerControl(optimizer="Nelder_Mead",
+                            optCtrl=list(maxfun=2e5)))
+
+
+summary(reviewer2.mod3)
+Anova(reviewer2.mod3)
+(reviewer2.emm <- emmeans(reviewer2.mod3, spec = ~ tgt_pos | stream_pos, adjust = "Tukey", transform = "response"))
+
+
+# --- Linear model version?
+reviewer2.lm <- lm(rt_secs ~ 1 + tgt_pos + stream_pos, data = rt_data)
+summary(reviewer2.lm)
+Anova(reviewer2.lm)
+
+(reviewer2.emmlm <- emmeans(reviewer2.lm, spec = ~ tgt_pos | stream_pos, adjust = "Tukey", transform = "response"))
+
+
+```
+Model fails to converge when we attempt to predict RT_secs using target position, stream position, and block, with subject as random intercept factor. Also when removing block. 
+When predicted using only stream position, same issue. When predicted using only stream position as factor, model never seems to resolve. 
+Using RT (ms) and target position and stream position (but not their interaction), model is unidentifiable. 
+
+#### Fig. S2e-f: Stream Position
+```{r}
+# First, a plot to show that the targets appeared in all stream positions
+ggplot(rt_data, aes(target,stream_pos)) +
+  geom_jitter(width = 0.01) +
+  scale_y_continuous(name = "Stream position") +
+  scale_x_discrete(name = "Target syllable") + 
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size = 20),
+        legend.position = "top") +
+  ggsave(file.path(fig_path,'R1_Stream_positions.png'),width=7,height=6)
+
+stream.sum <- summarySE(rt_data,measurevar = "rt_secs",groupvars = c("tgt_pos","stream_pos"),na.rm = TRUE)
+stream.sum.block <- summarySE(rt_data,measurevar = "rt_secs",groupvars = c("tgt_pos","stream_pos","block"),na.rm = TRUE)
+
+ggplot(stream.sum, aes(stream_pos,rt_secs_median,color=tgt_pos)) + 
+  geom_point() + 
+  scale_color_brewer(palette="Dark2", name = "Position") + 
+  ylab('Median RT (s)') + xlab('Stream position') +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=22), legend.position = "top") +
+  ggsave(file.path(fig_path,'R1_S6_Stream_position.png'), width = w, height = 6)
+
+ggplot(stream.sum.block, aes(stream_pos,rt_secs_mean,color=tgt_pos)) + 
+  geom_point() + 
+  facet_wrap(. ~ block, nrow = 2) + 
+  scale_color_brewer(palette="Dark2", name = "Position") + 
+  scale_x_continuous(n.breaks = 4) +
+  ylab('Median RT (s)') + xlab('Stream position') +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold",size=18), legend.position = "top") +
+  ggsave(file.path(fig_path,'R1_S6_Stream_position_block.png'), width = w, height = h)
+  
+
+```
+
 
 #### Target Num
 ```{r}
@@ -839,6 +1047,86 @@ emmip(check.sum2.glm,target_num~tgt_pos)
 emmip(check.sum2.glm,tgt_pos~target_num)
 ```
 Adding ordinal position as a predictor significantly improves the fit of the model.
+
+### Present in all participants? 
+```{r}
+rt.mod.lm <- lm(rt_secs ~ 1 + tgt_pos * subject, data = rt_data)
+  summary(rt.mod.lm)
+  plot(residuals(rt.mod.lm))
+  qqnorm(resid(rt.mod.lm))
+  Anova(rt.mod.lm,type = 2)
+  
+  (subs.pairs <- emmeans(rt.mod.lm, specs = pairwise ~ tgt_pos | subject, adjust = "Bonferroni", transform = "response"))
+
+  subj.contrasts <- as.data.frame(subs.pairs$contrasts) %>%
+                mutate(effect = case_when(p.value < 0.05 ~ 1))
+  
+ 
+  n_subjs_effect_1to3 <- length(
+    unique(
+      subj.contrasts$subject[
+        intersect(which(subj.contrasts$effect==1), 
+        union(which(subj.contrasts$contrast=="1 - 3"),which(subj.contrasts$contrast=="1 - 2"))  
+                  )  
+                  ]))
+  
+   subjs_effect_1to3 <- 
+    unique(
+      subj.contrasts$subject[
+        intersect(which(subj.contrasts$effect==1), 
+        union(which(subj.contrasts$contrast=="1 - 3"),which(subj.contrasts$contrast=="1 - 2"))           
+                  )  
+                  ])
+  
+rt_data_sum4.0 <- rt_data %>% # target position x subject
+    summarySE(measurevar = "rt", groupvars = c("tgt_pos","subject"),na.rm=TRUE) %>%
+    mutate(effect = as.factor(case_when(subject %in% subjs_effect_1to3 ~ "present",
+                                        TRUE ~ "not present") )) 
+
+ggplot() + 
+  geom_point(rt_data_sum4.0, mapping=aes(x=tgt_pos,y=rt_median), color="BLACK") +
+  geom_line(rt_data_sum4.0, mapping=aes(x=tgt_pos,y=rt_median,group=1, color=effect)) +
+  geom_errorbar(rt_data_sum4.0, mapping=aes(x=tgt_pos,y=rt_median,ymin=rt_median-ci,ymax=rt_median+ci, color=effect),width=.3) +
+  ylab('Median Response Time (ms) [bars = CI]') + xlab('Triplet Postion') + labs(color="RT effect (1st-3rd)") +
+  scale_color_manual(values = c("black","red")) + 
+  facet_wrap(. ~ subject, ncol=6) +
+  theme_classic() +
+  theme(text = element_text(family = "LM Roman 10", face="bold", size = 18),legend.position = "bottom") +
+  ggsave(file.path(fig_path,'Supplementary_SubjectsRT.png'),width=17,height=10)
+```
+# -> Regress out syllable effect
+```{r}
+# across all participants, median RTs for each of the syllables
+# rm anova with syllable and position as factors
+subj.mod <- glmer(rt ~ tgt_pos*target + (1 | subject), data = rt_data, family = Gamma("log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
+summary(subj.mod)
+### make this rt_secs! 
+
+# for each participant, subtracted the residual RT value from observed value for each syllable, co-varying out the effects of physical stimulus factors and yielding corrected RT effect
+
+# Model is rank-deficient
+library(broom.mixed)
+broom.mixed::glance(subj.mod)
+augment(subj.mod)
+rt_data_adj <- data.frame(subject = as.factor(augment(subj.mod)$subject),
+           tgt_pos = as.factor(augment(subj.mod)$tgt_pos),
+           rt_adj = as.numeric(augment(subj.mod)$rt - augment(subj.mod)$.resid))
+         
+rt.mod.less.int.adj <- glmer(rt_adj ~ 1 + tgt_pos + (1 | subject), data = rt_data_adj, family = Gamma(link = "log"))
+  summary(rt.mod.less.int.adj)
+  plot(residuals(rt.mod.less.int.adj))
+  qqnorm(resid(rt.mod.less.int.adj))
+  
+  car::Anova(rt.mod.less.int.adj)
+  
+  
+reg.syll.mod <- (emmeans(rt.mod.less.int.adj, specs = pairwise ~ tgt_pos, adjust = "Tukey", transform = "response"))  
+reg.mod.cont <- as.data.frame(reg.syll.mod$contrasts)
+(reg.mod.cont$d <- reg.mod.cont$estimate / sigmaHat(rt.mod.less.int.adj))
+  
+```
+
+
 
 
 # 3 - ACCURACY STATS
@@ -1020,45 +1308,13 @@ ggplot()+
 #  scale_color_manual(values = c("#ABABAB", "#757575", "#454545")) + 
   scale_y_continuous(limits = c(0,1), name = "Mean detection accuracy") +
   scale_x_discrete(name = "Target syllables") + 
-  guides(fill = FALSE) + labs(color = "Ordinal position") +
+  guides(fill = FALSE) + labs(color = "Triplet position") +
   theme_classic() +
   theme(text = element_text(family = "LM Roman 10", face="bold",size = 22),
         legend.position = "top") +
   ggsave(file.path(fig_path,'accuracy_syll_greys.png'),width=7,height=6)
 
 
-```
-
-# -> Regress out syllable effect
-```{r}
-# across all participants, median RTs for each of the syllables
-# rm anova with syllable and position as factors
-subj.mod <- glmer(rt ~ tgt_pos*target + (1 | subject), data = rt_data, family = Gamma("log"), control = glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=2e5)))
-summary(subj.mod)
-### make this rt_secs! 
-
-# for each participant, subtracted the residual RT value from observed value for each syllable, co-varying out the effects of physical stimulus factors and yielding corrected RT effect
-
-# Model is rank-deficient
-library(broom.mixed)
-broom.mixed::glance(subj.mod)
-augment(subj.mod)
-rt_data_adj <- data.frame(subject = as.factor(augment(subj.mod)$subject),
-           tgt_pos = as.factor(augment(subj.mod)$tgt_pos),
-           rt_adj = as.numeric(augment(subj.mod)$rt - augment(subj.mod)$.resid))
-         
-rt.mod.less.int.adj <- glmer(rt_adj ~ 1 + tgt_pos + (1 | subject), data = rt_data_adj, family = Gamma(link = "log"))
-  summary(rt.mod.less.int.adj)
-  plot(residuals(rt.mod.less.int.adj))
-  qqnorm(resid(rt.mod.less.int.adj))
-  
-  car::Anova(rt.mod.less.int.adj)
-  
-  
-reg.syll.mod <- (emmeans(rt.mod.less.int.adj, specs = pairwise ~ tgt_pos, adjust = "Tukey", transform = "response"))  
-reg.mod.cont <- as.data.frame(reg.syll.mod$contrasts)
-(reg.mod.cont$d <- reg.mod.cont$estimate / sigmaHat(rt.mod.less.int.adj))
-  
 ```
 
 
@@ -1531,98 +1787,3 @@ annotate(geom = "text", x = 0.45, y = 0.2,
         legend.title = element_text(""),  legend.position = "top") +
   ggsave(file.path(fig_path,'siegelman_corr.png'), width = w, height = h)
 ```
-
-#----------------------------
-## Siegelman Analyses: Online Measure of SL
-```{r}
-rt_data <- rt_data %>% mutate(rt_log = log(rt))
-
-rt_data_log_sum <- rt_data %>%
-  summarySE(measurevar="rt_log", groupvars=c("tgt_pos","block"), na.rm=TRUE)
-
-# ggplot(data = rt_data_log_sum, aes(x = block, y = rt_log_mean, group = tgt_pos, color = tgt_pos)) + 
-#   geom_point(size = 2, alpha = 0.8) +
-#   geom_line(size = 1.5, alpha = 0.5) + 
-#   geom_smooth(method = "glm", formula = y~x,
-#               method.args = list(family = gaussian(link = 'log')), 
-#               se = TRUE, size = 1, alpha = 0.2) +
-#   scale_color_manual(values = c("#D44739", "#FAC869", "#3C5E4D"),
-#                      name = NULL, labels = c("1st", "2nd", "3rd")) +
-#   xlab("Block") + ylab("Mean log(RT)") +
-#   theme_classic() +
-#   theme(text = element_text(family = "LM Roman 10", face="bold"), 
-#         legend.title = element_text("Position"),  legend.position = "right") + 
-#   ggsave(file.path(res_path,'figures','logRT_block.png'), width = w, height = h)
-# dev.copy(pdf,file.path(res_path,'figures','fig1artposblock.pdf'), width = 6, height = 4)
-# dev.off()
-
-exp_3_log_traj <- rbind(rt_data_log_sum %>% filter(tgt_pos == 1),
-    rt_data %>%
-    filter(tgt_pos == 2 || 3) %>%
-    summarySE(measurevar="rt_log", groupvars=c("block"), na.rm=TRUE) %>%
-    add_column(tgt_pos = as.factor("2-3"), .before = "block"))
-
-exp_3_log_traj.siegelman2018 <- exp_3_log_traj %>% 
-  arrange(block) %>%
-  mutate(delta = rt_log_mean - lead(rt_log_mean)) %>%
-  mutate(delta = round(delta,digits=5)) %>%
-  dplyr::select(tgt_pos:rt_log_median,delta,sd:ci) %>%
-  filter(tgt_pos == 1)
-```
-
-## Fig. 1d: Online measure of SL
-```{r}
-ggplot(data = exp_3_log_traj.siegelman2018, aes(x = block, y = rt_log_mean, group = 1)) + 
-  geom_point(size = 2, alpha = 0.8) +
-  geom_line(size = 1.5, alpha = 0.5) +
-  geom_errorbar(mapping = aes(ymin = rt_log_mean-se, ymax = rt_log_mean+se), colour = "BLACK", width = 0.1, size = 0.8) + 
-  geom_smooth(method = "glm", formula = y~x,
-              method.args = list(family = gaussian(link = 'log')), 
-              se = TRUE, size = 1, alpha = 0.2, color = "red") +
-  xlab("Block") + 
-  ylab("Measure of online SL") +
-  #ylab(expression(logRT[1]~-~mu(logRT[2]+logRT[3]))) + 
-  theme_classic() +
-  theme(text = element_text(family = "LM Roman 10", face="bold",size = 22), 
-        legend.title = element_text("Position"),  legend.position = "right") + 
-  ggsave(file.path(fig_path,'logRT_block_traj.png'), width = w, height = h)
-
-
-```
-
-
-
-```{r}
-exp_3_log_traj_ind <- rbind(rt_data %>% 
-  summarySE(measurevar="rt_log", groupvars=c("subject","tgt_pos","block"), na.rm=TRUE) %>%
-  filter(tgt_pos == 1),
- rt_data %>%
-    filter(tgt_pos == 2 || 3) %>%
-    summarySE(measurevar="rt_log", groupvars=c("subject","block"), na.rm=TRUE) %>%
-    add_column(tgt_pos = as.factor("2-3"), .before = "block")) %>%
-  arrange(block,subject)
-
-exp_3_log_traj_ind.siegelman2018 <- exp_3_log_traj_ind %>% 
-  mutate(delta = rt_log_mean - lead(rt_log_mean)) %>%
-  mutate(delta = round(delta,digits=5)) %>%
-  dplyr::select(subject:rt_log_median,delta,sd:ci) %>%
-  filter(tgt_pos == 1)
-
-emm_options(lmer.df = "satterth")
-traj.mod1 <- lmer(delta ~ 1 + block + (1|subject), data = exp_3_log_traj_ind.siegelman2018)
-#, family = gaussian(link="log"))
-
-summary(traj.mod1)
-Anova(traj.mod1)
-emmeans(traj.mod1, specs = pairwise ~ block, adjust = "Tukey",  transform = "response")
-
-# http://www.alexanderdemos.org/ANOVA6.html
-
-# cont <- emmeans(traj.mod1, ~ block) #we already created this
-# pairs(cont, adjust='tukey')
-
-descdist(exp_3_log_traj_ind.siegelman2018$rt_log_mean[!is.na(exp_3_log_traj_ind.siegelman2018$rt_log_mean)])
-gofstat(fitdist(exp_3_log_traj_ind.siegelman2018$rt_log_mean[!is.na(exp_3_log_traj_ind.siegelman2018$rt_log_mean)],"lnorm"))
-denscomp(fitdist(exp_3_log_traj_ind.siegelman2018$rt_log_mean[!is.na(exp_3_log_traj_ind.siegelman2018$rt_log_mean)],"lnorm"))
-```
-So, nothing new is gained in the above analysis. Using logRT, we find again that there's no effect of block on reaction times, again likely because the learning is happening in the first few presentations in each block.  
